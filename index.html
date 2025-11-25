@@ -388,7 +388,7 @@
       background: rgba(148, 163, 184, 0.1);
     }
 
-    /* Calendar */
+    /* Main calendar */
     .calendar-wrapper {
       margin-top: 18px;
       border-radius: 12px;
@@ -683,8 +683,8 @@
       margin: 4px 0;
     }
 
-    /* Patient timeline in New blister patient tab */
-    .patient-timeline-card {
+    /* Patient mini calendar (New blister patient tab) */
+    .patient-calendar-card {
       border-radius: 10px;
       border: 1px solid var(--border);
       padding: 8px 9px 10px;
@@ -694,67 +694,81 @@
       margin-top: 4px;
     }
 
-    .patient-timeline-title {
+    .patient-calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      gap: 6px;
+    }
+
+    .patient-calendar-title {
       font-weight: 600;
-      margin-bottom: 6px;
     }
 
-    .patient-timeline-bar-wrapper {
-      margin-top: 4px;
-      margin-bottom: 6px;
+    .patient-calendar-month-label {
+      font-size: 0.82rem;
+      font-weight: 600;
     }
 
-    .patient-timeline-bar {
-      position: relative;
-      height: 7px;
-      border-radius: 999px;
-      background: var(--border);
-      overflow: hidden;
+    table.patient-calendar {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 0.72rem;
     }
 
-    .patient-timeline-bridge {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, #38bdf8, #6366f1);
-      opacity: 0.85;
+    .patient-calendar thead th {
+      padding: 3px 0;
+      text-align: center;
+      font-weight: 500;
+      color: var(--calendar-muted-text);
     }
 
-    .patient-timeline-marker {
-      position: absolute;
-      top: 50%;
-      transform: translate(-50%, -50%);
+    .patient-calendar td {
+      border-radius: 6px;
+      padding: 3px;
+      vertical-align: top;
+    }
+
+    .patient-calendar-cell {
+      background: var(--calendar-cell-bg);
+      border: 1px solid transparent;
+      min-height: 32px;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      justify-content: space-between;
+    }
+
+    .patient-calendar-cell--other {
+      opacity: var(--calendar-other-month-opacity);
+    }
+
+    .patient-calendar-day-number {
+      font-size: 0.7rem;
+      text-align: right;
+    }
+
+    .patient-calendar-dots {
+      margin-top: 3px;
+      display: flex;
+      flex-wrap: wrap;
       gap: 2px;
     }
 
-    .patient-timeline-dot {
-      width: 10px;
-      height: 10px;
+    .patient-cal-dot {
+      width: 6px;
+      height: 6px;
       border-radius: 999px;
-      border: 2px solid var(--card-bg);
-      box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.6);
     }
 
-    .patient-timeline-dot--start { background: #22c55e; }
-    .patient-timeline-dot--launch { background: #38bdf8; }
-    .patient-timeline-dot--automation { background: #22c55e; }
-    .patient-timeline-dot--delivery { background: #eab308; }
-    .patient-timeline-dot--bagging { background: #f97316; }
+    .patient-cal-dot--start     { background: #22c55e; }  /* green */
+    .patient-cal-dot--launch    { background: #38bdf8; }  /* blue */
+    .patient-cal-dot--auto      { background: #0ea5e9; }  /* cyan-ish */
+    .patient-cal-dot--delivery  { background: #eab308; }  /* yellow */
+    .patient-cal-dot--bagging   { background: #f97316; }  /* orange */
 
-    .patient-timeline-label {
-      font-size: 0.7rem;
-      color: var(--muted-strong);
-      white-space: nowrap;
-    }
-
-    .patient-timeline-date {
-      font-size: 0.68rem;
-      color: var(--muted);
-    }
-
-    .patient-timeline-legend {
+    .patient-calendar-legend {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
@@ -763,24 +777,24 @@
       color: var(--muted);
     }
 
-    .patient-timeline-legend-item {
+    .patient-calendar-legend-item {
       display: inline-flex;
       align-items: center;
       gap: 4px;
     }
 
-    .patient-timeline-legend-dot {
+    .patient-calendar-legend-dot {
       width: 7px;
       height: 7px;
       border-radius: 999px;
     }
 
     @media (max-width: 640px) {
-      .patient-timeline-label {
-        font-size: 0.66rem;
+      .patient-calendar-day-number {
+        font-size: 0.68rem;
       }
-      .patient-timeline-date {
-        font-size: 0.64rem;
+      .patient-calendar {
+        font-size: 0.68rem;
       }
     }
 
@@ -874,12 +888,6 @@
       border: 1px solid var(--border);
       font-size: 0.75rem;
       background: rgba(148, 163, 184, 0.06);
-    }
-
-    .quick-link-pill span {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .quick-link-desc {
@@ -1063,7 +1071,7 @@
         <div class="small">
           Use this wizard when a brand-new blister patient is added. It helps you plan bridge blister
           (if needed), first CPAK cycle timing, a copy-ready HealthWATCH note, a MAR setup checklist,
-          and a visual timeline from start date to CPAK blister bagging.
+          and a mini calendar showing the patient’s start, launch, automation, CPAK delivery, and bagging dates.
         </div>
 
         <div class="wizard-card">
@@ -1151,58 +1159,48 @@
                   </div>
                 </div>
 
-                <!-- Timeline card for this patient -->
-                <div class="patient-timeline-card" id="wizardTimelineCard" style="display:none;">
-                  <div class="patient-timeline-title">Timeline for this patient</div>
-                  <div class="patient-timeline-bar-wrapper">
-                    <div class="patient-timeline-bar">
-                      <!-- coloured bridge bar (Start → Bagging) -->
-                      <div class="patient-timeline-bridge"></div>
-
-                      <!-- Markers will be positioned by JS -->
-                      <div class="patient-timeline-marker" id="markerStart">
-                        <div class="patient-timeline-dot patient-timeline-dot--start"></div>
-                        <div class="patient-timeline-label">Start</div>
-                        <div class="patient-timeline-date" id="markerStartDate"></div>
-                      </div>
-                      <div class="patient-timeline-marker" id="markerLaunch">
-                        <div class="patient-timeline-dot patient-timeline-dot--launch"></div>
-                        <div class="patient-timeline-label">Launch</div>
-                        <div class="patient-timeline-date" id="markerLaunchDate"></div>
-                      </div>
-                      <div class="patient-timeline-marker" id="markerAutomation">
-                        <div class="patient-timeline-dot patient-timeline-dot--automation"></div>
-                        <div class="patient-timeline-label">Automation</div>
-                        <div class="patient-timeline-date" id="markerAutomationDate"></div>
-                      </div>
-                      <div class="patient-timeline-marker" id="markerDelivery">
-                        <div class="patient-timeline-dot patient-timeline-dot--delivery"></div>
-                        <div class="patient-timeline-label">CPAK delivery</div>
-                        <div class="patient-timeline-date" id="markerDeliveryDate"></div>
-                      </div>
-                      <div class="patient-timeline-marker" id="markerBagging">
-                        <div class="patient-timeline-dot patient-timeline-dot--bagging"></div>
-                        <div class="patient-timeline-label">Bagging / ready</div>
-                        <div class="patient-timeline-date" id="markerBaggingDate"></div>
-                      </div>
-                    </div>
+                <!-- Patient mini calendar -->
+                <div class="patient-calendar-card" id="wizardCalCard" style="display:none;">
+                  <div class="patient-calendar-header">
+                    <div class="patient-calendar-title">Calendar for this patient</div>
+                    <div class="patient-calendar-month-label" id="wizardCalMonthLabel"></div>
                   </div>
-                  <div class="patient-timeline-legend">
-                    <span class="patient-timeline-legend-item">
-                      <span class="patient-timeline-legend-dot" style="background:#22c55e;"></span> Start / automation
+                  <table class="patient-calendar">
+                    <thead>
+                      <tr>
+                        <th>Sun</th>
+                        <th>Mon</th>
+                        <th>Tue</th>
+                        <th>Wed</th>
+                        <th>Thu</th>
+                        <th>Fri</th>
+                        <th>Sat</th>
+                      </tr>
+                    </thead>
+                    <tbody id="wizardCalBody">
+                      <!-- Filled by JS -->
+                    </tbody>
+                  </table>
+                  <div class="patient-calendar-legend">
+                    <span class="patient-calendar-legend-item">
+                      <span class="patient-calendar-legend-dot" style="background:#22c55e;"></span> Start
                     </span>
-                    <span class="patient-timeline-legend-item">
-                      <span class="patient-timeline-legend-dot" style="background:#38bdf8;"></span> First launch (Sunday)
+                    <span class="patient-calendar-legend-item">
+                      <span class="patient-calendar-legend-dot" style="background:#38bdf8;"></span> First launch (Sunday)
                     </span>
-                    <span class="patient-timeline-legend-item">
-                      <span class="patient-timeline-legend-dot" style="background:#eab308;"></span> CPAK delivery (Monday)
+                    <span class="patient-calendar-legend-item">
+                      <span class="patient-calendar-legend-dot" style="background:#0ea5e9;"></span> Automation (Wednesday)
                     </span>
-                    <span class="patient-timeline-legend-item">
-                      <span class="patient-timeline-legend-dot" style="background:#f97316;"></span> Bagging / ready (Sunday)
+                    <span class="patient-calendar-legend-item">
+                      <span class="patient-calendar-legend-dot" style="background:#eab308;"></span> CPAK delivery (Monday)
+                    </span>
+                    <span class="patient-calendar-legend-item">
+                      <span class="patient-calendar-legend-dot" style="background:#f97316;"></span> Bagging / ready (Sunday)
                     </span>
                   </div>
                   <div class="wizard-helper" style="margin-top:4px;">
-                    Coloured bar = timeline from the patient’s start date until the CPAK blister is bagged and ready for pick-up.
+                    This mini calendar shows the patient’s start date and their first blister cycle:
+                    launch, automation, CPAK delivery, and bagging/pick-up.
                   </div>
                 </div>
 
@@ -1229,7 +1227,7 @@
               <div id="wizardPlaceholder" class="wizard-helper">
                 Fill out the batch type, patient start date, and supply at home,
                 then click “Generate plan” to see bridge blister needs, first CPAK cycle,
-                a visual timeline, and documentation prompts.
+                a patient-specific calendar, and documentation prompts.
               </div>
             </div>
           </div>
@@ -1269,8 +1267,7 @@
                   <strong>Work-on-blisters day:</strong> Wednesday – cross-check against MAR and fix.
                 </li>
                 <li>
-                  <strong>Product check:</strong> Usually Saturday for fixed packs.
-                </li>
+                  <strong>Product check:</strong> Usually Saturday for fixed packs.</li>
                 <li>
                   <strong>Bagging & sorting:</strong> Sunday – bag and sort for pickup or delivery.
                 </li>
@@ -1666,7 +1663,7 @@
     const BIWEEKLY_INTERVAL = 14; // days
     const MONTHLY_INTERVAL = 28;  // days
 
-    // For calendar
+    // For main calendar
     let currentMonthDate = null; // first day of visible month
     let calendarEventsMap = {};  // { "yyyy-mm-dd": [ { type, label } ] }
 
@@ -1906,7 +1903,7 @@
       });
     }
 
-    // ---- CALENDAR EVENTS ----
+    // ---- CALENDAR EVENTS FOR MAIN CALENDAR ----
 
     function addEventToMap(dateKey, type) {
       if (!EVENT_TYPES[type]) return;
@@ -2204,32 +2201,97 @@
       box.style.display = "block";
     }
 
-    // ---- PATIENT TIMELINE ----
+    // ---- PATIENT MINI CALENDAR (NEW PATIENT TAB) ----
 
-    function renderPatientTimeline(startDate, launch, automation, delivery, bagging) {
-      const card = document.getElementById("wizardTimelineCard");
-      if (!card) return;
+    function renderPatientCalendar(startDate, launch, automation, delivery, bagging) {
+      const card = document.getElementById("wizardCalCard");
+      const monthLabelEl = document.getElementById("wizardCalMonthLabel");
+      const tbody = document.getElementById("wizardCalBody");
+      if (!card || !monthLabelEl || !tbody) return;
 
-      const totalDays = Math.max(diffInDays(startDate, bagging), 1); // avoid divide by 0
+      tbody.innerHTML = "";
 
-      function positionMarker(markerId, dateLabelId, dateValue) {
-        const marker = document.getElementById(markerId);
-        const dateLabel = document.getElementById(dateLabelId);
-        if (!marker || !dateLabel) return;
+      // We'll center the mini calendar on the month of the patient start date
+      const base = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+      base.setHours(0, 0, 0, 0);
 
-        const daysFromStart = diffInDays(startDate, dateValue);
-        const ratio = Math.min(Math.max(daysFromStart / totalDays, 0), 1);
-        const leftPercent = ratio * 100;
+      monthLabelEl.textContent = base.toLocaleDateString(undefined, {
+        month: "long",
+        year: "numeric"
+      });
 
-        marker.style.left = leftPercent + "%";
-        dateLabel.textContent = formatNiceDateNoWeekday(dateValue);
+      const firstOfMonth = new Date(base);
+      const gridStart = new Date(firstOfMonth);
+      while (gridStart.getDay() !== 0) {
+        gridStart.setDate(gridStart.getDate() - 1);
       }
 
-      positionMarker("markerStart", "markerStartDate", startDate);
-      positionMarker("markerLaunch", "markerLaunchDate", launch);
-      positionMarker("markerAutomation", "markerAutomationDate", automation);
-      positionMarker("markerDelivery", "markerDeliveryDate", delivery);
-      positionMarker("markerBagging", "markerBaggingDate", bagging);
+      function sameDay(d1, d2) {
+        return (
+          d1.getFullYear() === d2.getFullYear() &&
+          d1.getMonth() === d2.getMonth() &&
+          d1.getDate() === d2.getDate()
+        );
+      }
+
+      const monthIndex = base.getMonth();
+      let current = new Date(gridStart);
+
+      for (let week = 0; week < 6; week++) {
+        const tr = document.createElement("tr");
+        for (let dow = 0; dow < 7; dow++) {
+          const td = document.createElement("td");
+          const cellDate = new Date(current);
+
+          const cellDiv = document.createElement("div");
+          cellDiv.classList.add("patient-calendar-cell");
+          if (cellDate.getMonth() !== monthIndex) {
+            cellDiv.classList.add("patient-calendar-cell--other");
+          }
+
+          const dayNumber = document.createElement("div");
+          dayNumber.classList.add("patient-calendar-day-number");
+          dayNumber.textContent = cellDate.getDate();
+
+          const dotsDiv = document.createElement("div");
+          dotsDiv.classList.add("patient-calendar-dots");
+
+          if (sameDay(cellDate, startDate)) {
+            const dot = document.createElement("span");
+            dot.classList.add("patient-cal-dot", "patient-cal-dot--start");
+            dotsDiv.appendChild(dot);
+          }
+          if (sameDay(cellDate, launch)) {
+            const dot = document.createElement("span");
+            dot.classList.add("patient-cal-dot", "patient-cal-dot--launch");
+            dotsDiv.appendChild(dot);
+          }
+          if (sameDay(cellDate, automation)) {
+            const dot = document.createElement("span");
+            dot.classList.add("patient-cal-dot", "patient-cal-dot--auto");
+            dotsDiv.appendChild(dot);
+          }
+          if (sameDay(cellDate, delivery)) {
+            const dot = document.createElement("span");
+            dot.classList.add("patient-cal-dot", "patient-cal-dot--delivery");
+            dotsDiv.appendChild(dot);
+          }
+          if (sameDay(cellDate, bagging)) {
+            const dot = document.createElement("span");
+            dot.classList.add("patient-cal-dot", "patient-cal-dot--bagging");
+            dotsDiv.appendChild(dot);
+          }
+
+          cellDiv.appendChild(dayNumber);
+          cellDiv.appendChild(dotsDiv);
+
+          td.appendChild(cellDiv);
+          tr.appendChild(td);
+
+          current.setDate(current.getDate() + 1);
+        }
+        tbody.appendChild(tr);
+      }
 
       card.style.display = "block";
     }
@@ -2247,11 +2309,11 @@
         const errorBox = document.getElementById("wizardErrorBox");
         const outputBox = document.getElementById("wizardOutputBox");
         const placeholder = document.getElementById("wizardPlaceholder");
-        const timelineCard = document.getElementById("wizardTimelineCard");
+        const calCard = document.getElementById("wizardCalCard");
 
         errorBox.style.display = "none";
         errorBox.textContent = "";
-        if (timelineCard) timelineCard.style.display = "none";
+        if (calCard) calCard.style.display = "none";
 
         if (!batchValue || !startStr || !hasSupplyValue) {
           errorBox.textContent = "Please fill out batch type, patient start date, and supply at home.";
@@ -2339,8 +2401,8 @@
         const noteText = noteLines.join("\n");
         document.getElementById("wizardNoteText").value = noteText;
 
-        // Timeline
-        renderPatientTimeline(startDate, nextLaunch, automation, delivery, bagging);
+        // Patient-specific mini calendar
+        renderPatientCalendar(startDate, nextLaunch, automation, delivery, bagging);
 
         placeholder.style.display = "none";
         outputBox.style.display = "block";
