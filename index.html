@@ -76,53 +76,6 @@
       box-shadow: 0 0 0 1px #38bdf8;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-    }
-
-    .batch-card {
-      border-radius: 12px;
-      border: 1px solid #1f2937;
-      padding: 12px 12px 14px;
-      background: radial-gradient(circle at top left, rgba(56,189,248,0.12), transparent 55%);
-    }
-
-    .batch-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-
-    .batch-name {
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .badge {
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      font-size: 0.6rem;
-      padding: 2px 6px;
-      border-radius: 999px;
-      border: 1px solid #4b5563;
-      color: #9ca3af;
-    }
-
-    .interval-label {
-      font-size: 0.75rem;
-      color: #9ca3af;
-      margin-bottom: 4px;
-    }
-
-    .interval-value {
-      font-size: 0.8rem;
-      color: #e5e7eb;
-      margin-bottom: 8px;
-    }
-
     button {
       border-radius: 999px;
       border: none;
@@ -237,8 +190,8 @@
     <div class="card">
       <h1>Batch Launch Planner</h1>
       <div class="subtitle">
-        Enter today’s date and your reference launch dates. The tool will calculate the next launch day
-        for each batch and how many days are left.
+        Pick today’s date. The tool will calculate the next launch date for:
+        weekly, bi-weekly, and “monthly” (every 28 days) batches.
       </div>
 
       <!-- Today's date -->
@@ -247,53 +200,7 @@
         <label for="todayInput">Today’s date</label>
         <input type="date" id="todayInput" />
         <div class="small">
-          Tip: This will usually be today, but you can change it if you’re pre-planning.
-        </div>
-      </div>
-
-      <!-- Batch reference dates -->
-      <div>
-        <div class="section-title">2. Reference launch dates</div>
-        <div class="small">
-          Use the last time you launched each batch, or any known launch date in the current cycle.
-        </div>
-
-        <div class="grid" style="margin-top: 10px;">
-          <!-- Weekly -->
-          <div class="batch-card">
-            <div class="batch-header">
-              <div class="batch-name">Weekly batch</div>
-              <div class="badge">Every 7 days</div>
-            </div>
-            <div class="interval-label">Interval</div>
-            <div class="interval-value">Weekly (7-day cycle)</div>
-            <label for="weeklyRef">Reference launch date</label>
-            <input type="date" id="weeklyRef" />
-          </div>
-
-          <!-- Bi-weekly -->
-          <div class="batch-card">
-            <div class="batch-header">
-              <div class="batch-name">Bi-weekly batch</div>
-              <div class="badge">Every 14 days</div>
-            </div>
-            <div class="interval-label">Interval</div>
-            <div class="interval-value">Bi-weekly (14-day cycle)</div>
-            <label for="biweeklyRef">Reference launch date</label>
-            <input type="date" id="biweeklyRef" />
-          </div>
-
-          <!-- Monthly (4-week cycle) -->
-          <div class="batch-card">
-            <div class="batch-header">
-              <div class="batch-name">“Monthly” batch</div>
-              <div class="badge">Every 28 days</div>
-            </div>
-            <div class="interval-label">Interval</div>
-            <div class="interval-value">4-week cycle (28 days)</div>
-            <label for="monthlyRef">Reference launch date</label>
-            <input type="date" id="monthlyRef" />
-          </div>
+          This is usually today, but you can choose a future date if you are pre-planning.
         </div>
       </div>
 
@@ -306,7 +213,7 @@
 
       <!-- Results -->
       <div class="results" id="resultsBox" style="display:none;">
-        <div class="results-title">3. Results</div>
+        <div class="results-title">2. Results</div>
         <table>
           <thead>
             <tr>
@@ -321,15 +228,35 @@
             <!-- Filled by JS -->
           </tbody>
         </table>
-        <div class="small">
-          Note: If “Days until launch” is 0, launch that batch today.
+        <div class="small" style="margin-top:8px;">
+          Anchor dates used:
+          Weekly = every Sunday;
+          Bi-weekly anchor = Nov 23, 2025;
+          Monthly (28-day) anchor = Nov 16, 2025.
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    // Utility: parse a date string (yyyy-mm-dd) into a Date at local midnight
+    // ---- CONFIG (your anchors & rules) ----
+
+    // Weekly: every Sunday
+    const WEEKLY_TARGET_WEEKDAY = 0; // 0 = Sunday
+
+    // Bi-weekly anchor: Nov 23, 2025 (yyyy, monthIndex, day) -> monthIndex is 0-based
+    const BIWEEKLY_ANCHOR = new Date(2025, 10, 23); // Nov = 10
+    BIWEEKLY_ANCHOR.setHours(0, 0, 0, 0);
+
+    // Monthly (28-day cycle) anchor: Nov 16, 2025
+    const MONTHLY_ANCHOR = new Date(2025, 10, 16);
+    MONTHLY_ANCHOR.setHours(0, 0, 0, 0);
+
+    const BIWEEKLY_INTERVAL = 14; // days
+    const MONTHLY_INTERVAL = 28;  // days
+
+    // ---- DATE UTILITIES ----
+
     function parseLocalDate(input) {
       if (!input) return null;
       const [year, month, day] = input.split("-").map(Number);
@@ -339,7 +266,6 @@
       return d;
     }
 
-    // Utility: format date as yyyy-mm-dd
     function formatDateYMD(date) {
       const y = date.getFullYear();
       const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -347,7 +273,6 @@
       return `${y}-${m}-${d}`;
     }
 
-    // Utility: human-friendly date (e.g., Sun, Nov 24, 2025)
     function formatNiceDate(date) {
       return date.toLocaleDateString(undefined, {
         weekday: "short",
@@ -357,41 +282,47 @@
       });
     }
 
-    // Utility: get day name
     function getDayName(date) {
       return date.toLocaleDateString(undefined, { weekday: "long" });
     }
 
-    // Utility: add days
     function addDays(date, days) {
       const d = new Date(date);
       d.setDate(d.getDate() + days);
       return d;
     }
 
-    // Utility: diff in whole days (b - a)
     function diffInDays(a, b) {
       const msPerDay = 24 * 60 * 60 * 1000;
       return Math.round((b - a) / msPerDay);
     }
 
-    // Core: find next launch date given reference date, interval, and "today"
-    function getNextLaunchDate(today, referenceDate, intervalDays) {
-      // If today is before the reference date, the next launch is the reference date
-      let next = new Date(referenceDate);
+    // Next Sunday (weekly) from "today"
+    function getNextWeeklyLaunch(today) {
+      const todayDow = today.getDay(); // 0 = Sunday
+      const diff = (7 + WEEKLY_TARGET_WEEKDAY - todayDow) % 7;
+      // If diff = 0 → launch today
+      return addDays(today, diff);
+    }
+
+    // Generic cycle: next date >= today from anchor + n * intervalDays
+    function getNextCycleLaunch(today, anchor, intervalDays) {
+      let next = new Date(anchor);
       while (next < today) {
         next = addDays(next, intervalDays);
       }
       return next;
     }
 
-    // Set default today’s date to "now"
+    // Set default today’s date to now
     (function setDefaultToday() {
       const todayInput = document.getElementById("todayInput");
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       todayInput.value = formatDateYMD(today);
     })();
+
+    // ---- MAIN HANDLER ----
 
     document.getElementById("calcBtn").addEventListener("click", function () {
       const errorBox = document.getElementById("errorBox");
@@ -404,54 +335,44 @@
       tbody.innerHTML = "";
 
       const todayStr = document.getElementById("todayInput").value;
-      const weeklyRefStr = document.getElementById("weeklyRef").value;
-      const biweeklyRefStr = document.getElementById("biweeklyRef").value;
-      const monthlyRefStr = document.getElementById("monthlyRef").value;
-
       const today = parseLocalDate(todayStr);
+
       if (!today) {
         errorBox.textContent = "Please enter a valid value for today’s date.";
         errorBox.style.display = "block";
         return;
       }
 
-      // Build batch config
-      const batches = [
-        {
-          name: "Weekly batch",
-          intervalDays: 7,
-          refStr: weeklyRefStr
-        },
-        {
-          name: "Bi-weekly batch",
-          intervalDays: 14,
-          refStr: biweeklyRefStr
-        },
-        {
-          name: "“Monthly” (4-week) batch",
-          intervalDays: 28,
-          refStr: monthlyRefStr
-        }
-      ];
+      const batches = [];
 
-      const anyRefFilled = batches.some(b => b.refStr);
-      if (!anyRefFilled) {
-        errorBox.textContent = "Please enter at least one reference launch date.";
-        errorBox.style.display = "block";
-        return;
-      }
+      // Weekly
+      const weeklyNext = getNextWeeklyLaunch(today);
+      batches.push({
+        name: "Weekly batch",
+        nextLaunch: weeklyNext
+      });
 
+      // Bi-weekly
+      const biNext = getNextCycleLaunch(today, BIWEEKLY_ANCHOR, BIWEEKLY_INTERVAL);
+      batches.push({
+        name: "Bi-weekly batch",
+        nextLaunch: biNext
+      });
+
+      // Monthly (28-day)
+      const monthlyNext = getNextCycleLaunch(today, MONTHLY_ANCHOR, MONTHLY_INTERVAL);
+      batches.push({
+        name: "“Monthly” (28-day) batch",
+        nextLaunch: monthlyNext
+      });
+
+      // Fill table
       batches.forEach(batch => {
-        if (!batch.refStr) return; // skip if not provided
-
-        const refDate = parseLocalDate(batch.refStr);
-        if (!refDate) return;
-
-        const nextLaunch = getNextLaunchDate(today, refDate, batch.intervalDays);
-        const daysUntil = diffInDays(today, nextLaunch);
+        const daysUntil = diffInDays(today, batch.nextLaunch);
 
         let statusClass = "status-upcoming";
         let statusText = "Upcoming";
+
         if (daysUntil === 0) {
           statusClass = "status-today";
           statusText = "Launch today";
@@ -461,11 +382,10 @@
         }
 
         const tr = document.createElement("tr");
-
         tr.innerHTML = `
           <td>${batch.name}</td>
-          <td>${formatNiceDate(nextLaunch)}</td>
-          <td>${getDayName(nextLaunch)}</td>
+          <td>${formatNiceDate(batch.nextLaunch)}</td>
+          <td>${getDayName(batch.nextLaunch)}</td>
           <td>${daysUntil}</td>
           <td>
             <span class="status-pill ${statusClass}">
@@ -473,16 +393,10 @@
             </span>
           </td>
         `;
-
         tbody.appendChild(tr);
       });
 
-      if (!tbody.children.length) {
-        errorBox.textContent = "No valid reference dates were entered.";
-        errorBox.style.display = "block";
-      } else {
-        resultsBox.style.display = "block";
-      }
+      resultsBox.style.display = "block";
     });
   </script>
 </body>
