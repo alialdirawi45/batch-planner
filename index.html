@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
+      /* Default (dark) palette */
       --bg: #0f172a;
       --text: #e5e7eb;
       --card-bg: #020617;
@@ -20,6 +21,23 @@
       --calendar-other-month-opacity: 0.35;
     }
 
+    /* Dark theme */
+    body[data-theme="dark"] {
+      --bg: #0f172a;
+      --text: #e5e7eb;
+      --card-bg: #020617;
+      --border: #1f2937;
+      --muted: #9ca3af;
+      --muted-strong: #d1d5db;
+      --pill-border: #4b5563;
+      --error-text: #fecaca;
+      --table-row-border: #111827;
+      --calendar-cell-bg: #020617;
+      --calendar-muted-text: #9ca3af;
+      --calendar-other-month-opacity: 0.35;
+    }
+
+    /* Light theme */
     body[data-theme="light"] {
       --bg: #f3f4f6;
       --text: #111827;
@@ -33,6 +51,54 @@
       --calendar-cell-bg: #ffffff;
       --calendar-muted-text: #9ca3af;
       --calendar-other-month-opacity: 0.35;
+    }
+
+    /* Ocean theme */
+    body[data-theme="ocean"] {
+      --bg: #0b1120;
+      --text: #e0f2fe;
+      --card-bg: #020617;
+      --border: #1e293b;
+      --muted: #7dd3fc;
+      --muted-strong: #bae6fd;
+      --pill-border: #38bdf8;
+      --error-text: #fecaca;
+      --table-row-border: #0b1120;
+      --calendar-cell-bg: #020617;
+      --calendar-muted-text: #7dd3fc;
+      --calendar-other-month-opacity: 0.35;
+    }
+
+    /* Emerald theme */
+    body[data-theme="emerald"] {
+      --bg: #022c22;
+      --text: #d1fae5;
+      --card-bg: #022c22;
+      --border: #064e3b;
+      --muted: #6ee7b7;
+      --muted-strong: #a7f3d0;
+      --pill-border: #10b981;
+      --error-text: #fecaca;
+      --table-row-border: #064e3b;
+      --calendar-cell-bg: #022c22;
+      --calendar-muted-text: #6ee7b7;
+      --calendar-other-month-opacity: 0.35;
+    }
+
+    /* Sunset theme */
+    body[data-theme="sunset"] {
+      --bg: #111827;
+      --text: #fef3c7;
+      --card-bg: #1f2937;
+      --border: #4b5563;
+      --muted: #fbbf24;
+      --muted-strong: #fed7aa;
+      --pill-border: #f97316;
+      --error-text: #fecaca;
+      --table-row-border: #374151;
+      --calendar-cell-bg: #111827;
+      --calendar-muted-text: #fbbf24;
+      --calendar-other-month-opacity: 0.4;
     }
 
     * {
@@ -83,22 +149,32 @@
       color: var(--muted);
     }
 
-    .theme-toggle-btn {
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      padding: 6px 12px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      background: transparent;
-      color: var(--muted-strong);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
+    .theme-select-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      min-width: 150px;
     }
 
-    .theme-toggle-btn:hover {
-      background: rgba(148, 163, 184, 0.1);
+    .theme-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .theme-select {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      background: transparent;
+      color: var(--muted-strong);
+    }
+
+    .theme-select:focus {
+      outline: none;
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 1px #38bdf8;
     }
 
     .section-title {
@@ -171,6 +247,85 @@
       color: var(--error-text);
       font-size: 0.8rem;
       margin-top: 6px;
+    }
+
+    /* Dashboard */
+    .dashboard {
+      margin-top: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 10px 10px 12px;
+      background: var(--card-bg);
+    }
+
+    .dashboard-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .dashboard-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .dashboard-card {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 8px 9px;
+      font-size: 0.78rem;
+      background: rgba(148, 163, 184, 0.04);
+    }
+
+    .dashboard-card-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .dashboard-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .dashboard-label {
+      color: var(--muted);
+    }
+
+    .dashboard-value {
+      font-weight: 500;
+    }
+
+    .dashboard-count {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .notif-btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      background: transparent;
+      color: var(--muted-strong);
+      box-shadow: none;
+      margin-top: 0;
+    }
+
+    .notif-btn:hover {
+      background: rgba(148, 163, 184, 0.1);
+      transform: none;
     }
 
     /* Calendar */
@@ -394,6 +549,9 @@
       .calendar-day-number {
         font-size: 0.7rem;
       }
+      .theme-select-wrapper {
+        min-width: 0;
+      }
     }
   </style>
 </head>
@@ -408,7 +566,16 @@
             plus a calendar of launches, automations, and deliveries.
           </div>
         </div>
-        <button type="button" id="themeToggleBtn" class="theme-toggle-btn">🌙 Dark</button>
+        <div class="theme-select-wrapper">
+          <span class="theme-label">Theme</span>
+          <select id="themeSelect" class="theme-select">
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+            <option value="ocean">Ocean</option>
+            <option value="emerald">Emerald</option>
+            <option value="sunset">Sunset</option>
+          </select>
+        </div>
       </div>
 
       <!-- 1. Today's date + Today button -->
@@ -433,8 +600,25 @@
 
       <div id="errorBox" class="error" style="display:none;"></div>
 
-      <!-- 2. Calendar view -->
-      <div class="section-title" style="margin-top: 20px;">2. Calendar view</div>
+      <!-- 2. Weekly dashboard -->
+      <div class="dashboard" id="dashboardBox" style="display:none;">
+        <div class="dashboard-title-row">
+          <div class="dashboard-title">2. Weekly dashboard – launches & automations</div>
+          <button type="button" id="enableNotificationsBtn" class="notif-btn">
+            🔔 Enable notifications
+          </button>
+        </div>
+        <div class="small">
+          Shows the next launch and automation dates for each batch based on the selected “today”.
+          Notifications trigger when today is a launch or automation day.
+        </div>
+        <div class="dashboard-grid" id="dashboardBody">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+
+      <!-- 3. Calendar view -->
+      <div class="section-title" style="margin-top: 20px;">3. Calendar view</div>
       <div class="calendar-wrapper">
         <div class="calendar-header-bar">
           <div class="calendar-month-label" id="calendarMonthLabel">Month Year</div>
@@ -476,9 +660,9 @@
         </div>
       </div>
 
-      <!-- 3. Results table -->
+      <!-- 4. Results table -->
       <div class="results" id="resultsBox" style="display:none;">
-        <div class="results-title">3. Next launch dates</div>
+        <div class="results-title">4. Next launch dates</div>
         <table class="results-table">
           <thead>
             <tr>
@@ -536,6 +720,9 @@
       biweeklyDelivery: { label: "Bi-weekly batch delivery", dotClass: "dot-delivery" },
       monthlyDelivery: { label: "Monthly batch delivery", dotClass: "dot-delivery" }
     };
+
+    // Notifications
+    let notificationsEnabled = false;
 
     // ---- DATE UTILITIES ----
 
@@ -600,9 +787,9 @@
     function applyTheme(theme) {
       document.body.setAttribute("data-theme", theme);
       localStorage.setItem("batchTheme", theme);
-      const btn = document.getElementById("themeToggleBtn");
-      if (btn) {
-        btn.textContent = theme === "dark" ? "🌙 Dark" : "☀️ Light";
+      const select = document.getElementById("themeSelect");
+      if (select && select.value !== theme) {
+        select.value = theme;
       }
     }
 
@@ -610,12 +797,11 @@
       const saved = localStorage.getItem("batchTheme");
       const defaultTheme = saved || "dark";
       applyTheme(defaultTheme);
-      const btn = document.getElementById("themeToggleBtn");
-      if (btn) {
-        btn.addEventListener("click", () => {
-          const current = document.body.getAttribute("data-theme") || "dark";
-          const next = current === "dark" ? "light" : "dark";
-          applyTheme(next);
+      const select = document.getElementById("themeSelect");
+      if (select) {
+        select.value = defaultTheme;
+        select.addEventListener("change", (e) => {
+          applyTheme(e.target.value);
         });
       }
     }
@@ -643,6 +829,63 @@
       }
     }
 
+    // ---- NOTIFICATIONS ----
+
+    function initNotifications() {
+      const btn = document.getElementById("enableNotificationsBtn");
+      if (!btn) return;
+
+      if (!("Notification" in window)) {
+        btn.style.display = "none";
+        return;
+      }
+
+      function updateButton() {
+        if (!notificationsEnabled || Notification.permission !== "granted") {
+          btn.textContent = "🔔 Enable notifications";
+        } else {
+          btn.textContent = "🔔 Notifications on";
+        }
+      }
+
+      btn.addEventListener("click", async () => {
+        if (Notification.permission === "granted") {
+          notificationsEnabled = !notificationsEnabled;
+          updateButton();
+          return;
+        }
+
+        try {
+          const permission = await Notification.requestPermission();
+          if (permission === "granted") {
+            notificationsEnabled = true;
+          } else {
+            notificationsEnabled = false;
+          }
+        } catch (e) {
+          notificationsEnabled = false;
+        }
+        updateButton();
+      });
+
+      updateButton();
+    }
+
+    function handleNotifications(batches, today) {
+      if (!notificationsEnabled) return;
+      if (!("Notification" in window)) return;
+      if (Notification.permission !== "granted") return;
+
+      batches.forEach(batch => {
+        if (batch.daysUntilLaunch === 0) {
+          new Notification(`Launch ${batch.name} today`);
+        }
+        if (batch.daysUntilAutomation === 0) {
+          new Notification(`Send automation for ${batch.name} today`);
+        }
+      });
+    }
+
     // ---- CALENDAR EVENTS ----
 
     function addEventToMap(dateKey, type) {
@@ -662,7 +905,7 @@
       const searchStart = addDays(start, -14);
       const searchEnd = addDays(end, 14);
 
-      // Weekly events (no specific anchor; all Sundays)
+      // Weekly events
       let d = new Date(searchStart);
       d.setHours(0, 0, 0, 0);
       while (d.getDay() !== WEEKLY_TARGET_WEEKDAY) {
@@ -742,13 +985,11 @@
       firstOfMonth.setHours(0, 0, 0, 0);
       lastOfMonth.setHours(0, 0, 0, 0);
 
-      // Start grid on the Sunday of the week containing the 1st
       const gridStart = new Date(firstOfMonth);
       while (gridStart.getDay() !== 0) {
         gridStart.setDate(gridStart.getDate() - 1);
       }
 
-      // End grid after 5–6 weeks
       const gridEnd = new Date(gridStart);
       gridEnd.setDate(gridEnd.getDate() + 6 * 7 - 1);
       gridEnd.setHours(0, 0, 0, 0);
@@ -793,7 +1034,7 @@
           const events = calendarEventsMap[cellKey] || [];
           const usedTypes = new Set();
           events.forEach(ev => {
-            if (usedTypes.has(ev.type)) return; // avoid duplicate dots per type
+            if (usedTypes.has(ev.type)) return;
             usedTypes.add(ev.type);
             const dot = document.createElement("span");
             dot.classList.add("calendar-dot");
@@ -816,7 +1057,6 @@
         tbody.appendChild(tr);
       }
 
-      // Auto-select default day
       selectCalendarDate(defaultSelectedKey);
     }
 
@@ -824,7 +1064,6 @@
       const tbody = document.getElementById("calendarBody");
       if (!tbody) return;
 
-      // Clear previous selection
       const prevSelected = tbody.querySelector(".calendar-cell--selected");
       if (prevSelected) {
         prevSelected.classList.remove("calendar-cell--selected");
@@ -892,6 +1131,59 @@
       renderCalendar();
     }
 
+    // ---- DASHBOARD RENDER ----
+
+    function renderDashboard(batches) {
+      const box = document.getElementById("dashboardBox");
+      const body = document.getElementById("dashboardBody");
+      body.innerHTML = "";
+
+      batches.forEach(batch => {
+        const card = document.createElement("div");
+        card.classList.add("dashboard-card");
+
+        const title = document.createElement("div");
+        title.classList.add("dashboard-card-title");
+        title.textContent = batch.name;
+        card.appendChild(title);
+
+        const launchRow = document.createElement("div");
+        launchRow.classList.add("dashboard-row");
+        launchRow.innerHTML = `
+          <span class="dashboard-label">Next launch</span>
+          <span class="dashboard-value">${formatNiceDate(batch.nextLaunch)}</span>
+        `;
+        card.appendChild(launchRow);
+
+        const autoRow = document.createElement("div");
+        autoRow.classList.add("dashboard-row");
+        autoRow.innerHTML = `
+          <span class="dashboard-label">Automation</span>
+          <span class="dashboard-value">${formatNiceDate(batch.automationDate)}</span>
+        `;
+        card.appendChild(autoRow);
+
+        const counts = document.createElement("div");
+        counts.classList.add("dashboard-count");
+        const launchText = batch.daysUntilLaunch === 0
+          ? "Launch today"
+          : batch.daysUntilLaunch === 1
+          ? "Launch in 1 day"
+          : `Launch in ${batch.daysUntilLaunch} days`;
+        const autoText = batch.daysUntilAutomation === 0
+          ? "Automation today"
+          : batch.daysUntilAutomation === 1
+          ? "Automation in 1 day"
+          : `Automation in ${batch.daysUntilAutomation} days`;
+        counts.textContent = `${launchText} · ${autoText}`;
+        card.appendChild(counts);
+
+        body.appendChild(card);
+      });
+
+      box.style.display = "block";
+    }
+
     // ---- MAIN RESULTS HANDLER ----
 
     document.getElementById("calcBtn").addEventListener("click", function () {
@@ -936,16 +1228,23 @@
         nextLaunch: monthlyNext
       });
 
+      // Enrich with automation + countdowns
       batches.forEach(batch => {
-        const daysUntil = diffInDays(today, batch.nextLaunch);
+        const automation = addDays(batch.nextLaunch, 3);
+        batch.automationDate = automation;
+        batch.daysUntilLaunch = diffInDays(today, batch.nextLaunch);
+        batch.daysUntilAutomation = diffInDays(today, automation);
+      });
 
+      // Fill results table
+      batches.forEach(batch => {
         let statusClass = "status-upcoming";
         let statusText = "Upcoming";
 
-        if (daysUntil === 0) {
+        if (batch.daysUntilLaunch === 0) {
           statusClass = "status-today";
           statusText = "Launch today";
-        } else if (daysUntil < 0) {
+        } else if (batch.daysUntilLaunch < 0) {
           statusClass = "status-past";
           statusText = "Already passed";
         }
@@ -955,7 +1254,7 @@
           <td>${batch.name}</td>
           <td>${formatNiceDate(batch.nextLaunch)}</td>
           <td>${getDayName(batch.nextLaunch)}</td>
-          <td>${daysUntil}</td>
+          <td>${batch.daysUntilLaunch}</td>
           <td>
             <span class="status-pill ${statusClass}">
               ${statusText}
@@ -966,6 +1265,12 @@
       });
 
       resultsBox.style.display = "block";
+
+      // Update dashboard
+      renderDashboard(batches);
+
+      // Fire notifications (if enabled)
+      handleNotifications(batches, today);
     });
 
     // ---- INIT ----
@@ -973,6 +1278,7 @@
     setDefaultToday();
     initTodayButton();
     initTheme();
+    initNotifications();
     initCalendar();
   </script>
 </body>
