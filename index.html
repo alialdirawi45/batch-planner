@@ -103,13 +103,13 @@
 
     /* HealthWATCH-inspired theme */
     body[data-theme="healthwatch"] {
-      --bg: #e5edf5;           /* light grey-blue background */
-      --text: #1f2937;         /* dark slate text */
-      --card-bg: #ffffff;      /* white cards */
-      --border: #cbd5e1;       /* soft borders */
-      --muted: #64748b;        /* muted text */
-      --muted-strong: #0f172a; /* strong labels */
-      --pill-border: #2563eb;  /* blue accents */
+      --bg: #e5edf5;
+      --text: #1f2937;
+      --card-bg: #ffffff;
+      --border: #cbd5e1;
+      --muted: #64748b;
+      --muted-strong: #0f172a;
+      --pill-border: #2563eb;
       --error-text: #b91c1c;
       --table-row-border: #e5e7eb;
       --calendar-cell-bg: #f8fafc;
@@ -877,7 +877,7 @@
             Pattern: Launch (Sunday) → Automation (Wednesday, +3 days) → Delivery (Monday, +8 days).
           </div>
           <div class="small" style="margin-top:6px;">
-            ISP report: 
+            ISP report:
             <a href="http://isp:6777/login" target="_blank">isp:6777/login</a>
           </div>
         </div>
@@ -1010,45 +1010,327 @@
       <div id="tab-training" class="tab-content">
         <div class="section-title">Training – blister pack workflow refresher</div>
         <div class="small">
-          This tab gives a quick, high-level refresher of the blister pack process and how this tool fits in.
-          For full details, always follow the official Blister Pack Guide and pharmacy SOPs.
+          This tab mirrors the Blister Pack Guide in a scrollable, “cheat-sheet” format.
+          Use it to teach new staff, or to remind yourself of the big picture and key checkpoints.
+          For full legal/clinical detail, always follow the official guide.
         </div>
 
         <div class="training-card">
           <div class="training-grid">
+            <!-- 1. Big picture -->
             <div class="training-subcard">
-              <div class="training-subtitle">1. Weekly cycle at a glance</div>
+              <div class="training-subtitle">1. Big picture – SS-CPAK-7 workflow</div>
+              <p style="margin:4px 0 6px;">
+                All blister pack patients at the store are under one group: <strong>SS-CPAK-7</strong>.
+                Within that group, you have four cycles: Tuesday, Wednesday, Bi-weekly, and 28-day “Monthly”.
+              </p>
               <ul>
-                <li><strong>Sunday – Launch:</strong> Launch all batches (Tuesday, Wednesday, Bi-weekly, Monthly) and bag/sort blisters that are due for pick-up this week.</li>
-                <li><strong>Wednesday – Automation:</strong> After updating all changes and clearing queues, send automation for the launched batches.</li>
-                <li><strong>Monday – CPAK delivery:</strong> CPAK blisters arrive; store them safely and prepare for cross-checking.</li>
-                <li><strong>Before next Sunday – Cross-check & PC:</strong> Cross-check against MAR, fix any issues, and complete product check.</li>
-                <li><strong>Next Sunday – Bagging:</strong> Bag and sort all verified blisters for pick-up or delivery.</li>
+                <li>
+                  Each batch follows the same sequence:
+                  <strong>Launch → Automation → CPAK shipment → Cross-check/fix → Product check → Bagging</strong>.
+                </li>
+                <li>
+                  <strong>Launch day:</strong> Sunday for all batches (Tue/Wed/Bi-weekly/Monthly).
+                </li>
+                <li>
+                  <strong>CPAK delivery:</strong> Monday of the following week for the last automation sent.
+                </li>
+                <li>
+                  <strong>Work-on-blisters day:</strong> Wednesday – cross-check against MAR and fix.
+                </li>
+                <li>
+                  <strong>Product check:</strong> Usually Saturday for fixed packs.
+                </li>
+                <li>
+                  <strong>Bagging & sorting:</strong> Sunday – bag and sort for pickup or delivery.
+                </li>
               </ul>
             </div>
 
+            <!-- 2. Launching the batch -->
             <div class="training-subcard">
-              <div class="training-subtitle">2. Using this tool in real life</div>
+              <div class="training-subtitle">2. Launching the batch (Section 6)</div>
+              <p style="margin:4px 0 6px;">
+                Launching the batch tells HealthWATCH: “Refill everything in this batch now.”
+                This is what starts the entire CPAK cycle.
+              </p>
               <ul>
-                <li><strong>Schedule tab:</strong> Use the date, dashboard, and calendar to know when to launch, send automation, and expect deliveries.</li>
-                <li><strong>New blister patient tab:</strong> When a new patient is added, use the wizard to work out:
+                <li>
+                  When you launch:
                   <ul>
-                    <li>whether a non-billed bridge blister is needed,</li>
-                    <li>the first CPAK launch date and cycle,</li>
-                    <li>a HealthWATCH note and MAR checklist.</li>
+                    <li>All RXs in that batch are refilled.</li>
+                    <li>RXs needing adjudication go to the <strong>batch adjudication queue</strong>.</li>
+                    <li>RXs with no refills go to the <strong>batch reauthorization queue</strong>.</li>
+                    <li>Once cleared, RXs sit in the <strong>DV/CV batch queue</strong> for pharmacist check.</li>
                   </ul>
                 </li>
-                <li><strong>Notifications:</strong> If enabled, they remind you when today is a launch or automation day.</li>
+                <li>
+                  Quick HealthWATCH flow:
+                  <ul>
+                    <li>ACTIONS → <strong>Launch/View Batch</strong>.</li>
+                    <li>Select <strong>Group = SS-CPAK-7</strong>, then choose the right batch (Tue/Wed/Bi-weekly/Monthly).</li>
+                    <li>Select today’s date and <strong>waive total fee</strong> and <strong>fee variance</strong> if needed.</li>
+                    <li>Launch the batch and then work through adjudication, reauthorization, and DV/CV queues.</li>
+                  </ul>
+                </li>
+                <li>
+                  After queues are cleared and everything is billed, you use the <strong>ISP report</strong> to:
+                  <ul>
+                    <li>Confirm all claims billed properly.</li>
+                    <li>Identify non-DSPs that need to be changed to CPAK DSP products.</li>
+                    <li>Check if any patient is paying too much (insurance issues).</li>
+                  </ul>
+                </li>
               </ul>
             </div>
 
+            <!-- 3. ISP report & DSP -->
             <div class="training-subcard">
-              <div class="training-subtitle">3. Safety & documentation checkpoints</div>
+              <div class="training-subtitle">3. ISP report & DSP check (Section 6.5)</div>
+              <p style="margin:4px 0 6px;">
+                The ISP report is your “quality-control screenshot” for the batch after launch.
+              </p>
               <ul>
-                <li>Before automation, make sure all new meds, discontinuations, and dose changes are updated in the MAR and dispensing system.</li>
-                <li>Use the MAR and any change log to double-check CPAK blisters after delivery.</li>
-                <li>Document significant changes and start dates in the patient profile (e.g., bridge blister given, first CPAK cycle date).</li>
-                <li>When in doubt, follow the Blister Pack Guide and ask the pharmacist to clarify clinical or workflow questions.</li>
+                <li><strong>Purpose:</strong>
+                  <ul>
+                    <li>Summarizes all TXs in the launched batch.</li>
+                    <li>Shows which drugs are <strong>non-DSP</strong> so you can swap to CPAK-approved products.</li>
+                    <li>Confirms claims that were billed successfully to insurance.</li>
+                  </ul>
+                </li>
+                <li><strong>How to access:</strong>
+                  <ul>
+                    <li>Go to <strong>isp:6777/login</strong> (link is also on the Schedule tab).</li>
+                    <li>Log in with HealthWATCH credentials.</li>
+                    <li>Select <strong>Pre-Verification Batch Report</strong>.</li>
+                    <li>Pick group <strong>SS-CPAK-7</strong> and set start/end dates to the batch launch date.</li>
+                  </ul>
+                </li>
+                <li><strong>What to do with it:</strong>
+                  <ul>
+                    <li>Change any non-DSP drugs to CPAK’s DSP (using the CPAK e-formulary).</li>
+                    <li>Scroll to the bottom and make sure each claim has a reasonable third-party payment.</li>
+                    <li>If patient is paying a lot or $0 is paid by third party when it shouldn’t be, investigate.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 4. Sending automation -->
+            <div class="training-subcard">
+              <div class="training-subtitle">4. Sending automation (Section 8)</div>
+              <p style="margin:4px 0 6px;">
+                Automation is how you tell CPAK: “Here are the prescriptions and dates – please build blisters.”
+              </p>
+              <ul>
+                <li>
+                  <strong>When:</strong> Every Wednesday, after:
+                  <ul>
+                    <li>Adjudication, reauthorization, and DV/CV queues are cleared for that batch.</li>
+                    <li>ISP report issues are fixed.</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>HealthWATCH steps (ACTIONS → Automation):</strong>
+                  <ul>
+                    <li>Device: <strong>SHARED SERVICES CPAK</strong>.</li>
+                    <li>Group: <strong>SS-CPAK-7</strong>.</li>
+                    <li>Sub-location: choose the batch (Tue, Wed, Bi-weekly, Monthly).</li>
+                    <li>Start date: the <strong>Monday</strong> when CPAK will ship blisters to you.</li>
+                    <li># of days: 7 (Tue/Wed), 14 (Bi-weekly), 28 (Monthly).</li>
+                    <li>Tab through to auto-fill stop date, or count manually if needed.</li>
+                    <li>Click ACTION → <strong>Automate</strong>, and confirm status goes to COMPLETE.</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Emailing CPAK:</strong>
+                  <ul>
+                    <li>Automation alone is not enough — you must send the email with card & TX counts.</li>
+                    <li>Use the EBC order confirmation template from PSDM email.</li>
+                    <li>Fill in each batch name, card count, and number of TXs (from CPAK batch summary).</li>
+                    <li>Send to the CPAK email and ensure you get a confirmation; follow-up if none arrives.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 5. Receiving CPAK & cross-check -->
+            <div class="training-subcard">
+              <div class="training-subtitle">5. Receiving CPAK & cross-checking (Section 9)</div>
+              <p style="margin:4px 0 6px;">
+                Monday is “arrivals”, Wednesday is “work day” for those blisters.
+              </p>
+              <ul>
+                <li>
+                  <strong>Monday – receiving:</strong>
+                  <ul>
+                    <li>CPAK ships packs for all batches that were automated previously.</li>
+                    <li>Each batch arrives in its own box, alphabetically organized.</li>
+                    <li>Boxes are stored in the office until cross-checking day.</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Wednesday – cross-check with MAR:</strong>
+                  <ul>
+                    <li>Organize blisters by batch and alphabetically by patient.</li>
+                    <li>Pull out the MAR binders and match each blister to its MAR.</li>
+                    <li>Check: correct meds, strengths, directions, time slots, and doses.</li>
+                    <li>Remember CPAK may not pack:
+                      controlled meds, some vitamins, some brands, and non-DSPs —
+                      these appear in red on the MAR and need to be added manually.</li>
+                    <li>Use sticky notes on blisters that need fixing so nothing is missed.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 6. Bagging & sorting -->
+            <div class="training-subcard">
+              <div class="training-subtitle">6. Bagging & sorting for pick-up/delivery (Section 7)</div>
+              <p style="margin:4px 0 6px;">
+                Once packs are checked and fixed, they are ready to be sent to patients – but only if they are
+                bagged and sorted properly.
+              </p>
+              <ul>
+                <li>
+                  Bag by batch:
+                  <ul>
+                    <li>Work on one batch at a time (e.g., Tuesday box, then Wednesday, etc.).</li>
+                    <li>Lay out blisters alphabetically on the counter, then start bagging.</li>
+                  </ul>
+                </li>
+                <li>
+                  Delivery vs pickup:
+                  <ul>
+                    <li>Use the <strong>delivery binder</strong> (by day of week) to identify who is for delivery.</li>
+                    <li>Place delivery blisters into the appropriate delivery drawer/section by day.</li>
+                    <li>Place the rest in pickup drawers alphabetically.</li>
+                  </ul>
+                </li>
+                <li>
+                  Key reminders:
+                  <ul>
+                    <li>Remove any <strong>previous-week blisters</strong> from the pickup drawer before placing new ones.</li>
+                    <li>Investigate blisters that were not picked up the previous week (see guide for details).</li>
+                    <li>Report missing or damaged blisters in the blister pack group chat.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 7. New patient setup & MAR -->
+            <div class="training-subcard">
+              <div class="training-subtitle">7. New blister patient setup & MAR (Section 5)</div>
+              <p style="margin:4px 0 6px;">
+                Section 5 of the guide explains the full process. This card gives the “fast memory hook”
+                that pairs with the tool’s New blister patient tab.
+              </p>
+              <ul>
+                <li>
+                  <strong>Pharmacist piece (before setup):</strong>
+                  <ul>
+                    <li>Do a medication review & pick time slots (AM/Noon/PM/HS).</li>
+                    <li>Complete and fax the <strong>Frequent Dispensing Form</strong> to the prescriber.</li>
+                    <li>Help patient choose the most appropriate batch (often Bi-weekly).</li>
+                    <li>Text the blister pack WhatsApp group: name, batch, pickup/delivery day, and who is setting it up.</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>HealthWATCH setup:</strong>
+                  <ul>
+                    <li>Assign <strong>Group = SS-CPAK-7</strong> and choose the correct Sub-location (Tue/Wed/Bi-weekly/Monthly).</li>
+                    <li>Scan/enter all prescriptions for the blister pack.</li>
+                    <li>Ensure quantities & days’ supply match the cycle:
+                      7 (weekly), 14 (bi-weekly), 28 (monthly).</li>
+                    <li>In <strong>Group/Pkg info</strong>:
+                      Include in batch = Yes,
+                      Packaging = Shared Services CPAK,
+                      assign a card number,
+                      and assign each medication to the right slots.</li>
+                    <li>Log the RX once everything is set up correctly.</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Creating & filing the MAR:</strong>
+                  <ul>
+                    <li>Go: Home → Maintenance → Reports → Compliance Pack Label.</li>
+                    <li>Group = SS-CPAK-7, Sort order = Trade name, Include logs = Yes.</li>
+                    <li>Search for the patient and print the MAR.</li>
+                    <li>Have the MAR signed (ideally) by the pharmacist who did the review.</li>
+                    <li>File the MAR in the correct batch binder and attach a Change Log sheet.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 8. Bridge blisters & timing -->
+            <div class="training-subcard">
+              <div class="training-subtitle">8. Bridge blisters & timing examples</div>
+              <p style="margin:4px 0 6px;">
+                Bridge blisters are for when a patient starts or changes mid-cycle and CPAK hasn’t caught up yet.
+                The idea: give them enough tablets to “bridge” until the CPAK blister that reflects the change is
+                bagged and ready.
+              </p>
+              <ul>
+                <li>
+                  <strong>Concept:</strong>
+                  <ul>
+                    <li>Bridge covers from the <strong>setup/change date</strong> until
+                      the CPAK blister is <strong>bagged and ready for pick-up</strong>.</li>
+                    <li>You often bill a larger quantity (e.g., 21 tabs) but enter a smaller days supply
+                      in HealthWATCH to align with the next launch and avoid early refill rejections.</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Documentation style (examples from guide):</strong>
+                  <ul>
+                    <li>Note that a bridge was given to cover until a specific CPAK date.</li>
+                    <li>Explain that days’ supply was adjusted for billing but the patient still received the full clinical supply.</li>
+                    <li>Text the blister pack group chat so that, before the next launch, the RX is adjusted back to the normal 7/14/28-day quantity.</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>In this tool:</strong>
+                  <ul>
+                    <li>The <strong>New blister patient wizard</strong> uses your anchor dates and timing rules to propose:
+                      first launch, automation, delivery, bagging, and a bridge blister range.</li>
+                    <li>You still apply the detailed billing/N (UN code, frequent dispensing) rules from the Billing section of the guide.</li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+
+            <!-- 9. How to use this tool with the guide -->
+            <div class="training-subcard">
+              <div class="training-subtitle">9. How to use this tool with the full Guide</div>
+              <p style="margin:4px 0 6px;">
+                Think of the PDF as the “textbook” and this tab as your “lecture slides”. The Schedule and
+                New patient tabs are your calculators.
+              </p>
+              <ul>
+                <li>
+                  <strong>Before Sunday:</strong>
+                  use the <strong>Schedule</strong> tab to confirm which batches will launch and when to send automation.
+                </li>
+                <li>
+                  <strong>On Sunday:</strong>
+                  after launching, check the dashboard and calendar to see how this cycle plays out.
+                </li>
+                <li>
+                  <strong>When adding a new patient:</strong>
+                  run the <strong>New blister patient wizard</strong>, then follow Section 5 of the guide to do the
+                  actual HealthWATCH setup, MAR creation, and documentation.
+                </li>
+                <li>
+                  <strong>During the week:</strong>
+                  click on dates in the calendar if you forget “What day is this in the cycle again?” – it will
+                  show all launches, automations, and deliveries on that date.
+                </li>
+                <li>
+                  <strong>Training new staff:</strong>
+                  walk them through this Training tab in order (1 → 9) while showing screenshots from the PDF.
+                  Then have them practice using the Schedule + New patient tabs on real or demo patients.
+                </li>
               </ul>
             </div>
           </div>
@@ -1180,7 +1462,7 @@
       return next;
     }
 
-    // For wizard: next Sunday on or after given date (not used anymore for biweekly/monthly)
+    // For wizard: next Sunday on or after given date (for weekly batches)
     function getNextSundayFrom(date) {
       const dow = date.getDay(); // 0 = Sunday
       const diff = (7 - dow) % 7;
