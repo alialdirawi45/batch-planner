@@ -706,9 +706,25 @@
       font-weight: 600;
     }
 
+    .patient-calendar-months {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .patient-calendar-wrapper {
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      padding: 4px 4px 6px;
+      background: var(--calendar-cell-bg);
+    }
+
     .patient-calendar-month-label {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 600;
+      margin-bottom: 2px;
+      text-align: center;
     }
 
     table.patient-calendar {
@@ -795,6 +811,9 @@
       }
       .patient-calendar {
         font-size: 0.68rem;
+      }
+      .patient-calendar-months {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -1159,28 +1178,16 @@
                   </div>
                 </div>
 
-                <!-- Patient mini calendar -->
+                <!-- Patient mini calendar (1 or 2 months) -->
                 <div class="patient-calendar-card" id="wizardCalCard" style="display:none;">
                   <div class="patient-calendar-header">
                     <div class="patient-calendar-title">Calendar for this patient</div>
-                    <div class="patient-calendar-month-label" id="wizardCalMonthLabel"></div>
                   </div>
-                  <table class="patient-calendar">
-                    <thead>
-                      <tr>
-                        <th>Sun</th>
-                        <th>Mon</th>
-                        <th>Tue</th>
-                        <th>Wed</th>
-                        <th>Thu</th>
-                        <th>Fri</th>
-                        <th>Sat</th>
-                      </tr>
-                    </thead>
-                    <tbody id="wizardCalBody">
-                      <!-- Filled by JS -->
-                    </tbody>
-                  </table>
+
+                  <div class="patient-calendar-months" id="wizardCalMonthsContainer">
+                    <!-- Filled by JS -->
+                  </div>
+
                   <div class="patient-calendar-legend">
                     <span class="patient-calendar-legend-item">
                       <span class="patient-calendar-legend-dot" style="background:#22c55e;"></span> Start
@@ -1200,7 +1207,8 @@
                   </div>
                   <div class="wizard-helper" style="margin-top:4px;">
                     This mini calendar shows the patient’s start date and their first blister cycle:
-                    launch, automation, CPAK delivery, and bagging/pick-up.
+                    launch, automation, CPAK delivery, and bagging/pick-up. If the cycle spans two different
+                    months, both months are shown side-by-side.
                   </div>
                 </div>
 
@@ -1261,11 +1269,9 @@
                   <strong>Launch day:</strong> Sunday for all batches (Tue/Wed/Bi-weekly/Monthly).
                 </li>
                 <li>
-                  <strong>CPAK delivery:</strong> Monday of the following week for the last automation sent.
-                </li>
+                  <strong>CPAK delivery:</strong> Monday of the following week for the last automation sent.</li>
                 <li>
-                  <strong>Work-on-blisters day:</strong> Wednesday – cross-check against MAR and fix.
-                </li>
+                  <strong>Work-on-blisters day:</strong> Wednesday – cross-check against MAR and fix.</li>
                 <li>
                   <strong>Product check:</strong> Usually Saturday for fixed packs.</li>
                 <li>
@@ -2205,26 +2211,10 @@
 
     function renderPatientCalendar(startDate, launch, automation, delivery, bagging) {
       const card = document.getElementById("wizardCalCard");
-      const monthLabelEl = document.getElementById("wizardCalMonthLabel");
-      const tbody = document.getElementById("wizardCalBody");
-      if (!card || !monthLabelEl || !tbody) return;
+      const container = document.getElementById("wizardCalMonthsContainer");
+      if (!card || !container) return;
 
-      tbody.innerHTML = "";
-
-      // We'll center the mini calendar on the month of the patient start date
-      const base = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
-      base.setHours(0, 0, 0, 0);
-
-      monthLabelEl.textContent = base.toLocaleDateString(undefined, {
-        month: "long",
-        year: "numeric"
-      });
-
-      const firstOfMonth = new Date(base);
-      const gridStart = new Date(firstOfMonth);
-      while (gridStart.getDay() !== 0) {
-        gridStart.setDate(gridStart.getDate() - 1);
-      }
+      container.innerHTML = "";
 
       function sameDay(d1, d2) {
         return (
@@ -2234,64 +2224,141 @@
         );
       }
 
-      const monthIndex = base.getMonth();
-      let current = new Date(gridStart);
+      // Decide if we need 1 month or 2 months
+      const sameMonth =
+        startDate.getFullYear() === bagging.getFullYear() &&
+        startDate.getMonth() === bagging.getMonth();
 
-      for (let week = 0; week < 6; week++) {
-        const tr = document.createElement("tr");
-        for (let dow = 0; dow < 7; dow++) {
-          const td = document.createElement("td");
-          const cellDate = new Date(current);
+      const monthsToShow = [];
 
-          const cellDiv = document.createElement("div");
-          cellDiv.classList.add("patient-calendar-cell");
-          if (cellDate.getMonth() !== monthIndex) {
-            cellDiv.classList.add("patient-calendar-cell--other");
-          }
-
-          const dayNumber = document.createElement("div");
-          dayNumber.classList.add("patient-calendar-day-number");
-          dayNumber.textContent = cellDate.getDate();
-
-          const dotsDiv = document.createElement("div");
-          dotsDiv.classList.add("patient-calendar-dots");
-
-          if (sameDay(cellDate, startDate)) {
-            const dot = document.createElement("span");
-            dot.classList.add("patient-cal-dot", "patient-cal-dot--start");
-            dotsDiv.appendChild(dot);
-          }
-          if (sameDay(cellDate, launch)) {
-            const dot = document.createElement("span");
-            dot.classList.add("patient-cal-dot", "patient-cal-dot--launch");
-            dotsDiv.appendChild(dot);
-          }
-          if (sameDay(cellDate, automation)) {
-            const dot = document.createElement("span");
-            dot.classList.add("patient-cal-dot", "patient-cal-dot--auto");
-            dotsDiv.appendChild(dot);
-          }
-          if (sameDay(cellDate, delivery)) {
-            const dot = document.createElement("span");
-            dot.classList.add("patient-cal-dot", "patient-cal-dot--delivery");
-            dotsDiv.appendChild(dot);
-          }
-          if (sameDay(cellDate, bagging)) {
-            const dot = document.createElement("span");
-            dot.classList.add("patient-cal-dot", "patient-cal-dot--bagging");
-            dotsDiv.appendChild(dot);
-          }
-
-          cellDiv.appendChild(dayNumber);
-          cellDiv.appendChild(dotsDiv);
-
-          td.appendChild(cellDiv);
-          tr.appendChild(td);
-
-          current.setDate(current.getDate() + 1);
-        }
-        tbody.appendChild(tr);
+      if (sameMonth) {
+        monthsToShow.push({
+          label: startDate.toLocaleDateString(undefined, {
+            month: "long",
+            year: "numeric"
+          }),
+          baseDate: new Date(startDate.getFullYear(), startDate.getMonth(), 1)
+        });
+      } else {
+        monthsToShow.push({
+          label: startDate.toLocaleDateString(undefined, {
+            month: "long",
+            year: "numeric"
+          }),
+          baseDate: new Date(startDate.getFullYear(), startDate.getMonth(), 1)
+        });
+        monthsToShow.push({
+          label: bagging.toLocaleDateString(undefined, {
+            month: "long",
+            year: "numeric"
+          }),
+          baseDate: new Date(bagging.getFullYear(), bagging.getMonth(), 1)
+        });
       }
+
+      monthsToShow.forEach(({ label, baseDate }) => {
+        baseDate.setHours(0, 0, 0, 0);
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "patient-calendar-wrapper";
+
+        const title = document.createElement("div");
+        title.className = "patient-calendar-month-label";
+        title.textContent = label;
+        wrapper.appendChild(title);
+
+        const table = document.createElement("table");
+        table.className = "patient-calendar";
+
+        const thead = document.createElement("thead");
+        thead.innerHTML = `
+          <tr>
+            <th>Sun</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+          </tr>
+        `;
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+
+        const firstOfMonth = new Date(baseDate.getFullYear(), baseDate.getMonth(), 1);
+        firstOfMonth.setHours(0, 0, 0, 0);
+
+        const gridStart = new Date(firstOfMonth);
+        while (gridStart.getDay() !== 0) {
+          gridStart.setDate(gridStart.getDate() - 1);
+        }
+
+        const monthIndex = baseDate.getMonth();
+        let current = new Date(gridStart);
+
+        for (let week = 0; week < 6; week++) {
+          const tr = document.createElement("tr");
+
+          for (let dow = 0; dow < 7; dow++) {
+            const td = document.createElement("td");
+            const cellDate = new Date(current);
+
+            const cellDiv = document.createElement("div");
+            cellDiv.classList.add("patient-calendar-cell");
+            if (cellDate.getMonth() !== monthIndex) {
+              cellDiv.classList.add("patient-calendar-cell--other");
+            }
+
+            const dayNumber = document.createElement("div");
+            dayNumber.classList.add("patient-calendar-day-number");
+            dayNumber.textContent = cellDate.getDate();
+
+            const dotsDiv = document.createElement("div");
+            dotsDiv.classList.add("patient-calendar-dots");
+
+            if (sameDay(cellDate, startDate)) {
+              const dot = document.createElement("span");
+              dot.classList.add("patient-cal-dot", "patient-cal-dot--start");
+              dotsDiv.appendChild(dot);
+            }
+            if (sameDay(cellDate, launch)) {
+              const dot = document.createElement("span");
+              dot.classList.add("patient-cal-dot", "patient-cal-dot--launch");
+              dotsDiv.appendChild(dot);
+            }
+            if (sameDay(cellDate, automation)) {
+              const dot = document.createElement("span");
+              dot.classList.add("patient-cal-dot", "patient-cal-dot--auto");
+              dotsDiv.appendChild(dot);
+            }
+            if (sameDay(cellDate, delivery)) {
+              const dot = document.createElement("span");
+              dot.classList.add("patient-cal-dot", "patient-cal-dot--delivery");
+              dotsDiv.appendChild(dot);
+            }
+            if (sameDay(cellDate, bagging)) {
+              const dot = document.createElement("span");
+              dot.classList.add("patient-cal-dot", "patient-cal-dot--bagging");
+              dotsDiv.appendChild(dot);
+            }
+
+            cellDiv.appendChild(dayNumber);
+            cellDiv.appendChild(dotsDiv);
+
+            td.appendChild(cellDiv);
+            tr.appendChild(td);
+
+            current.setDate(current.getDate() + 1);
+          }
+
+          tbody.appendChild(tr);
+        }
+
+        table.appendChild(tbody);
+        wrapper.appendChild(table);
+        container.appendChild(wrapper);
+      });
 
       card.style.display = "block";
     }
@@ -2401,7 +2468,7 @@
         const noteText = noteLines.join("\n");
         document.getElementById("wizardNoteText").value = noteText;
 
-        // Patient-specific mini calendar
+        // Patient-specific mini calendar (1 or 2 months)
         renderPatientCalendar(startDate, nextLaunch, automation, delivery, bagging);
 
         placeholder.style.display = "none";
