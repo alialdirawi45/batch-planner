@@ -492,11 +492,25 @@
       border-radius: 999px;
     }
 
-    .dot-weekly-launch { background: #38bdf8; }
-    .dot-bi-launch { background: #a855f7; }
-    .dot-monthly-launch { background: #f97316; }
-    .dot-automation { background: #22c55e; }
-    .dot-delivery { background: #eab308; }
+    .dot-weekly-launch {
+      background: #38bdf8;
+    }
+
+    .dot-bi-launch {
+      background: #a855f7;
+    }
+
+    .dot-monthly-launch {
+      background: #f97316;
+    }
+
+    .dot-automation {
+      background: #22c55e;
+    }
+
+    .dot-delivery {
+      background: #eab308;
+    }
 
     .calendar-legend {
       display: flex;
@@ -670,6 +684,11 @@
       margin-top: 4px;
       font-size: 0.78rem;
       line-height: 1.35;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      padding: 6px 8px;
     }
 
     .wizard-checklist {
@@ -778,11 +797,25 @@
       border-radius: 999px;
     }
 
-    .patient-cal-dot--start     { background: #22c55e; }  /* green */
-    .patient-cal-dot--launch    { background: #38bdf8; }  /* blue */
-    .patient-cal-dot--auto      { background: #0ea5e9; }  /* cyan-ish */
-    .patient-cal-dot--delivery  { background: #eab308; }  /* yellow */
-    .patient-cal-dot--bagging   { background: #f97316; }  /* orange */
+    .patient-cal-dot--start {
+      background: #22c55e;
+    }
+
+    .patient-cal-dot--launch {
+      background: #38bdf8;
+    }
+
+    .patient-cal-dot--auto {
+      background: #0ea5e9;
+    }
+
+    .patient-cal-dot--delivery {
+      background: #eab308;
+    }
+
+    .patient-cal-dot--bagging {
+      background: #f97316;
+    }
 
     .patient-calendar-legend {
       display: flex;
@@ -805,13 +838,37 @@
       border-radius: 999px;
     }
 
+    /* Bridge (Bill new Rx) note area tweaks */
+    .bridge-note-status {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .bridge-copy-btn {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      background: transparent;
+      color: var(--muted-strong);
+      box-shadow: none;
+      margin-top: 8px;
+    }
+
+    .bridge-copy-btn:hover {
+      background: rgba(148, 163, 184, 0.1);
+    }
+
     @media (max-width: 640px) {
       .patient-calendar-day-number {
         font-size: 0.68rem;
       }
+
       .patient-calendar {
         font-size: 0.68rem;
       }
+
       .patient-calendar-months {
         grid-template-columns: 1fr;
       }
@@ -925,12 +982,15 @@
       .card {
         padding: 18px 14px 22px;
       }
+
       h1 {
         font-size: 1.3rem;
       }
+
       .calendar-day-number {
         font-size: 0.7rem;
       }
+
       .theme-select-wrapper {
         min-width: 0;
       }
@@ -944,8 +1004,8 @@
         <div>
           <h1>Batch Launch Planner</h1>
           <div class="subtitle">
-            Tools for batch scheduling and blister pack workflow: schedule overview,
-            calendar, new blister pack patient wizard, training, and quick links.
+            Tools for batch scheduling and blister pack workflow: schedule overview, calendar, new blister pack
+            patient wizard, bridge billing, training, and quick links.
           </div>
         </div>
         <div class="theme-select-wrapper">
@@ -965,6 +1025,7 @@
       <div class="tabs">
         <button class="tab-btn tab-btn--active" data-tab-target="schedule">Schedule</button>
         <button class="tab-btn" data-tab-target="new-patient">New blister patient</button>
+        <button class="tab-btn" data-tab-target="bill-rx">Bill new Rx (bridge)</button>
         <button class="tab-btn" data-tab-target="training">Training</button>
         <button class="tab-btn" data-tab-target="quick-links">Quick Links Hub</button>
       </div>
@@ -990,7 +1051,6 @@
           <span>Calculate next launch dates</span>
           <span>🧮</span>
         </button>
-
         <div id="errorBox" class="error" style="display:none;"></div>
 
         <!-- 2. Weekly dashboard -->
@@ -1036,7 +1096,6 @@
               <!-- Filled by JS -->
             </tbody>
           </table>
-
           <div class="calendar-legend">
             <span><span class="calendar-dot dot-weekly-launch"></span> Weekly launch</span>
             <span><span class="calendar-dot dot-bi-launch"></span> Bi-weekly launch</span>
@@ -1044,7 +1103,6 @@
             <span><span class="calendar-dot dot-automation"></span> Automation day</span>
             <span><span class="calendar-dot dot-delivery"></span> Delivery day</span>
           </div>
-
           <div class="calendar-details" id="calendarDetails">
             <div class="calendar-details-title">Day details</div>
             <div class="calendar-details-body">
@@ -1071,15 +1129,12 @@
             </tbody>
           </table>
           <div class="small" style="margin-top:8px;">
-            Anchor rules:
-            Weekly = every Sunday;
-            Bi-weekly anchor = Nov 23, 2025;
-            28-day “monthly” anchor = Nov 16, 2025.
+            Anchor rules: Weekly = every Sunday; Bi-weekly anchor = Nov 23, 2025; 28-day “monthly” anchor = Nov 16, 2025.
             Pattern: Launch (Sunday) → Automation (Wednesday, +3 days) → Delivery (Monday, +8 days).
           </div>
           <div class="small" style="margin-top:6px;">
             ISP report:
-            <a href="http://isp:6777/login" target="_blank">isp:6777/login</a>
+            <a href="http://isp:6777/login" target="_blank" rel="noopener noreferrer">isp:6777/login</a>
           </div>
         </div>
       </div>
@@ -1088,9 +1143,9 @@
       <div id="tab-new-patient" class="tab-content">
         <div class="section-title">New blister pack patient wizard</div>
         <div class="small">
-          Use this wizard when a brand-new blister patient is added. It helps you plan bridge blister
-          (if needed), first CPAK cycle timing, a copy-ready HealthWATCH note, a MAR setup checklist,
-          and a mini calendar showing the patient’s start, launch, automation, CPAK delivery, and bagging dates.
+          Use this wizard when a brand-new blister patient is added. It helps you plan bridge blister (if needed),
+          first CPAK cycle timing, a copy-ready HealthWATCH note, a MAR setup checklist, and a mini calendar showing
+          the patient’s start, launch, automation, CPAK delivery, and bagging dates.
         </div>
 
         <div class="wizard-card">
@@ -1098,7 +1153,6 @@
             <!-- Left: inputs -->
             <div class="wizard-section">
               <div class="wizard-section-title">1. Patient & batch details</div>
-
               <div class="wizard-row">
                 <label for="wizardBatchType">Batch type</label>
                 <select id="wizardBatchType">
@@ -1129,7 +1183,8 @@
                   <option value="no">No – they have little or no supply at home</option>
                 </select>
                 <div class="wizard-helper">
-                  If “No”, the wizard will recommend a non-billed bridge blister until their CPAK blister is bagged and ready for pickup.
+                  If “No”, the wizard will recommend a non-billed bridge blister until their CPAK blister is bagged and
+                  ready for pickup.
                 </div>
               </div>
 
@@ -1137,14 +1192,12 @@
                 <span>Generate plan</span>
                 <span>✨</span>
               </button>
-
               <div id="wizardErrorBox" class="error" style="display:none;"></div>
             </div>
 
             <!-- Right: output -->
             <div class="wizard-section">
               <div class="wizard-section-title">Plan & documentation</div>
-
               <div id="wizardOutputBox" style="display:none;">
                 <div class="wizard-output-card">
                   <div class="wizard-output-title">Summary</div>
@@ -1183,32 +1236,35 @@
                   <div class="patient-calendar-header">
                     <div class="patient-calendar-title">Calendar for this patient</div>
                   </div>
-
                   <div class="patient-calendar-months" id="wizardCalMonthsContainer">
                     <!-- Filled by JS -->
                   </div>
-
                   <div class="patient-calendar-legend">
                     <span class="patient-calendar-legend-item">
-                      <span class="patient-calendar-legend-dot" style="background:#22c55e;"></span> Start
+                      <span class="patient-calendar-legend-dot" style="background:#22c55e;"></span>
+                      Start
                     </span>
                     <span class="patient-calendar-legend-item">
-                      <span class="patient-calendar-legend-dot" style="background:#38bdf8;"></span> First launch (Sunday)
+                      <span class="patient-calendar-legend-dot" style="background:#38bdf8;"></span>
+                      First launch (Sunday)
                     </span>
                     <span class="patient-calendar-legend-item">
-                      <span class="patient-calendar-legend-dot" style="background:#0ea5e9;"></span> Automation (Wednesday)
+                      <span class="patient-calendar-legend-dot" style="background:#0ea5e9;"></span>
+                      Automation (Wednesday)
                     </span>
                     <span class="patient-calendar-legend-item">
-                      <span class="patient-calendar-legend-dot" style="background:#eab308;"></span> CPAK delivery (Monday)
+                      <span class="patient-calendar-legend-dot" style="background:#eab308;"></span>
+                      CPAK delivery (Monday)
                     </span>
                     <span class="patient-calendar-legend-item">
-                      <span class="patient-calendar-legend-dot" style="background:#f97316;"></span> Bagging / ready (Sunday)
+                      <span class="patient-calendar-legend-dot" style="background:#f97316;"></span>
+                      Bagging / ready (Sunday)
                     </span>
                   </div>
                   <div class="wizard-helper" style="margin-top:4px;">
-                    This mini calendar shows the patient’s start date and their first blister cycle:
-                    launch, automation, CPAK delivery, and bagging/pick-up. If the cycle spans two different
-                    months, both months are shown side-by-side.
+                    This mini calendar shows the patient’s start date and their first blister cycle: launch, automation,
+                    CPAK delivery, and bagging/pick-up. If the cycle spans two different months, both months are shown
+                    side-by-side.
                   </div>
                 </div>
 
@@ -1223,19 +1279,126 @@
                 <div class="wizard-output-card wizard-checklist">
                   <div class="wizard-output-title">MAR & batch setup checklist</div>
                   <ul>
-                    <li>Assign Group: <strong>SS-CPAK-7</strong> and select the correct batch (Tuesday, Wednesday, Bi-weekly, or Monthly).</li>
-                    <li>Re-log all active prescriptions and print each prescription form; confirm quantities match 7/14/28-day multiples.</li>
-                    <li>Update Group/Packaging Info: include in batch = Yes; Packaging type = Shared Services CPAK; assign card number.</li>
-                    <li>Assign each medication to the correct slots (AM/Noon/PM/HS) with correct tablet counts or fractions.</li>
-                    <li>Print the MAR (including logs), file it in the correct batch binder with a Change Log sheet attached, alphabetically by last name.</li>
+                    <li>
+                      Assign Group: <strong>SS-CPAK-7</strong> and select the correct batch (Tuesday, Wednesday,
+                      Bi-weekly, or Monthly).
+                    </li>
+                    <li>
+                      Re-log all active prescriptions and print each prescription form; confirm quantities match
+                      7/14/28-day multiples.
+                    </li>
+                    <li>
+                      Update Group/Packaging Info: include in batch = Yes; Packaging type = Shared Services CPAK; assign
+                      card number.
+                    </li>
+                    <li>
+                      Assign each medication to the correct slots (AM/Noon/PM/HS) with correct tablet counts or
+                      fractions.
+                    </li>
+                    <li>
+                      Print the MAR (including logs), file it in the correct batch binder with a Change Log sheet.
+                    </li>
                   </ul>
                 </div>
               </div>
 
               <div id="wizardPlaceholder" class="wizard-helper">
-                Fill out the batch type, patient start date, and supply at home,
-                then click “Generate plan” to see bridge blister needs, first CPAK cycle,
-                a patient-specific calendar, and documentation prompts.
+                Fill out the batch type, patient start date, and supply at home, then click “Generate plan” to see
+                bridge blister needs, first CPAK cycle, a patient-specific calendar, and documentation prompts.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Bill new Rx (bridge) -->
+      <div id="tab-bill-rx" class="tab-content">
+        <div class="section-title">Bill new prescription for existing blister patient (bridge)</div>
+        <div class="small">
+          Use this when an existing blister-pack patient gets a new Rx or dose change mid-cycle. The tool will calculate:
+          <strong>quantity</strong> to bill, <strong>days supply</strong> (from today until the next launch Sunday),
+          and a copy-ready note for the supplemental notes.
+        </div>
+
+        <div class="wizard-card">
+          <div class="wizard-grid">
+            <!-- Left: inputs -->
+            <div class="wizard-section">
+              <div class="wizard-section-title">1. Rx & batch details</div>
+
+              <div class="wizard-row">
+                <label for="bridgeBatchType">Batch type</label>
+                <select id="bridgeBatchType">
+                  <option value="weekly">Weekly batch</option>
+                  <option value="biweekly">Bi-weekly batch</option>
+                  <option value="monthly">28-day “monthly” batch</option>
+                </select>
+                <div class="wizard-helper">
+                  For the patient’s existing SS-CPAK-7 batch (weekly, bi-weekly, or 28-day monthly).
+                </div>
+              </div>
+
+              <div class="wizard-row" style="margin-top:10px;">
+                <label for="bridgeTodayDate">Today’s date / Rx billed date</label>
+                <input type="date" id="bridgeTodayDate" />
+                <div class="wizard-helper">
+                  Date you are billing the new prescription or dose change.
+                </div>
+              </div>
+
+              <div class="wizard-row" style="margin-top:10px;">
+                <label for="bridgeNextLaunch">Next launch (Sunday) for this batch</label>
+                <input type="date" id="bridgeNextLaunch" />
+                <div class="wizard-helper">
+                  Launch Sunday when this change will enter CPAK. Days supply will be “from today until this Sunday”.
+                </div>
+              </div>
+
+              <div class="wizard-row" style="margin-top:10px;">
+                <label for="bridgeTabsPerDay">
+                  Tablets per day
+                </label>
+                <input type="number" id="bridgeTabsPerDay" step="0.25" min="0" />
+                <div class="wizard-helper">
+                  Example: OD = 1, BID = 2, 1.5 tabs/day = 1.5.
+                </div>
+              </div>
+
+              <div class="wizard-row" style="margin-top:10px;">
+                <label for="bridgeDrugName">Drug name / strength (for note)</label>
+                <input type="text" id="bridgeDrugName" placeholder="e.g., Rosuvastatin 20 mg" />
+              </div>
+
+              <button id="bridgeCalcBtn" class="primary-btn">
+                <span>Calculate bridge quantity & days supply</span>
+                <span>💊</span>
+              </button>
+              <div id="bridgeErrorBox" class="error" style="display:none;"></div>
+            </div>
+
+            <!-- Right: output -->
+            <div class="wizard-section">
+              <div class="wizard-section-title">Bridge output</div>
+              <div id="bridgeOutputBox" class="wizard-helper">
+                Enter the details on the left and click
+                <strong>“Calculate bridge quantity & days supply”</strong>. The tool will:
+                <ul style="margin-top:4px; padding-left:18px;">
+                  <li>
+                    Assume the CPAK blister with this change will be
+                    <strong>ready for pickup 14 days after the launch Sunday</strong>.
+                  </li>
+                  <li>
+                    Calculate the <strong>quantity</strong> as:
+                    <em>tablets per day × days from today until the CPAK blister is ready</em>.
+                  </li>
+                  <li>
+                    Set <strong>days supply</strong> as:
+                    <em>number of days from today until the next launch Sunday</em> (your “from now until launch” rule).
+                  </li>
+                  <li>
+                    Generate a <strong>copy-ready note</strong> for patient supplemental notes.
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -1246,9 +1409,9 @@
       <div id="tab-training" class="tab-content">
         <div class="section-title">Training – blister pack workflow refresher</div>
         <div class="small">
-          This tab mirrors the Blister Pack Guide in a scrollable, “cheat-sheet” format.
-          Use it to teach new staff, or to remind yourself of the big picture and key checkpoints.
-          For full legal/clinical detail, always follow the official guide.
+          This tab mirrors the Blister Pack Guide in a scrollable, “cheat-sheet” format. Use it to teach new staff,
+          or to remind yourself of the big picture and key checkpoints. For full legal/clinical detail, always follow
+          the official guide.
         </div>
 
         <div class="training-card">
@@ -1257,8 +1420,9 @@
             <div class="training-subcard">
               <div class="training-subtitle">1. Big picture – SS-CPAK-7 workflow</div>
               <p style="margin:4px 0 6px;">
-                All blister pack patients at the store are under one group: <strong>SS-CPAK-7</strong>.
-                Within that group, you have four cycles: Tuesday, Wednesday, Bi-weekly, and 28-day “Monthly”.
+                All blister pack patients at the store are under one group:
+                <strong>SS-CPAK-7</strong>. Within that group, you have four cycles: Tuesday, Wednesday,
+                Bi-weekly, and 28-day “Monthly”.
               </p>
               <ul>
                 <li>
@@ -1269,11 +1433,14 @@
                   <strong>Launch day:</strong> Sunday for all batches (Tue/Wed/Bi-weekly/Monthly).
                 </li>
                 <li>
-                  <strong>CPAK delivery:</strong> Monday of the following week for the last automation sent.</li>
+                  <strong>CPAK delivery:</strong> Monday of the following week for the last automation sent.
+                </li>
                 <li>
-                  <strong>Work-on-blisters day:</strong> Wednesday – cross-check against MAR and fix.</li>
+                  <strong>Work-on-blisters day:</strong> Wednesday – cross-check against MAR and fix.
+                </li>
                 <li>
-                  <strong>Product check:</strong> Usually Saturday for fixed packs.</li>
+                  <strong>Product check:</strong> Usually Saturday for fixed packs.
+                </li>
                 <li>
                   <strong>Bagging & sorting:</strong> Sunday – bag and sort for pickup or delivery.
                 </li>
@@ -1284,8 +1451,8 @@
             <div class="training-subcard">
               <div class="training-subtitle">2. Launching the batch (Section 6)</div>
               <p style="margin:4px 0 6px;">
-                Launching the batch tells HealthWATCH: “Refill everything in this batch now.”
-                This is what starts the entire CPAK cycle.
+                Launching the batch tells HealthWATCH: “Refill everything in this batch now.” This is what starts the
+                entire CPAK cycle.
               </p>
               <ul>
                 <li>
@@ -1324,14 +1491,16 @@
                 The ISP report is your “quality-control screenshot” for the batch after launch.
               </p>
               <ul>
-                <li><strong>Purpose:</strong>
+                <li>
+                  <strong>Purpose:</strong>
                   <ul>
                     <li>Summarizes all TXs in the launched batch.</li>
                     <li>Shows which drugs are <strong>non-DSP</strong> so you can swap to CPAK-approved products.</li>
                     <li>Confirms claims that were billed successfully to insurance.</li>
                   </ul>
                 </li>
-                <li><strong>How to access:</strong>
+                <li>
+                  <strong>How to access:</strong>
                   <ul>
                     <li>Go to <strong>isp:6777/login</strong> (link is also on the Schedule tab).</li>
                     <li>Log in with HealthWATCH credentials.</li>
@@ -1339,7 +1508,8 @@
                     <li>Pick group <strong>SS-CPAK-7</strong> and set start/end dates to the batch launch date.</li>
                   </ul>
                 </li>
-                <li><strong>What to do with it:</strong>
+                <li>
+                  <strong>What to do with it:</strong>
                   <ul>
                     <li>Change any non-DSP drugs to CPAK’s DSP (using the CPAK e-formulary).</li>
                     <li>Scroll to the bottom and make sure each claim has a reasonable third-party payment.</li>
@@ -1408,9 +1578,10 @@
                     <li>Organize blisters by batch and alphabetically by patient.</li>
                     <li>Pull out the MAR binders and match each blister to its MAR.</li>
                     <li>Check: correct meds, strengths, directions, time slots, and doses.</li>
-                    <li>Remember CPAK may not pack:
-                      controlled meds, some vitamins, some brands, and non-DSPs —
-                      these appear in red on the MAR and need to be added manually.</li>
+                    <li>
+                      Remember CPAK may not pack: controlled meds, some vitamins, some brands, and non-DSPs — these
+                      appear in red on the MAR and need to be added manually.
+                    </li>
                     <li>Use sticky notes on blisters that need fixing so nothing is missed.</li>
                   </ul>
                 </li>
@@ -1421,8 +1592,8 @@
             <div class="training-subcard">
               <div class="training-subtitle">6. Bagging & sorting for pick-up/delivery (Section 7)</div>
               <p style="margin:4px 0 6px;">
-                Once packs are checked and fixed, they are ready to be sent to patients – but only if they are
-                bagged and sorted properly.
+                Once packs are checked and fixed, they are ready to be sent to patients – but only if they are bagged
+                and sorted properly.
               </p>
               <ul>
                 <li>
@@ -1443,8 +1614,10 @@
                 <li>
                   Key reminders:
                   <ul>
-                    <li>Remove any <strong>previous-week blisters</strong> from the pickup drawer before placing new ones.</li>
-                    <li>Investigate blisters that were not picked up the previous week (see guide for details).</li>
+                    <li>
+                      Remove any <strong>previous-week blisters</strong> from the pickup drawer before placing new ones.
+                    </li>
+                    <li>Investigate blisters that were not picked up the previous week.</li>
                     <li>Report missing or damaged blisters in the blister pack group chat.</li>
                   </ul>
                 </li>
@@ -1455,8 +1628,8 @@
             <div class="training-subcard">
               <div class="training-subtitle">7. New blister patient setup & MAR (Section 5)</div>
               <p style="margin:4px 0 6px;">
-                Section 5 of the guide explains the full process. This card gives the “fast memory hook”
-                that pairs with the tool’s New blister patient tab.
+                Section 5 of the guide explains the full process. This card gives the “fast memory hook” that pairs with
+                the tool’s New blister patient tab.
               </p>
               <ul>
                 <li>
@@ -1465,21 +1638,21 @@
                     <li>Do a medication review & pick time slots (AM/Noon/PM/HS).</li>
                     <li>Complete and fax the <strong>Frequent Dispensing Form</strong> to the prescriber.</li>
                     <li>Help patient choose the most appropriate batch (often Bi-weekly).</li>
-                    <li>Text the blister pack WhatsApp group: name, batch, pickup/delivery day, and who is setting it up.</li>
+                    <li>
+                      Text the blister pack WhatsApp group: name, batch, pickup/delivery day, and who is setting it up.
+                    </li>
                   </ul>
                 </li>
                 <li>
                   <strong>HealthWATCH setup:</strong>
                   <ul>
-                    <li>Assign <strong>Group = SS-CPAK-7</strong> and choose the correct Sub-location (Tue/Wed/Bi-weekly/Monthly).</li>
+                    <li>Assign <strong>Group = SS-CPAK-7</strong> and choose the correct Sub-location.</li>
                     <li>Scan/enter all prescriptions for the blister pack.</li>
-                    <li>Ensure quantities & days’ supply match the cycle:
-                      7 (weekly), 14 (bi-weekly), 28 (monthly).</li>
-                    <li>In <strong>Group/Pkg info</strong>:
-                      Include in batch = Yes,
-                      Packaging = Shared Services CPAK,
-                      assign a card number,
-                      and assign each medication to the right slots.</li>
+                    <li>Ensure quantities & days’ supply match the cycle: 7, 14, or 28 days.</li>
+                    <li>
+                      In <strong>Group/Pkg info</strong>: Include in batch = Yes, Packaging = Shared Services CPAK, assign
+                      a card number, and assign each medication to the right slots.
+                    </li>
                     <li>Log the RX once everything is set up correctly.</li>
                   </ul>
                 </li>
@@ -1500,34 +1673,49 @@
             <div class="training-subcard">
               <div class="training-subtitle">8. Bridge blisters & timing examples</div>
               <p style="margin:4px 0 6px;">
-                Bridge blisters are for when a patient starts or changes mid-cycle and CPAK hasn’t caught up yet.
-                The idea: give them enough tablets to “bridge” until the CPAK blister that reflects the change is
-                bagged and ready.
+                Bridge blisters are for when a patient starts or changes mid-cycle and CPAK hasn’t caught up yet. The
+                idea: give them enough tablets to “bridge” until the CPAK blister that reflects the change is bagged and
+                ready.
               </p>
               <ul>
                 <li>
                   <strong>Concept:</strong>
                   <ul>
-                    <li>Bridge covers from the <strong>setup/change date</strong> until
-                      the CPAK blister is <strong>bagged and ready for pick-up</strong>.</li>
-                    <li>You often bill a larger quantity (e.g., 21 tabs) but enter a smaller days supply
-                      in HealthWATCH to align with the next launch and avoid early refill rejections.</li>
+                    <li>
+                      Bridge covers from the <strong>setup/change date</strong> until the CPAK blister is
+                      <strong>bagged and ready for pick-up</strong>.
+                    </li>
+                    <li>
+                      You often bill a larger quantity but enter a smaller days supply in HealthWATCH to line up with the
+                      next launch and avoid early refill rejections.
+                    </li>
                   </ul>
                 </li>
                 <li>
                   <strong>Documentation style (examples from guide):</strong>
                   <ul>
                     <li>Note that a bridge was given to cover until a specific CPAK date.</li>
-                    <li>Explain that days’ supply was adjusted for billing but the patient still received the full clinical supply.</li>
-                    <li>Text the blister pack group chat so that, before the next launch, the RX is adjusted back to the normal 7/14/28-day quantity.</li>
+                    <li>
+                      Explain that days’ supply was adjusted for billing but the patient still received the full clinical
+                      supply.
+                    </li>
+                    <li>
+                      Text the blister pack group chat so that, before the next launch, the RX is adjusted back to the
+                      normal 7/14/28-day quantity.
+                    </li>
                   </ul>
                 </li>
                 <li>
                   <strong>In this tool:</strong>
                   <ul>
-                    <li>The <strong>New blister patient wizard</strong> uses your anchor dates and timing rules to propose:
-                      first launch, automation, delivery, bagging, and a bridge blister range.</li>
-                    <li>You still apply the detailed billing/N (UN code, frequent dispensing) rules from the Billing section of the guide.</li>
+                    <li>
+                      The <strong>New blister patient wizard</strong> uses your anchors to propose first launch,
+                      automation, delivery, bagging, and a bridge blister range.
+                    </li>
+                    <li>
+                      The <strong>Bill new Rx</strong> tab uses your rule: days supply = days from today to the next
+                      launch Sunday; quantity covers until the CPAK blister with the change is ready (launch + 14 days).
+                    </li>
                   </ul>
                 </li>
               </ul>
@@ -1537,32 +1725,28 @@
             <div class="training-subcard">
               <div class="training-subtitle">9. How to use this tool with the full Guide</div>
               <p style="margin:4px 0 6px;">
-                Think of the PDF as the “textbook” and this tab as your “lecture slides”. The Schedule and
-                New patient tabs are your calculators.
+                Think of the PDF as the “textbook” and this tab as your “lecture slides”. The Schedule, New patient, and
+                Bill new Rx tabs are your calculators.
               </p>
               <ul>
                 <li>
-                  <strong>Before Sunday:</strong>
-                  use the <strong>Schedule</strong> tab to confirm which batches will launch and when to send automation.
+                  <strong>Before Sunday:</strong> use the <strong>Schedule</strong> tab to confirm which batches will
+                  launch and when to send automation.
                 </li>
                 <li>
-                  <strong>On Sunday:</strong>
-                  after launching, check the dashboard and calendar to see how this cycle plays out.
+                  <strong>On Sunday:</strong> after launching, check the dashboard and calendar to see how this cycle
+                  plays out.
                 </li>
                 <li>
-                  <strong>When adding a new patient:</strong>
-                  run the <strong>New blister patient wizard</strong>, then follow Section 5 of the guide to do the
-                  actual HealthWATCH setup, MAR creation, and documentation.
+                  <strong>When adding a new patient:</strong> run the <strong>New blister patient wizard</strong>, then
+                  follow Section 5 of the guide for setup and MAR.
                 </li>
                 <li>
-                  <strong>During the week:</strong>
-                  click on dates in the calendar if you forget “What day is this in the cycle again?” – it will
-                  show all launches, automations, and deliveries on that date.
+                  <strong>When a new Rx / dose change arrives mid-cycle:</strong> use the
+                  <strong>Bill new Rx (bridge)</strong> tab to calculate quantity, days supply, and a note.
                 </li>
                 <li>
-                  <strong>Training new staff:</strong>
-                  walk them through this Training tab in order (1 → 9) while showing screenshots from the PDF.
-                  Then have them practice using the Schedule + New patient tabs on real or demo patients.
+                  <strong>Training new staff:</strong> walk them through this Training tab in order while showing the PDF.
                 </li>
               </ul>
             </div>
@@ -1593,8 +1777,8 @@
                 <span>Open ISP login</span>
               </a>
               <div class="quick-link-desc">
-                Use this after launching a batch to run the ISP report: confirm billing, identify non-DSP products,
-                and spot patients paying too much. Only works on the pharmacy network.
+                Use this after launching a batch to run the ISP report: confirm billing, identify non-DSP products, and
+                spot patients paying too much. Only works on the pharmacy network.
               </div>
               <div class="quick-link-pill" style="margin-top:6px;">
                 <span>💡</span>
@@ -1637,8 +1821,8 @@
                 <span>Open ODB Frequent Dispensing Form (PDF)</span>
               </a>
               <div class="quick-link-desc">
-                Print, complete, and fax to the prescriber when a patient qualifies for frequent dispensing
-                (e.g., blister packs). File signed copies according to your store’s policy and the Blister Pack Guide.
+                Print, complete, and fax to the prescriber when a patient qualifies for frequent dispensing (e.g., blister
+                packs). File signed copies according to your store’s policy and the Blister Pack Guide.
               </div>
               <div class="quick-link-pill" style="margin-top:6px;">
                 <span>🖨️</span>
@@ -1659,7 +1843,7 @@
     const WEEKLY_TARGET_WEEKDAY = 0; // 0 = Sunday
 
     // Bi-weekly anchor: Nov 23, 2025
-    const BIWEEKLY_ANCHOR = new Date(2025, 10, 23); // months 0-based; 10 = Nov
+    const BIWEEKLY_ANCHOR = new Date(2025, 10, 23); // month 10 = November
     BIWEEKLY_ANCHOR.setHours(0, 0, 0, 0);
 
     // Monthly (28-day) anchor: Nov 16, 2025
@@ -1667,22 +1851,22 @@
     MONTHLY_ANCHOR.setHours(0, 0, 0, 0);
 
     const BIWEEKLY_INTERVAL = 14; // days
-    const MONTHLY_INTERVAL = 28;  // days
+    const MONTHLY_INTERVAL = 28; // days
 
     // For main calendar
     let currentMonthDate = null; // first day of visible month
-    let calendarEventsMap = {};  // { "yyyy-mm-dd": [ { type, label } ] }
+    let calendarEventsMap = {};  // { "yyyy-mm-dd": [ { type, label, dotClass } ] }
 
     const EVENT_TYPES = {
-      weeklyLaunch: { label: "Weekly batch launch", dotClass: "dot-weekly-launch" },
-      biweeklyLaunch: { label: "Bi-weekly batch launch", dotClass: "dot-bi-launch" },
-      monthlyLaunch: { label: "28-day “monthly” batch launch", dotClass: "dot-monthly-launch" },
-      weeklyAutomation: { label: "Weekly batch automation", dotClass: "dot-automation" },
+      weeklyLaunch:   { label: "Weekly batch launch",         dotClass: "dot-weekly-launch" },
+      biweeklyLaunch: { label: "Bi-weekly batch launch",      dotClass: "dot-bi-launch" },
+      monthlyLaunch:  { label: "28-day “monthly” batch launch", dotClass: "dot-monthly-launch" },
+      weeklyAutomation:   { label: "Weekly batch automation",   dotClass: "dot-automation" },
       biweeklyAutomation: { label: "Bi-weekly batch automation", dotClass: "dot-automation" },
-      monthlyAutomation: { label: "Monthly batch automation", dotClass: "dot-automation" },
-      weeklyDelivery: { label: "Weekly batch delivery", dotClass: "dot-delivery" },
+      monthlyAutomation:  { label: "Monthly batch automation",  dotClass: "dot-automation" },
+      weeklyDelivery:   { label: "Weekly batch delivery",   dotClass: "dot-delivery" },
       biweeklyDelivery: { label: "Bi-weekly batch delivery", dotClass: "dot-delivery" },
-      monthlyDelivery: { label: "Monthly batch delivery", dotClass: "dot-delivery" }
+      monthlyDelivery:  { label: "Monthly batch delivery",  dotClass: "dot-delivery" }
     };
 
     // Notifications
@@ -1690,29 +1874,21 @@
 
     // Wizard batch config
     const WIZARD_BATCH_CONFIG = {
-      "tue-weekly": {
-        label: "Weekly – Tuesday batch",
-        binder: "Tuesday SS-CPAK-7 binder"
-      },
-      "wed-weekly": {
-        label: "Weekly – Wednesday batch",
-        binder: "Wednesday SS-CPAK-7 binder"
-      },
-      "biweekly": {
-        label: "Bi-weekly batch",
-        binder: "Bi-weekly SS-CPAK-7 binder"
-      },
-      "monthly": {
-        label: "28-day “monthly” batch",
-        binder: "Monthly SS-CPAK-7 binder"
-      }
+      "tue-weekly": { label: "Weekly – Tuesday batch",  binder: "Tuesday SS-CPAK-7 binder" },
+      "wed-weekly": { label: "Weekly – Wednesday batch", binder: "Wednesday SS-CPAK-7 binder" },
+      "biweekly":   { label: "Bi-weekly batch",          binder: "Bi-weekly SS-CPAK-7 binder" },
+      "monthly":    { label: "28-day “monthly” batch",   binder: "Monthly SS-CPAK-7 binder" }
     };
 
     // ---- DATE UTILITIES ----
 
     function parseLocalDate(input) {
       if (!input) return null;
-      const [year, month, day] = input.split("-").map(Number);
+      const parts = input.split("-");
+      if (parts.length !== 3) return null;
+      const year = Number(parts[0]);
+      const month = Number(parts[1]);
+      const day = Number(parts[2]);
       if (!year || !month || !day) return null;
       const d = new Date(year, month - 1, day);
       d.setHours(0, 0, 0, 0);
@@ -1723,7 +1899,7 @@
       const y = date.getFullYear();
       const m = String(date.getMonth() + 1).padStart(2, "0");
       const d = String(date.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
+      return y + "-" + m + "-" + d;
     }
 
     function formatNiceDate(date) {
@@ -1758,6 +1934,10 @@
       return Math.round((b - a) / msPerDay);
     }
 
+    function isSunday(date) {
+      return date.getDay() === 0;
+    }
+
     // Next Sunday (weekly) from "today"
     function getNextWeeklyLaunch(today) {
       const todayDow = today.getDay(); // 0 = Sunday
@@ -1778,7 +1958,9 @@
 
     function applyTheme(theme) {
       document.body.setAttribute("data-theme", theme);
-      localStorage.setItem("batchTheme", theme);
+      try {
+        localStorage.setItem("batchTheme", theme);
+      } catch (e) {}
       const select = document.getElementById("themeSelect");
       if (select && select.value !== theme) {
         select.value = theme;
@@ -1786,9 +1968,13 @@
     }
 
     function initTheme() {
-      const saved = localStorage.getItem("batchTheme");
+      let saved = null;
+      try {
+        saved = localStorage.getItem("batchTheme");
+      } catch (e) {}
       const defaultTheme = saved || "dark";
       applyTheme(defaultTheme);
+
       const select = document.getElementById("themeSelect");
       if (select) {
         select.value = defaultTheme;
@@ -1805,25 +1991,23 @@
       const tabContents = {
         "schedule": document.getElementById("tab-schedule"),
         "new-patient": document.getElementById("tab-new-patient"),
+        "bill-rx": document.getElementById("tab-bill-rx"),
         "training": document.getElementById("tab-training"),
         "quick-links": document.getElementById("tab-quick-links")
       };
 
-      tabButtons.forEach(btn => {
+      tabButtons.forEach((btn) => {
         btn.addEventListener("click", () => {
           const target = btn.getAttribute("data-tab-target");
           if (!target) return;
 
-          tabButtons.forEach(b => b.classList.remove("tab-btn--active"));
+          tabButtons.forEach((b) => b.classList.remove("tab-btn--active"));
           btn.classList.add("tab-btn--active");
 
-          Object.keys(tabContents).forEach(key => {
-            if (tabContents[key]) {
-              tabContents[key].classList.toggle(
-                "tab-content--active",
-                key === target
-              );
-            }
+          Object.keys(tabContents).forEach((key) => {
+            const el = tabContents[key];
+            if (!el) return;
+            el.classList.toggle("tab-content--active", key === target);
           });
         });
       });
@@ -1843,7 +2027,7 @@
       const todayInput = document.getElementById("todayInput");
       const calcBtn = document.getElementById("calcBtn");
       if (todayBtn && todayInput && calcBtn) {
-        todayBtn.addEventListener("click", function () {
+        todayBtn.addEventListener("click", () => {
           const today = new Date();
           today.setHours(0, 0, 0, 0);
           todayInput.value = formatDateYMD(today);
@@ -1877,14 +2061,9 @@
           updateButton();
           return;
         }
-
         try {
           const permission = await Notification.requestPermission();
-          if (permission === "granted") {
-            notificationsEnabled = true;
-          } else {
-            notificationsEnabled = false;
-          }
+          notificationsEnabled = permission === "granted";
         } catch (e) {
           notificationsEnabled = false;
         }
@@ -1894,12 +2073,12 @@
       updateButton();
     }
 
-    function handleNotifications(batches, today) {
+    function handleNotifications(batches) {
       if (!notificationsEnabled) return;
       if (!("Notification" in window)) return;
       if (Notification.permission !== "granted") return;
 
-      batches.forEach(batch => {
+      batches.forEach((batch) => {
         if (batch.daysUntilLaunch === 0) {
           new Notification(`Launch ${batch.name} today`);
         }
@@ -1994,6 +2173,7 @@
       const tbody = document.getElementById("calendarBody");
       const today = new Date();
       today.setHours(0, 0, 0, 0);
+      const todayKey = formatDateYMD(today);
 
       const year = currentMonthDate.getFullYear();
       const month = currentMonthDate.getMonth();
@@ -2012,19 +2192,15 @@
       while (gridStart.getDay() !== 0) {
         gridStart.setDate(gridStart.getDate() - 1);
       }
-
       const gridEnd = new Date(gridStart);
       gridEnd.setDate(gridEnd.getDate() + 6 * 7 - 1);
       gridEnd.setHours(0, 0, 0, 0);
 
       buildCalendarEvents(gridStart, gridEnd);
-
       tbody.innerHTML = "";
+
       let current = new Date(gridStart);
-
-      const todayKey = formatDateYMD(today);
       let defaultSelectedKey = todayKey;
-
       if (today < firstOfMonth || today > lastOfMonth) {
         defaultSelectedKey = formatDateYMD(firstOfMonth);
       }
@@ -2056,7 +2232,7 @@
 
           const events = calendarEventsMap[cellKey] || [];
           const usedTypes = new Set();
-          events.forEach(ev => {
+          events.forEach((ev) => {
             if (usedTypes.has(ev.type)) return;
             usedTypes.add(ev.type);
             const dot = document.createElement("span");
@@ -2101,8 +2277,12 @@
       const titleEl = detailsEl.querySelector(".calendar-details-title");
       const bodyEl = detailsEl.querySelector(".calendar-details-body");
 
-      const [year, month, day] = dateKey.split("-").map(Number);
+      const parts = dateKey.split("-");
+      const year = Number(parts[0]);
+      const month = Number(parts[1]);
+      const day = Number(parts[2]);
       const dateObj = new Date(year, month - 1, day);
+
       const niceDate = dateObj.toLocaleDateString(undefined, {
         weekday: "long",
         year: "numeric",
@@ -2119,7 +2299,7 @@
       }
 
       let html = "<ul>";
-      events.forEach(ev => {
+      events.forEach((ev) => {
         html += "<li>" + ev.label + "</li>";
       });
       html += "</ul>";
@@ -2130,6 +2310,7 @@
       const now = new Date();
       now.setHours(0, 0, 0, 0);
       currentMonthDate = new Date(now.getFullYear(), now.getMonth(), 1);
+
       const prevBtn = document.getElementById("prevMonthBtn");
       const nextBtn = document.getElementById("nextMonthBtn");
 
@@ -2161,7 +2342,7 @@
       const body = document.getElementById("dashboardBody");
       body.innerHTML = "";
 
-      batches.forEach(batch => {
+      batches.forEach((batch) => {
         const card = document.createElement("div");
         card.classList.add("dashboard-card");
 
@@ -2172,33 +2353,40 @@
 
         const launchRow = document.createElement("div");
         launchRow.classList.add("dashboard-row");
-        launchRow.innerHTML = `
-          <span class="dashboard-label">Next launch</span>
-          <span class="dashboard-value">${formatNiceDate(batch.nextLaunch)}</span>
-        `;
+        launchRow.innerHTML =
+          '<span class="dashboard-label">Next launch</span>' +
+          '<span class="dashboard-value">' +
+          formatNiceDate(batch.nextLaunch) +
+          "</span>";
         card.appendChild(launchRow);
 
         const autoRow = document.createElement("div");
         autoRow.classList.add("dashboard-row");
-        autoRow.innerHTML = `
-          <span class="dashboard-label">Automation</span>
-          <span class="dashboard-value">${formatNiceDate(batch.automationDate)}</span>
-        `;
+        autoRow.innerHTML =
+          '<span class="dashboard-label">Automation</span>' +
+          '<span class="dashboard-value">' +
+          formatNiceDate(batch.automationDate) +
+          "</span>";
         card.appendChild(autoRow);
 
         const counts = document.createElement("div");
         counts.classList.add("dashboard-count");
-        const launchText = batch.daysUntilLaunch === 0
-          ? "Launch today"
-          : batch.daysUntilLaunch === 1
-          ? "Launch in 1 day"
-          : `Launch in ${batch.daysUntilLaunch} days`;
-        const autoText = batch.daysUntilAutomation === 0
-          ? "Automation today"
-          : batch.daysUntilAutomation === 1
-          ? "Automation in 1 day"
-          : `Automation in ${batch.daysUntilAutomation} days`;
-        counts.textContent = `${launchText} · ${autoText}`;
+
+        const launchText =
+          batch.daysUntilLaunch === 0
+            ? "Launch today"
+            : batch.daysUntilLaunch === 1
+            ? "Launch in 1 day"
+            : "Launch in " + batch.daysUntilLaunch + " days";
+
+        const autoText =
+          batch.daysUntilAutomation === 0
+            ? "Automation today"
+            : batch.daysUntilAutomation === 1
+            ? "Automation in 1 day"
+            : "Automation in " + batch.daysUntilAutomation + " days";
+
+        counts.textContent = launchText + " · " + autoText;
         card.appendChild(counts);
 
         body.appendChild(card);
@@ -2224,7 +2412,6 @@
         );
       }
 
-      // Decide if we need 1 month or 2 months
       const sameMonth =
         startDate.getFullYear() === bagging.getFullYear() &&
         startDate.getMonth() === bagging.getMonth();
@@ -2271,17 +2458,16 @@
         table.className = "patient-calendar";
 
         const thead = document.createElement("thead");
-        thead.innerHTML = `
-          <tr>
-            <th>Sun</th>
-            <th>Mon</th>
-            <th>Tue</th>
-            <th>Wed</th>
-            <th>Thu</th>
-            <th>Fri</th>
-            <th>Sat</th>
-          </tr>
-        `;
+        thead.innerHTML =
+          "<tr>" +
+          "<th>Sun</th>" +
+          "<th>Mon</th>" +
+          "<th>Tue</th>" +
+          "<th>Wed</th>" +
+          "<th>Thu</th>" +
+          "<th>Fri</th>" +
+          "<th>Sat</th>" +
+          "</tr>";
         table.appendChild(thead);
 
         const tbody = document.createElement("tbody");
@@ -2299,7 +2485,6 @@
 
         for (let week = 0; week < 6; week++) {
           const tr = document.createElement("tr");
-
           for (let dow = 0; dow < 7; dow++) {
             const td = document.createElement("td");
             const cellDate = new Date(current);
@@ -2345,13 +2530,11 @@
 
             cellDiv.appendChild(dayNumber);
             cellDiv.appendChild(dotsDiv);
-
             td.appendChild(cellDiv);
             tr.appendChild(td);
 
             current.setDate(current.getDate() + 1);
           }
-
           tbody.appendChild(tr);
         }
 
@@ -2373,6 +2556,7 @@
         const batchValue = document.getElementById("wizardBatchType").value;
         const startStr = document.getElementById("wizardStartDate").value;
         const hasSupplyValue = document.getElementById("wizardHasSupply").value;
+
         const errorBox = document.getElementById("wizardErrorBox");
         const outputBox = document.getElementById("wizardOutputBox");
         const placeholder = document.getElementById("wizardPlaceholder");
@@ -2383,7 +2567,8 @@
         if (calCard) calCard.style.display = "none";
 
         if (!batchValue || !startStr || !hasSupplyValue) {
-          errorBox.textContent = "Please fill out batch type, patient start date, and supply at home.";
+          errorBox.textContent =
+            "Please fill out batch type, patient start date, and supply at home.";
           errorBox.style.display = "block";
           outputBox.style.display = "none";
           placeholder.style.display = "block";
@@ -2411,7 +2596,6 @@
         // Determine first launch based on batch type and anchors
         let nextLaunch;
         if (batchValue === "tue-weekly" || batchValue === "wed-weekly") {
-          // Weekly batches: same logic as schedule tab
           nextLaunch = getNextWeeklyLaunch(startDate);
         } else if (batchValue === "biweekly") {
           nextLaunch = getNextCycleLaunch(startDate, BIWEEKLY_ANCHOR, BIWEEKLY_INTERVAL);
@@ -2433,42 +2617,67 @@
 
         let bridgeText = "No bridge required";
         let bridgeDetail = "";
+
         if (!hasSupply) {
           const bridgeEnd = bagging;
           const daysCover = diffInDays(startDate, bridgeEnd) + 1; // inclusive
-          bridgeText = `Yes – cover from ${formatNiceDateNoWeekday(startDate)} to ${formatNiceDateNoWeekday(bridgeEnd)} (${daysCover} days)`;
-          bridgeDetail = `Bridge blister (non-billed) dispensed to cover from ${formatNiceDateNoWeekday(startDate)} until the CPAK blister is bagged and ready for pick-up on ${formatNiceDateNoWeekday(bridgeEnd)}.`;
+          bridgeText =
+            "Yes – cover from " +
+            formatNiceDateNoWeekday(startDate) +
+            " to " +
+            formatNiceDateNoWeekday(bridgeEnd) +
+            " (" +
+            daysCover +
+            " days)";
+          bridgeDetail =
+            "Bridge blister (non-billed) dispensed to cover from " +
+            formatNiceDateNoWeekday(startDate) +
+            " until the CPAK blister is bagged and ready for pick-up on " +
+            formatNiceDateNoWeekday(bridgeEnd) +
+            ".";
         }
 
-        // Fill summary
         document.getElementById("wizardSummaryBatch").textContent = batchConfig.label;
-        document.getElementById("wizardSummaryStartDate").textContent = formatNiceDateNoWeekday(startDate);
-        document.getElementById("wizardSummaryLaunchDate").textContent = formatNiceDate(nextLaunch);
+        document.getElementById("wizardSummaryStartDate").textContent =
+          formatNiceDateNoWeekday(startDate);
+        document.getElementById("wizardSummaryLaunchDate").textContent =
+          formatNiceDate(nextLaunch);
         document.getElementById("wizardSummaryBridge").textContent = bridgeText;
-        document.getElementById("wizardSummaryAutomation").textContent = formatNiceDate(automation);
-        document.getElementById("wizardSummaryDelivery").textContent = formatNiceDate(delivery);
-        document.getElementById("wizardSummaryBagging").textContent = formatNiceDate(bagging);
+        document.getElementById("wizardSummaryAutomation").textContent =
+          formatNiceDate(automation);
+        document.getElementById("wizardSummaryDelivery").textContent =
+          formatNiceDate(delivery);
+        document.getElementById("wizardSummaryBagging").textContent =
+          formatNiceDate(bagging);
 
-        // HealthWATCH note
-        let noteLines = [];
-
+        const noteLines = [];
         if (!hasSupply) {
           noteLines.push(bridgeDetail);
         } else {
-          noteLines.push(`Patient has existing supply at home and will transition to CPAK blister cycle starting on ${formatNiceDateNoWeekday(nextLaunch)}.`);
+          noteLines.push(
+            "Patient has existing supply at home and will transition to CPAK blister cycle starting on " +
+              formatNiceDateNoWeekday(nextLaunch) +
+              "."
+          );
         }
 
-        noteLines.push(`Added to Group SS-CPAK-7, ${batchConfig.label}.`);
-        noteLines.push(`First CPAK cycle:`);
-        noteLines.push(`- Launch/billing: ${formatNiceDate(nextLaunch)} (Sunday).`);
-        noteLines.push(`- Automation: ${formatNiceDate(automation)} (Wednesday, after queues cleared).`);
-        noteLines.push(`- CPAK delivery: ${formatNiceDate(delivery)} (Monday).`);
-        noteLines.push(`- Bagging/pick-up: ${formatNiceDate(bagging)} (Sunday, after product check).`);
+        noteLines.push("Added to Group SS-CPAK-7, " + batchConfig.label + ".");
+        noteLines.push("First CPAK cycle:");
+        noteLines.push(
+          "- Launch/billing: " + formatNiceDate(nextLaunch) + " (Sunday)."
+        );
+        noteLines.push(
+          "- Automation: " + formatNiceDate(automation) + " (Wednesday, after queues cleared)."
+        );
+        noteLines.push(
+          "- CPAK delivery: " + formatNiceDate(delivery) + " (Monday)."
+        );
+        noteLines.push(
+          "- Bagging/pick-up: " + formatNiceDate(bagging) + " (Sunday, after product check)."
+        );
 
-        const noteText = noteLines.join("\n");
-        document.getElementById("wizardNoteText").value = noteText;
+        document.getElementById("wizardNoteText").value = noteLines.join("\n");
 
-        // Patient-specific mini calendar (1 or 2 months)
         renderPatientCalendar(startDate, nextLaunch, automation, delivery, bagging);
 
         placeholder.style.display = "none";
@@ -2478,92 +2687,282 @@
 
     // ---- MAIN RESULTS HANDLER (Schedule tab) ----
 
-    document.getElementById("calcBtn").addEventListener("click", function () {
-      const errorBox = document.getElementById("errorBox");
-      const resultsBox = document.getElementById("resultsBox");
-      const tbody = document.getElementById("resultsTableBody");
+    function initSchedule() {
+      const calcBtn = document.getElementById("calcBtn");
+      calcBtn.addEventListener("click", () => {
+        const errorBox = document.getElementById("errorBox");
+        const resultsBox = document.getElementById("resultsBox");
+        const tbody = document.getElementById("resultsTableBody");
 
-      errorBox.style.display = "none";
-      errorBox.textContent = "";
-      resultsBox.style.display = "none";
-      tbody.innerHTML = "";
+        errorBox.style.display = "none";
+        errorBox.textContent = "";
+        resultsBox.style.display = "none";
+        tbody.innerHTML = "";
 
-      const todayStr = document.getElementById("todayInput").value;
-      const today = parseLocalDate(todayStr);
-
-      if (!today) {
-        errorBox.textContent = "Please enter a valid value for today’s date.";
-        errorBox.style.display = "block";
-        return;
-      }
-
-      const batches = [];
-
-      // Weekly
-      const weeklyNext = getNextWeeklyLaunch(today);
-      batches.push({
-        name: "Weekly batch",
-        nextLaunch: weeklyNext
-      });
-
-      // Bi-weekly
-      const biNext = getNextCycleLaunch(today, BIWEEKLY_ANCHOR, BIWEEKLY_INTERVAL);
-      batches.push({
-        name: "Bi-weekly batch",
-        nextLaunch: biNext
-      });
-
-      // Monthly (28-day)
-      const monthlyNext = getNextCycleLaunch(today, MONTHLY_ANCHOR, MONTHLY_INTERVAL);
-      batches.push({
-        name: "28-day “monthly” batch",
-        nextLaunch: monthlyNext
-      });
-
-      // Enrich with automation + countdowns
-      batches.forEach(batch => {
-        const automation = addDays(batch.nextLaunch, 3);
-        batch.automationDate = automation;
-        batch.daysUntilLaunch = diffInDays(today, batch.nextLaunch);
-        batch.daysUntilAutomation = diffInDays(today, automation);
-      });
-
-      // Fill results table
-      batches.forEach(batch => {
-        let statusClass = "status-upcoming";
-        let statusText = "Upcoming";
-
-        if (batch.daysUntilLaunch === 0) {
-          statusClass = "status-today";
-          statusText = "Launch today";
-        } else if (batch.daysUntilLaunch < 0) {
-          statusClass = "status-past";
-          statusText = "Already passed";
+        const todayStr = document.getElementById("todayInput").value;
+        const today = parseLocalDate(todayStr);
+        if (!today) {
+          errorBox.textContent = "Please enter a valid value for today’s date.";
+          errorBox.style.display = "block";
+          return;
         }
 
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${batch.name}</td>
-          <td>${formatNiceDate(batch.nextLaunch)}</td>
-          <td>${getDayName(batch.nextLaunch)}</td>
-          <td>${batch.daysUntilLaunch}</td>
-          <td>
-            <span class="status-pill ${statusClass}">
-              ${statusText}
-            </span>
-          </td>
-        `;
-        tbody.appendChild(tr);
+        const batches = [];
+
+        // Weekly
+        const weeklyNext = getNextWeeklyLaunch(today);
+        batches.push({ name: "Weekly batch", nextLaunch: weeklyNext });
+
+        // Bi-weekly
+        const biNext = getNextCycleLaunch(today, BIWEEKLY_ANCHOR, BIWEEKLY_INTERVAL);
+        batches.push({ name: "Bi-weekly batch", nextLaunch: biNext });
+
+        // Monthly (28-day)
+        const monthlyNext = getNextCycleLaunch(today, MONTHLY_ANCHOR, MONTHLY_INTERVAL);
+        batches.push({ name: "28-day “monthly” batch", nextLaunch: monthlyNext });
+
+        // Enrich with automation + countdowns
+        batches.forEach((batch) => {
+          const automation = addDays(batch.nextLaunch, 3);
+          batch.automationDate = automation;
+          batch.daysUntilLaunch = diffInDays(today, batch.nextLaunch);
+          batch.daysUntilAutomation = diffInDays(today, automation);
+        });
+
+        // Fill results table
+        batches.forEach((batch) => {
+          let statusClass = "status-upcoming";
+          let statusText = "Upcoming";
+
+          if (batch.daysUntilLaunch === 0) {
+            statusClass = "status-today";
+            statusText = "Launch today";
+          } else if (batch.daysUntilLaunch < 0) {
+            statusClass = "status-past";
+            statusText = "Already passed";
+          }
+
+          const tr = document.createElement("tr");
+          tr.innerHTML =
+            "<td>" +
+            batch.name +
+            "</td>" +
+            "<td>" +
+            formatNiceDate(batch.nextLaunch) +
+            "</td>" +
+            "<td>" +
+            getDayName(batch.nextLaunch) +
+            "</td>" +
+            "<td>" +
+            batch.daysUntilLaunch +
+            "</td>" +
+            '<td><span class="status-pill ' +
+            statusClass +
+            '">' +
+            statusText +
+            "</span></td>";
+
+          tbody.appendChild(tr);
+        });
+
+        resultsBox.style.display = "block";
+
+        renderDashboard(batches);
+        handleNotifications(batches);
       });
+    }
 
-      resultsBox.style.display = "block";
+    // ---- BRIDGE TOOL (Bill new Rx tab) ----
 
-      // Update dashboard
-      renderDashboard(batches);
+    function initBridgeTool() {
+      const todayInput = document.getElementById("bridgeTodayDate");
+      const launchInput = document.getElementById("bridgeNextLaunch");
+      const calcBtn = document.getElementById("bridgeCalcBtn");
+      const errorBox = document.getElementById("bridgeErrorBox");
 
-      // Fire notifications (if enabled)
-      handleNotifications(batches, today);
-    });
+      // Prefill dates: today and coming Sunday
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      todayInput.value = formatDateYMD(today);
+      const daysUntilSunday = (7 - today.getDay()) % 7;
+      const comingSunday = addDays(today, daysUntilSunday);
+      launchInput.value = formatDateYMD(comingSunday);
+
+      calcBtn.addEventListener("click", () => {
+        errorBox.style.display = "none";
+        errorBox.textContent = "";
+
+        const batchType = document.getElementById("bridgeBatchType").value;
+        const todayStr = todayInput.value;
+        const launchStr = launchInput.value;
+        const tabsPerDayStr = document.getElementById("bridgeTabsPerDay").value;
+        const drugName = document.getElementById("bridgeDrugName").value.trim();
+
+        const outputBox = document.getElementById("bridgeOutputBox");
+
+        const todayDate = parseLocalDate(todayStr);
+        const launchDate = parseLocalDate(launchStr);
+        const tabsPerDay = parseFloat(tabsPerDayStr || "0");
+
+        if (!todayDate || !launchDate) {
+          errorBox.textContent =
+            "Please enter valid dates for today and the next launch.";
+          errorBox.style.display = "block";
+          outputBox.innerHTML = "";
+          return;
+        }
+
+        if (!tabsPerDay || tabsPerDay <= 0) {
+          errorBox.textContent =
+            "Please enter a valid number for tablets per day (e.g., 1 for OD, 2 for BID).";
+          errorBox.style.display = "block";
+          outputBox.innerHTML = "";
+          return;
+        }
+
+        if (!isSunday(launchDate)) {
+          errorBox.textContent =
+            "The next launch date should be a Sunday based on your workflow. You can still calculate, but double-check the date.";
+          errorBox.style.display = "block";
+        }
+
+        // CPAK blister with this change ready for pickup: launch + 14 days (Sunday → Sunday)
+        const cpReady = addDays(launchDate, 14);
+
+        // Bridge coverage: from TODAY up to the day before CPAK pickup
+        const lastBridgeDay = addDays(cpReady, -1);
+        let bridgeDays = diffInDays(todayDate, cpReady);
+        if (bridgeDays < 0) bridgeDays = 0;
+
+        // Quantity to bill: tabs per day × days from today → CPAK ready
+        const quantityRaw = tabsPerDay * bridgeDays;
+        const quantity = Math.round(quantityRaw * 100) / 100;
+
+        // Days supply to bill = days from TODAY → NEXT LAUNCH (your real rule)
+        let daysSupplyToBill = diffInDays(todayDate, launchDate);
+        if (daysSupplyToBill <= 0) {
+          daysSupplyToBill = 1; // same-day change: at least 1 day
+        }
+
+        const batchLabel =
+          batchType === "weekly"
+            ? "Weekly batch"
+            : batchType === "biweekly"
+            ? "Bi-weekly batch"
+            : "28-day “monthly” batch";
+
+        const drugLabel = drugName || "this medication";
+
+        const noteLines = [];
+
+        noteLines.push(
+          "Bridge fill for new Rx / dose change for " + drugLabel + "."
+        );
+        noteLines.push("Batch group: " + batchLabel + ".");
+        noteLines.push(
+          "Next launch: " +
+            formatNiceDateNoWeekday(launchDate) +
+            "; CPAK blister with change expected ready for pickup: " +
+            formatNiceDateNoWeekday(cpReady) +
+            "."
+        );
+        noteLines.push(
+          "Billed quantity: " +
+            quantity +
+            " tab(s) with " +
+            daysSupplyToBill +
+            " day(s) supply entered (from " +
+            formatNiceDateNoWeekday(todayDate) +
+            " until launch on " +
+            formatNiceDateNoWeekday(launchDate) +
+            "), while the total quantity is intended to cover until the CPAK pack with this change is in place (coverage through " +
+            formatNiceDateNoWeekday(lastBridgeDay) +
+            ")."
+        );
+        noteLines.push(
+          "Adjust as needed based on clinical judgment and payer rules."
+        );
+
+        const noteText = noteLines.join(" ");
+
+        const html =
+          '<div class="wizard-output-card">' +
+          '<div class="wizard-output-title">Bridge summary</div>' +
+          '<div class="wizard-output-row">' +
+          '<span class="wizard-output-label">Batch</span>' +
+          '<span class="wizard-output-value">' +
+          batchLabel +
+          "</span>" +
+          "</div>" +
+          '<div class="wizard-output-row">' +
+          '<span class="wizard-output-label">Today</span>' +
+          '<span class="wizard-output-value">' +
+          formatNiceDateNoWeekday(todayDate) +
+          "</span>" +
+          "</div>" +
+          '<div class="wizard-output-row">' +
+          '<span class="wizard-output-label">Next launch (Sunday)</span>' +
+          '<span class="wizard-output-value">' +
+          formatNiceDateNoWeekday(launchDate) +
+          "</span>" +
+          "</div>" +
+          '<div class="wizard-output-row">' +
+          '<span class="wizard-output-label">CPAK with change ready</span>' +
+          '<span class="wizard-output-value">' +
+          formatNiceDateNoWeekday(cpReady) +
+          "</span>" +
+          "</div>" +
+          '<div class="wizard-output-row">' +
+          '<span class="wizard-output-label">Bridge coverage (calendar)</span>' +
+          '<span class="wizard-output-value">' +
+          bridgeDays +
+          " day(s) (" +
+          formatNiceDateNoWeekday(todayDate) +
+          " → " +
+          formatNiceDateNoWeekday(lastBridgeDay) +
+          ")</span>" +
+          "</div>" +
+          '<div class="wizard-output-row">' +
+          '<span class="wizard-output-label">Quantity to bill</span>' +
+          '<span class="wizard-output-value">' +
+          quantity +
+          " tab(s)</span>" +
+          "</div>" +
+          '<div class="wizard-output-row">' +
+          '<span class="wizard-output-label">Days supply to enter</span>' +
+          '<span class="wizard-output-value">' +
+          daysSupplyToBill +
+          " day(s) (from today until launch)</span>" +
+          "</div>" +
+          "</div>" +
+          '<div class="wizard-output-card">' +
+          '<div class="wizard-output-title">Suggested supplemental note</div>' +
+          '<textarea id="bridgeNoteText" class="wizard-note-textarea">' +
+          noteText +
+          "</textarea>" +
+          '<button type="button" id="bridgeCopyBtn" class="bridge-copy-btn">Copy note</button>' +
+          '<div id="bridgeNoteStatus" class="bridge-note-status">' +
+          "You can tweak the wording before copying." +
+          "</div>" +
+          "</div>";
+
+        outputBox.innerHTML = html;
+
+        const copyBtn = document.getElementById("bridgeCopyBtn");
+        const noteTextarea = document.getElementById("bridgeNoteText");
+        const statusEl = document.getElementById("bridgeNoteStatus");
+
+        copyBtn.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(noteTextarea.value);
+            statusEl.textContent = "Note copied to clipboard ✅";
+          } catch (e) {
+            statusEl.textContent =
+              "Unable to auto-copy. You can select and copy manually.";
+          }
+        });
+      });
+    }
 
     // ---- INIT ----
 
@@ -2574,6 +2973,8 @@
     initNotifications();
     initCalendar();
     initWizard();
+    initSchedule();
+    initBridgeTool();
   </script>
 </body>
 </html>
