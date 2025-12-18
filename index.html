@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Batch Launch Planner</title>
+  <title>The Blister Packs Tool</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
@@ -20,6 +20,7 @@
       --calendar-muted-text: #9ca3af;
       --calendar-other-month-opacity: 0.35;
     }
+  :root { --tab-hover-bg: rgba(56, 189, 248, 0.12); }
 
     /* Dark theme */
     body[data-theme="dark"] {
@@ -53,6 +54,9 @@
       --calendar-other-month-opacity: 0.35;
     }
 
+    body[data-theme="light"] { --tab-hover-bg: rgba(56, 189, 248, 0.10); }
+    body[data-theme="dark"]  { --tab-hover-bg: rgba(56, 189, 248, 0.16); }
+
     * {
       box-sizing: border-box;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -66,12 +70,15 @@
       display: flex;
       justify-content: center;
       min-height: 100vh;
+      position: relative;
     }
 
     .container {
       max-width: 1000px;
       width: 100%;
       padding: 24px 16px 40px;
+      position: relative;
+      z-index: 1;
     }
 
     .card {
@@ -154,7 +161,7 @@
 
     .tab-btn:hover {
       color: var(--muted-strong);
-      background: rgba(148, 163, 184, 0.08);
+      background: var(--tab-hover-bg);
     }
 
     .tab-btn--active {
@@ -326,7 +333,7 @@
 
     .status-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 999px; font-size: 0.7rem; border: 1px solid var(--pill-border); color: var(--text); }
     .status-today { border-color: #22c55e; background: rgba(34, 197, 94, 0.12); color: #bbf7d0; }
-    .status-upcoming { border-color: #38bdf8; background: rgba(56, 189, 248, 0.12); color: #bae6fd; }
+    .status-upcoming { border-color: #38bdf8; background: rgba(56, 189, 248, 0.12); color: #000000; }
     .status-past { border-color: #f97316; background: rgba(249, 115, 22, 0.12); color: #fed7aa; }
 
     /* Wizard */
@@ -401,14 +408,28 @@
 
     /* Quick Links tab */
     .links-card { margin-top: 8px; border-radius: 12px; border: 1px solid var(--border); padding: 10px 10px 14px; background: var(--card-bg); font-size: 0.82rem; }
-    .links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 8px; }
-    .links-subcard { border-radius: 10px; border: 1px solid var(--border); padding: 8px 9px; background: rgba(148, 163, 184, 0.04); }
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .links-subcard {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 8px 9px;
+      background: rgba(148, 163, 184, 0.04);
+    }
     .links-title { font-weight: 600; margin-bottom: 4px; }
     .links-subtitle { font-weight: 600; margin-bottom: 4px; }
     .quick-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #38bdf8; text-decoration: none; }
     .quick-link:hover { text-decoration: underline; }
     .quick-link-pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--border); font-size: 0.75rem; background: rgba(148, 163, 184, 0.06); }
-    .quick-link-desc { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+    .quick-link-desc {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
 
     @media (max-width: 800px) { .wizard-grid { grid-template-columns: minmax(0, 1fr); } }
     @media (max-width: 640px) {
@@ -417,18 +438,45 @@
       .calendar-day-number { font-size: 0.7rem; }
       .theme-select-wrapper { min-width: 0; }
     }
-  </style>
+  /* === Style 2: Livelier particle field + glassier card (theme-aware) === */
+:root { --card-glass-bg: rgba(2, 6, 23, 0.48); }
+body[data-theme="light"] {
+  --card-glass-bg: rgba(255, 255, 255, 0.58);
+  --particle1: rgba(56,189,248,0.90);
+  --particle2: rgba(99,102,241,0.85);
+  --particle3: rgba(14,165,233,0.85);
+  --particleLine: rgba(56,189,248,0.35);
+}
+body[data-theme="dark"]  {
+  --card-glass-bg: rgba(2, 6, 23, 0.50);
+  --particle1: rgba(56,189,248,0.85);
+  --particle2: rgba(99,102,241,0.78);
+  --particle3: rgba(14,165,233,0.78);
+  --particleLine: rgba(99,102,241,0.28);
+}
+
+/* Fullscreen particle canvas */
+#bgParticles{position:fixed;inset:0;z-index:0;display:block;background:transparent;pointer-events:none;} 
+
+/* Make the main card a bit more glassy */
+.card{background:var(--card-glass-bg)!important;-webkit-backdrop-filter:blur(16px) saturate(180%);backdrop-filter:blur(16px) saturate(180%);border-color: rgba(148,163,184,0.35);} 
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  #bgParticles{display:none;}
+}
+
+html{background:var(--bg);} 
+</style>
 </head>
 <body data-theme="light">
+  <canvas id="bgParticles" aria-hidden="true"></canvas>
   <div class="container">
     <div class="card">
       <div class="card-header">
         <div>
-          <h1>Batch Launch Planner</h1>
-          <div class="subtitle">
-            Tools for batch scheduling and blister pack workflow: schedule overview, calendar, new blister pack
-            patient wizard, bridge billing, training, and quick links.
-          </div>
+          <h1>The Blister Packs Tool</h1>
+          <div class="small">Created by Ali Al-Dirawi (PharmD Student)</div>
         </div>
         <div class="theme-select-wrapper">
           <span class="theme-label">Theme</span>
@@ -443,7 +491,7 @@
       <div class="tabs">
         <button class="tab-btn tab-btn--active" data-tab-target="schedule">Schedule</button>
         <button class="tab-btn" data-tab-target="new-patient">New blister patient</button>
-        <button class="tab-btn" data-tab-target="bill-rx">Bill new Rx (bridge)</button>
+        <button class="tab-btn" data-tab-target="bill-rx">Bill New RX</button>
         <button class="tab-btn" data-tab-target="training">Training</button>
         <button class="tab-btn" data-tab-target="quick-links">Quick Links Hub</button>
       </div>
@@ -536,10 +584,6 @@
             </thead>
             <tbody id="resultsTableBody"><!-- Filled by JS --></tbody>
           </table>
-          <div class="small" style="margin-top:8px;">
-            Anchor rules: Weekly = every Sunday; Bi-weekly anchor = Nov 23, 2025; 28-day “monthly” anchor = Nov 16, 2025.
-            Pattern: Launch (Sunday) → Automation (Wednesday, +3 days) → Delivery (Monday, +8 days).
-          </div>
           <div class="small" style="margin-top:6px;">
             ISP report:
             <a href="http://isp:6777/login" target="_blank" rel="noopener noreferrer">isp:6777/login</a>
@@ -703,7 +747,7 @@
 
       <!-- TAB: Bill new Rx (bridge) -->
       <div id="tab-bill-rx" class="tab-content">
-        <div class="section-title">Bill new prescription for existing blister patient (bridge)</div>
+        <div class="section-title">Bill New RX</div>
         <div class="small">
           Use this when an existing blister-pack patient gets a new Rx or dose change mid-cycle. The tool will calculate:
           <strong>quantity</strong> to bill, <strong>days supply</strong> (from today until the next launch Sunday),
@@ -742,6 +786,15 @@
                 <label for="bridgeTabsPerDay">Tablets per day</label>
                 <input type="number" id="bridgeTabsPerDay" step="0.25" min="0" />
                 <div class="wizard-helper">Example: OD = 1, BID = 2, 1.5 tabs/day = 1.5.</div>
+              </div>
+
+              <div class="wizard-row" style="margin-top:10px;">
+                <label for="bridgeHasOnHand">Is there already a CPAK blister in the pharmacy for this patient?</label>
+                <select id="bridgeHasOnHand">
+                  <option value="no" selected>No</option>
+                  <option value="yes">Yes</option>
+                </select>
+                <div class="wizard-helper">If <strong>Yes</strong>, quantity will cover <strong>3 weeks (21 days)</strong> of doses to account for the blister on hand and the next two blisters until the change arrives.</div>
               </div>
 
               <div class="wizard-row" style="margin-top:10px;">
@@ -1045,7 +1098,9 @@
       <!-- TAB: Quick Links Hub -->
       <div id="tab-quick-links" class="tab-content">
         <div class="section-title">Quick Links Hub</div>
-        <div class="small">One place for the key tools you use around blister packs. All links open in a new tab.</div>
+        <div class="small">
+          One place for the key tools you use around blister packs. All links open in a new tab.
+        </div>
 
         <div class="links-card">
           <div class="links-title">External tools & references</div>
@@ -1054,42 +1109,114 @@
             <!-- ISP link -->
             <div class="links-subcard">
               <div class="links-subtitle">ISP – Pre-Verification Batch Report</div>
-              <a class="quick-link" href="http://isp:6777/login" target="_blank" rel="noopener noreferrer">
-                <span>🔗</span><span>Open ISP login</span>
+              <a
+                class="quick-link"
+                href="http://isp:6777/login"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>🔗</span>
+                <span>Open ISP login</span>
               </a>
-              <div class="quick-link-desc">Use this after launching a batch to run the ISP report: confirm billing, identify non-DSP products, and spot patients paying too much. Only works on the pharmacy network.</div>
-              <div class="quick-link-pill" style="margin-top: 6px;"><span>💡</span><span>Tip: run it same day as launch</span></div>
+              <div class="quick-link-desc">
+                Use this after launching a batch to run the ISP report: confirm billing, identify
+                non-DSP products, and spot patients paying too much. Only works on the pharmacy
+                network.
+              </div>
+              <div class="quick-link-pill" style="margin-top: 6px;">
+                <span>💡</span>
+                <span>Tip: run it same day as launch</span>
+              </div>
             </div>
 
             <!-- ODB e-formulary -->
             <div class="links-subcard">
               <div class="links-subtitle">ODB e-Formulary</div>
-              <a class="quick-link" href="https://www.formulary.health.gov.on.ca/formulary/" target="_blank" rel="noopener noreferrer">
-                <span>📘</span><span>Open ODB e-Formulary</span>
+              <a
+                class="quick-link"
+                href="https://www.formulary.health.gov.on.ca/formulary/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>📘</span>
+                <span>Open ODB e-Formulary</span>
               </a>
-              <div class="quick-link-desc">Official Ontario Drug Benefit e-formulary. Use it alongside CPAK’s DSP list when you’re switching products or confirming coverage for blister-pack patients.</div>
-              <div class="quick-link-pill" style="margin-top: 6px;"><span>🔍</span><span>Search by DIN / generic / brand</span></div>
+              <div class="quick-link-desc">
+                Official Ontario Drug Benefit e-formulary. Use it alongside CPAK’s DSP list when
+                you’re switching products or confirming coverage for blister-pack patients.
+              </div>
+              <div class="quick-link-pill" style="margin-top: 6px;">
+                <span>🔍</span>
+                <span>Search by DIN / generic / brand</span>
+              </div>
             </div>
 
             <!-- CPAK Formulary -->
             <div class="links-subcard">
               <div class="links-subtitle">CPAK Formulary (SharePoint)</div>
-              <a class="quick-link" href="https://mtcad.sharepoint.com/:x:/s/EBG/ESeCNXBAdXlFp0SA8sHL7hEBKruMM2KBFVwKOpCS_JHx2w?CID=74fa29ef-1c4f-f46b-b775-3f481b82a598&e=suAtca" target="_blank" rel="noopener noreferrer">
-                <span>📂</span><span>Open CPAK formulary</span>
+              <a
+                class="quick-link"
+                href="https://mtcad.sharepoint.com/:x:/s/EBG/ESeCNXBAdXlFp0SA8sHL7hEBKruMM2KBFVwKOpCS_JHx2w?CID=74fa29ef-1c4f-f46b-b775-3f481b82a598&e=suAtca"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>📂</span>
+                <span>Open CPAK formulary</span>
               </a>
-              <div class="quick-link-desc">Shared Services CPAK formulary on SharePoint. Use it to confirm CPAK-approved DSP products and align with what can be packed in blisters.</div>
-              <div class="quick-link-pill" style="margin-top: 6px;"><span>💊</span><span>DSP & packable list</span></div>
+              <div class="quick-link-desc">
+                Shared Services CPAK formulary on SharePoint. Use it to confirm CPAK-approved DSP
+                products and align with what can be packed in blisters.
+              </div>
+              <div class="quick-link-pill" style="margin-top: 6px;">
+                <span>💊</span>
+                <span>DSP & packable list</span>
+              </div>
             </div>
 
             <!-- Frequent dispensing form -->
             <div class="links-subcard">
               <div class="links-subtitle">Frequent Dispensing Form (ODB)</div>
-              <a class="quick-link" href="https://assets.ctfassets.net/6duvppog4mpx/4y03tYQV7zBZm6Qam8jcTZ/2226a639097cb30bddfed519103cd072/Frequent_Dispensing_Form.pdf" target="_blank" rel="noopener noreferrer">
-                <span>📝</span><span>Open ODB Frequent Dispensing Form (PDF)</span>
+              <a
+                class="quick-link"
+                href="https://assets.ctfassets.net/6duvppog4mpx/4y03tYQV7zBZm6Qam8jcTZ/2226a639097cb30bddfed519103cd072/Frequent_Dispensing_Form.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>📝</span>
+                <span>Open ODB Frequent Dispensing Form (PDF)</span>
               </a>
-              <div class="quick-link-desc">Print, complete, and fax to the prescriber when a patient qualifies for frequent dispensing (e.g., blister packs). File signed copies according to your store’s policy and the Blister Pack Guide.</div>
-              <div class="quick-link-pill" style="margin-top: 6px;"><span>🖨️</span><span>Print & keep near MAR binders</span></div>
+              <div class="quick-link-desc">
+                Print, complete, and fax to the prescriber when a patient qualifies for frequent
+                dispensing (e.g., blister packs). File signed copies according to your store’s
+                policy and the Blister Pack Guide.
+              </div>
+              <div class="quick-link-pill" style="margin-top: 6px;">
+                <span>🖨️</span>
+                <span>Print & keep near MAR binders</span>
+              </div>
             </div>
+
+            <!-- Blister Pack Training Guide (Google Doc) -->
+            <div class="links-subcard">
+              <div class="links-subtitle">Blister Pack Training Guide (Google Doc)</div>
+              <a
+                class="quick-link"
+                href="https://docs.google.com/document/d/1lcmdu-bw4nqMBfQ5u6CtB1IN3CyQ9Bgv/edit?usp=sharing&amp;ouid=115543479751509479212&amp;rtpof=true&amp;sd=true"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>🧭</span>
+                <span>Open Training Guide</span>
+              </a>
+              <div class="quick-link-desc">
+                Your full A–Z blister workflow guide (setup → bagging). Use it alongside the Training tab.
+              </div>
+              <div class="quick-link-pill" style="margin-top: 6px;">
+                <span>📎</span>
+                <span>Always current</span>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -1188,12 +1315,19 @@
     function initTheme() {
       let saved = null;
       try { saved = localStorage.getItem("batchTheme"); } catch (e) {}
-      const defaultTheme = saved || "light";
+      // Clamp to supported themes only
+      if (saved !== "light" && saved !== "dark") {
+        saved = "light";
+      }
+      const defaultTheme = saved;
       applyTheme(defaultTheme);
       const select = document.getElementById("themeSelect");
       if (select) {
         select.value = defaultTheme;
-        select.addEventListener("change", (e) => { applyTheme(e.target.value); });
+        select.addEventListener("change", (e) => {
+          const next = e.target.value === "dark" ? "dark" : "light";
+          applyTheme(next);
+        });
       }
     }
 
@@ -1706,20 +1840,25 @@
 
     // ---- BRIDGE TOOL (Bill new Rx tab) ----
     function initBridgeTool() {
-      const todayInput  = document.getElementById("bridgeTodayDate");
+      // Grab elements
+      const todayInput = document.getElementById("bridgeTodayDate");
       const launchInput = document.getElementById("bridgeNextLaunch");
-      const calcBtn     = document.getElementById("bridgeCalcBtn");
-      const errorBox    = document.getElementById("bridgeErrorBox");
+      const calcBtn = document.getElementById("bridgeCalcBtn");
+      const errorBox = document.getElementById("bridgeErrorBox");
 
-      if (!todayInput || !launchInput || !calcBtn) return;
+      if (!todayInput || !launchInput || !calcBtn || !errorBox) return;
 
       // Prefill dates: today and coming Sunday
       const today = new Date();
-      today.setHours(0,0,0,0);
-      if (!todayInput.value) todayInput.value = formatDateYMD(today);
+      today.setHours(0, 0, 0, 0);
+      todayInput.value = formatDateYMD(today);
       const daysUntilSunday = (7 - today.getDay()) % 7;
       const comingSunday = addDays(today, daysUntilSunday);
-      if (!launchInput.value) launchInput.value = formatDateYMD(comingSunday);
+      launchInput.value = formatDateYMD(comingSunday);
+
+      // Ensure default for on-hand select is "no"
+      const hasOnHandSelect = document.getElementById("bridgeHasOnHand");
+      if (hasOnHandSelect && !hasOnHandSelect.value) { hasOnHandSelect.value = "no"; }
 
       calcBtn.addEventListener("click", () => {
         errorBox.style.display = "none";
@@ -1729,6 +1868,7 @@
         const todayStr    = todayInput.value;
         const launchStr   = launchInput.value;
         const tpdStr      = document.getElementById("bridgeTabsPerDay").value;
+        const hasOnHand   = (document.getElementById("bridgeHasOnHand")?.value === 'yes');
         const drugLabelIn = (document.getElementById("bridgeDrugName").value || "").trim();
 
         const outputBox   = document.getElementById("bridgeOutputBox");
@@ -1756,26 +1896,38 @@
 
         // CPAK blister with this change ready for pickup: launch + 14 days (Sunday → Sunday)
         const cpReady = addDays(launchDate, 14);
-        const lastBridgeDay = addDays(cpReady, -1);
+        let lastBridgeDay;
+        let bridgeDays;
+        let quantity;
 
-        // Bridge coverage: from TODAY up to the day before CPAK pickup (for calendar)
-        let bridgeDays = diffInDays(todayDate, cpReady);
-        if (bridgeDays < 0) bridgeDays = 0;
-
-        // Quantity to bill: tabs/day × days from today → CPAK ready
-        const rawQty = tabsPerDay * bridgeDays;
-        const quantity = Math.round(rawQty * 100) / 100; // 2 decimals
+        if (hasOnHand) {
+          // Always 3 weeks overlay when a blister is on hand
+          bridgeDays = 21;
+          lastBridgeDay = addDays(todayDate, 21 - 1); // inclusive display
+          quantity = Math.round((tabsPerDay * 21) * 100) / 100;
+        } else {
+          // Default: cover until CPAK pack with change is ready
+          bridgeDays = diffInDays(todayDate, cpReady);
+          if (bridgeDays < 0) bridgeDays = 0;
+          lastBridgeDay = addDays(cpReady, -1);
+          const rawQty = tabsPerDay * bridgeDays;
+          quantity = Math.round(rawQty * 100) / 100; // 2 decimals
+        }
 
         // Days supply to bill = days from TODAY → NEXT LAUNCH
         let daysSupplyToBill = diffInDays(todayDate, launchDate);
         if (daysSupplyToBill <= 0) daysSupplyToBill = 1; // at least 1 day if same-day
 
         // Actual days supplied A = quantity / tabsPerDay (rounded to 2 decimals)
-        let actualDaysSupply = quantity / tabsPerDay;
-        actualDaysSupply = Math.round(actualDaysSupply * 100) / 100;
-        // If it's nearly an integer, show as int
-        if (Math.abs(actualDaysSupply - Math.round(actualDaysSupply)) < 0.01) {
-          actualDaysSupply = Math.round(actualDaysSupply);
+        let actualDaysSupply;
+        if (hasOnHand) {
+          actualDaysSupply = 21;
+        } else {
+          actualDaysSupply = quantity / tabsPerDay;
+          actualDaysSupply = Math.round(actualDaysSupply * 100) / 100;
+          if (Math.abs(actualDaysSupply - Math.round(actualDaysSupply)) < 0.01) {
+            actualDaysSupply = Math.round(actualDaysSupply);
+          }
         }
 
         const batchLabel =
@@ -1785,9 +1937,10 @@
 
         const drugLabel = drugLabelIn || "this medication";
 
+        const noteEndDate = hasOnHand ? formatNiceDateNoWeekday(addDays(todayDate, 21)) : formatNiceDateNoWeekday(cpReady);
         const noteText =
           `Change for ${drugLabel}. Billed ${quantity} tablets for ${daysSupplyToBill} days to align for next launch date (${formatNiceDateNoWeekday(launchDate)}). ` +
-          `However, patient was indeed given ${actualDaysSupply} days supply to cover (from ${formatNiceDateNoWeekday(todayDate)} until ${formatNiceDateNoWeekday(cpReady)}).`;
+          `However, patient was indeed given ${actualDaysSupply} days supply to cover (from ${formatNiceDateNoWeekday(todayDate)} until ${noteEndDate}).`;
 
         const techHint = `
           <div class="wizard-output-card">
@@ -1876,33 +2029,125 @@
       }
     }
 
-    // ---- INIT ----
-    function runSelfTests() {
-      // Existing sanity tests
-      console.assert(typeof parseLocalDate("2025-12-11").getTime === "function", "parseLocalDate should return Date");
-      const wed = new Date(2025, 10, 19); wed.setHours(0,0,0,0); // Wed Nov 19, 2025
-      const nextSun = getNextWeeklyLaunch(wed); console.assert(nextSun.getDay() === 0, "Next weekly launch should be Sunday");
-      const today = new Date(2025, 10, 20); today.setHours(0,0,0,0); // Thu Nov 20, 2025
-      const bi = getNextCycleLaunch(today, BIWEEKLY_ANCHOR, BIWEEKLY_INTERVAL); console.assert(bi >= today, "Bi-weekly next >= today");
-      const mo = getNextCycleLaunch(today, MONTHLY_ANCHOR, MONTHLY_INTERVAL); console.assert(mo >= today, "Monthly next >= today");
-
-      // Added tests
-      console.assert(typeof initSchedule === 'function', 'initSchedule should be defined');
-      console.assert(formatDateYMD(new Date(2025,0,1)) === '2025-01-01', 'formatDateYMD format check');
-      console.assert(diffInDays(new Date(2025,0,1), new Date(2025,0,2)) === 1, 'diffInDays basic');
-      const jl = ['A','B'].join('\n'); console.assert(jl === 'A\nB', 'newline join is correct');
+    // Ensure external links always open even if a parent captures the click
+    function initLinkSafety() {
+      const openers = document.querySelectorAll('a.quick-link, .results a');
+      openers.forEach((a) => {
+        a.addEventListener('click', (e) => {
+          // Let browser handle it normally. Only intercept if we successfully opened a new tab.
+          if (a.target === '_blank') {
+            const w = window.open(a.href, '_blank', 'noopener');
+            if (w) {
+              e.preventDefault(); // only prevent if a new tab actually opened
+            }
+          }
+        });
+      });
     }
 
-    setDefaultToday();
-    initTodayButton();
-    initTheme();
-    initTabs();
-    initCalendar();
-    initWizard();
-    initSchedule();
-    initBridgeTool();
-    initTrainingAccordion();
-    runSelfTests();
-  </script>
+    // ---- PARTICLE BACKGROUND (Style 2) ----
+function initParticles(){
+  const canvas = document.getElementById('bgParticles');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let width, height, DPR = Math.min(window.devicePixelRatio||1, 2);
+  function resize(){
+    width = window.innerWidth; height = window.innerHeight;
+    canvas.style.width = width+'px'; canvas.style.height = height+'px';
+    canvas.width = Math.floor(width*DPR); canvas.height = Math.floor(height*DPR);
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const area = width * height;
+  const base = Math.floor(area / 9000); // denser field
+  const count = Math.max(140, Math.min(340, base));
+  const particles = Array.from({length:count}, () => ({
+    x: Math.random()*width,
+    y: Math.random()*height,
+    vx: (Math.random()-0.5)*1.05,
+    vy: (Math.random()-0.5)*1.05,
+    r: Math.random()*1.8 + 0.7,
+    hue: (Math.random()*3)|0
+  }));
+  const linkDist = Math.min(220, Math.max(140, Math.sqrt(width * height) / 8));
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let rafId;
+  function styles(){
+    const cs = getComputedStyle(document.body);
+    return {
+      p1: cs.getPropertyValue('--particle1') || 'rgba(56,189,248,0.8)',
+      p2: cs.getPropertyValue('--particle2') || 'rgba(99,102,241,0.75)',
+      p3: cs.getPropertyValue('--particle3') || 'rgba(14,165,233,0.75)',
+      line: cs.getPropertyValue('--particleLine') || 'rgba(56,189,248,0.25)'
+    };
+  }
+
+  function tick(){
+    const s = styles();
+    ctx.clearRect(0,0,width,height);
+
+    // Draw and move particles
+    for(let i=0;i<particles.length;i++){
+      const a = particles[i];
+      a.x += a.vx; a.y += a.vy;
+      if(a.x < -10) a.x = width+10; else if(a.x>width+10) a.x = -10;
+      if(a.y < -10) a.y = height+10; else if(a.y>height+10) a.y = -10;
+
+      ctx.beginPath();
+      ctx.fillStyle = (a.hue===0?s.p1:(a.hue===1?s.p2:s.p3));
+      ctx.arc(a.x,a.y,a.r,0,Math.PI*2);
+      ctx.fill();
+    }
+
+    // Connections
+    ctx.lineWidth = 1;
+    for(let i=0;i<particles.length;i++){
+      const a = particles[i];
+      for(let j=i+1;j<particles.length;j++){
+        const b = particles[j];
+        const dx=a.x-b.x, dy=a.y-b.y; const d2=dx*dx+dy*dy;
+        if(d2 < linkDist*linkDist){
+          const alpha = 1 - (Math.sqrt(d2)/linkDist);
+          ctx.strokeStyle = s.line;
+          ctx.globalAlpha = alpha * 0.9;
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
+      }
+    }
+
+    if(!reduce.matches) rafId = requestAnimationFrame(tick);
+  }
+
+  tick();
+  // Safari compatibility: addEventListener may not exist on MediaQueryList
+  const onPrefChange = () => {
+    if(reduce.matches && rafId){ cancelAnimationFrame(rafId); }
+    else { tick(); }
+  };
+  if (typeof reduce.addEventListener === 'function') {
+    reduce.addEventListener('change', onPrefChange);
+  } else if (typeof reduce.addListener === 'function') {
+    reduce.addListener(onPrefChange);
+  }
+}
+
+// ---- INIT ----
+// Initialize theme first so styles are available to other features
+initTheme();
+try { initParticles(); } catch(e) { /* fail-safe: don't block app */ }
+setDefaultToday();
+initTodayButton();
+initTabs();
+initCalendar();
+initWizard();
+initSchedule();
+initBridgeTool();
+initTrainingAccordion();
+initLinkSafety();
+</script>
 </body>
 </html>
