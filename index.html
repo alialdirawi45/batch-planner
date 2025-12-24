@@ -438,40 +438,22 @@
       .calendar-day-number { font-size: 0.7rem; }
       .theme-select-wrapper { min-width: 0; }
     }
-  /* === Style 2: Livelier particle field + glassier card (theme-aware) === */
+  /* === Style 2: Glassier card (theme-aware) – particles removed === */
 :root { --card-glass-bg: rgba(2, 6, 23, 0.48); }
 body[data-theme="light"] {
   --card-glass-bg: rgba(255, 255, 255, 0.58);
-  --particle1: rgba(56,189,248,0.90);
-  --particle2: rgba(99,102,241,0.85);
-  --particle3: rgba(14,165,233,0.85);
-  --particleLine: rgba(56,189,248,0.35);
 }
 body[data-theme="dark"]  {
   --card-glass-bg: rgba(2, 6, 23, 0.50);
-  --particle1: rgba(56,189,248,0.85);
-  --particle2: rgba(99,102,241,0.78);
-  --particle3: rgba(14,165,233,0.78);
-  --particleLine: rgba(99,102,241,0.28);
 }
-
-/* Fullscreen particle canvas */
-#bgParticles{position:fixed;inset:0;z-index:0;display:block;background:transparent;pointer-events:none;} 
 
 /* Make the main card a bit more glassy */
 .card{background:var(--card-glass-bg)!important;-webkit-backdrop-filter:blur(16px) saturate(180%);backdrop-filter:blur(16px) saturate(180%);border-color: rgba(148,163,184,0.35);} 
 
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce){
-  #bgParticles{display:none;}
-}
-
 html{background:var(--bg);} 
-</style>
+  </style>
 </head>
-<body data-theme="light">
-  <canvas id="bgParticles" aria-hidden="true"></canvas>
-  <div class="container">
+<body data-theme="light"><div class="container">
     <div class="card">
       <div class="card-header">
         <div>
@@ -571,7 +553,19 @@ html{background:var(--bg);}
 
         <!-- 4. Results table -->
         <div class="results" id="resultsBox" style="display:none;">
-          <div class="results-title">4. Next launch dates</div>
+          <div class="results-title">4. Next dispensing fee charge dates</div>
+          <div class="wizard-output-card" id="feeReminderBox" style="display:none; margin-top:8px;">
+            <div class="wizard-output-title">Dispensing fee reminder</div>
+            <div class="wizard-output-row">
+              <span class="wizard-output-label">Next fee charge</span>
+              <span class="wizard-output-value" id="feeNextDate">—</span>
+            </div>
+            <div class="wizard-output-row">
+              <span class="wizard-output-label">Days until</span>
+              <span class="wizard-output-value" id="feeDaysUntil">—</span>
+            </div>
+            <div class="small" style="margin-top:4px;">Applies on the first Sunday launch in Feb, May, Aug, and Nov.</div>
+          </div>
           <table class="results-table">
             <thead>
               <tr>
@@ -584,10 +578,6 @@ html{background:var(--bg);}
             </thead>
             <tbody id="resultsTableBody"><!-- Filled by JS --></tbody>
           </table>
-          <div class="small" style="margin-top:6px;">
-            ISP report:
-            <a href="http://isp:6777/login" target="_blank" rel="noopener noreferrer">isp:6777/login</a>
-          </div>
         </div>
       </div>
 
@@ -1292,6 +1282,24 @@ html{background:var(--bg);}
     function diffInDays(a, b) { const msPerDay = 24 * 60 * 60 * 1000; return Math.round((b - a) / msPerDay); }
     function isSunday(date) { return date.getDay() === 0; }
 
+    // --- Dispensing fee helpers ---
+    function getFirstSundayOfMonth(year, monthIndex) {
+      const d = new Date(year, monthIndex, 1);
+      d.setHours(0,0,0,0);
+      while (d.getDay() !== 0) { d.setDate(d.getDate() + 1); }
+      return d;
+    }
+    function getNextFeeChargeDate(today) {
+      const y = today.getFullYear();
+      const feeMonths = [1, 4, 7, 10]; // Feb, May, Aug, Nov
+      const candidates = [];
+      feeMonths.forEach((m) => candidates.push(getFirstSundayOfMonth(y, m)));
+      feeMonths.forEach((m) => candidates.push(getFirstSundayOfMonth(y + 1, m)));
+      candidates.sort((a,b) => a - b);
+      for (const d of candidates) { if (d >= today) return d; }
+      return candidates[0];
+    }
+
     function getNextWeeklyLaunch(today) {
       const todayDow = today.getDay();
       const diff = (7 + WEEKLY_TARGET_WEEKDAY - todayDow) % 7;
@@ -1767,7 +1775,6 @@ html{background:var(--bg);}
         noteLines.push(`- CPAK delivery: ${formatNiceDate(delivery)} (Monday).`);
         noteLines.push(`- Bagging/pick-up: ${formatNiceDate(bagging)} (Sunday, after product check).`);
 
-        // FIX: Join with a proper newline character (no stray quote/newline)
         document.getElementById("wizardNoteText").value = noteLines.join("\n");
 
         // Render patient mini calendar and reveal output
@@ -1835,6 +1842,17 @@ html{background:var(--bg);}
 
         resultsBox.style.display = "block";
         renderDashboard(batches);
+
+        // --- Dispensing fee reminder ---
+        const feeBox = document.getElementById("feeReminderBox");
+        const feeNext = document.getElementById("feeNextDate");
+        const feeDays = document.getElementById("feeDaysUntil");
+        if (feeBox && feeNext && feeDays) {
+          const nextFeeDate = getNextFeeChargeDate(today);
+          feeNext.textContent = formatNiceDate(nextFeeDate);
+          feeDays.textContent = diffInDays(today, nextFeeDate);
+          feeBox.style.display = "block";
+        }
       });
     }
 
@@ -2045,109 +2063,35 @@ html{background:var(--bg);}
       });
     }
 
-    // ---- PARTICLE BACKGROUND (Style 2) ----
-function initParticles(){
-  const canvas = document.getElementById('bgParticles');
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let width, height, DPR = Math.min(window.devicePixelRatio||1, 2);
-  function resize(){
-    width = window.innerWidth; height = window.innerHeight;
-    canvas.style.width = width+'px'; canvas.style.height = height+'px';
-    canvas.width = Math.floor(width*DPR); canvas.height = Math.floor(height*DPR);
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  const area = width * height;
-  const base = Math.floor(area / 9000); // denser field
-  const count = Math.max(140, Math.min(340, base));
-  const particles = Array.from({length:count}, () => ({
-    x: Math.random()*width,
-    y: Math.random()*height,
-    vx: (Math.random()-0.5)*1.05,
-    vy: (Math.random()-0.5)*1.05,
-    r: Math.random()*1.8 + 0.7,
-    hue: (Math.random()*3)|0
-  }));
-  const linkDist = Math.min(220, Math.max(140, Math.sqrt(width * height) / 8));
-
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let rafId;
-  function styles(){
-    const cs = getComputedStyle(document.body);
-    return {
-      p1: cs.getPropertyValue('--particle1') || 'rgba(56,189,248,0.8)',
-      p2: cs.getPropertyValue('--particle2') || 'rgba(99,102,241,0.75)',
-      p3: cs.getPropertyValue('--particle3') || 'rgba(14,165,233,0.75)',
-      line: cs.getPropertyValue('--particleLine') || 'rgba(56,189,248,0.25)'
-    };
-  }
-
-  function tick(){
-    const s = styles();
-    ctx.clearRect(0,0,width,height);
-
-    // Draw and move particles
-    for(let i=0;i<particles.length;i++){
-      const a = particles[i];
-      a.x += a.vx; a.y += a.vy;
-      if(a.x < -10) a.x = width+10; else if(a.x>width+10) a.x = -10;
-      if(a.y < -10) a.y = height+10; else if(a.y>height+10) a.y = -10;
-
-      ctx.beginPath();
-      ctx.fillStyle = (a.hue===0?s.p1:(a.hue===1?s.p2:s.p3));
-      ctx.arc(a.x,a.y,a.r,0,Math.PI*2);
-      ctx.fill();
-    }
-
-    // Connections
-    ctx.lineWidth = 1;
-    for(let i=0;i<particles.length;i++){
-      const a = particles[i];
-      for(let j=i+1;j<particles.length;j++){
-        const b = particles[j];
-        const dx=a.x-b.x, dy=a.y-b.y; const d2=dx*dx+dy*dy;
-        if(d2 < linkDist*linkDist){
-          const alpha = 1 - (Math.sqrt(d2)/linkDist);
-          ctx.strokeStyle = s.line;
-          ctx.globalAlpha = alpha * 0.9;
-          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
-          ctx.globalAlpha = 1;
-        }
+    // ---- LIGHTWEIGHT SELF-TESTS (console only) ----
+    function selfTest() {
+      try {
+        console.group('[Blister Tool self-test]');
+        const d = parseLocalDate('2025-01-05');
+        console.assert(d && d.getFullYear() === 2025 && d.getMonth() === 0 && d.getDate() === 5, 'parseLocalDate failed');
+        const sunday = getNextWeeklyLaunch(new Date(2025, 0, 5)); // Sun Jan 5, 2025
+        console.assert(isSunday(sunday), 'getNextWeeklyLaunch should return Sunday');
+        const fee = getNextFeeChargeDate(new Date(2025, 0, 5));
+        console.assert(isSunday(fee), 'Next fee charge should be a Sunday');
+        console.groupEnd();
+      } catch (e) {
+        console.warn('Self-test error', e);
       }
     }
 
-    if(!reduce.matches) rafId = requestAnimationFrame(tick);
-  }
-
-  tick();
-  // Safari compatibility: addEventListener may not exist on MediaQueryList
-  const onPrefChange = () => {
-    if(reduce.matches && rafId){ cancelAnimationFrame(rafId); }
-    else { tick(); }
-  };
-  if (typeof reduce.addEventListener === 'function') {
-    reduce.addEventListener('change', onPrefChange);
-  } else if (typeof reduce.addListener === 'function') {
-    reduce.addListener(onPrefChange);
-  }
-}
-
-// ---- INIT ----
-// Initialize theme first so styles are available to other features
-initTheme();
-try { initParticles(); } catch(e) { /* fail-safe: don't block app */ }
-setDefaultToday();
-initTodayButton();
-initTabs();
-initCalendar();
-initWizard();
-initSchedule();
-initBridgeTool();
-initTrainingAccordion();
-initLinkSafety();
-</script>
+    // ---- INIT ----
+    // Initialize theme first so styles are available to other features
+    initTheme();
+    setDefaultToday();
+    initTodayButton();
+    initTabs();
+    initCalendar();
+    initWizard();
+    initSchedule();
+    initBridgeTool();
+    initTrainingAccordion();
+    initLinkSafety();
+    selfTest();
+  </script>
 </body>
 </html>
