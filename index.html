@@ -787,6 +787,18 @@ html{background:var(--bg);}
                 <div class="wizard-helper">If <strong>Yes</strong>, quantity will cover <strong>3 weeks (21 days)</strong> of doses to account for the blister on hand and the next two blisters until the change arrives.</div>
               </div>
 
+              <!-- NEW (weekly only): until next blister pack? -->
+              <div class="wizard-row" id="bridgeUntilNextPackRow" style="margin-top:10px; display:none;">
+                <label for="bridgeUntilNextPack">Do you want to give the patinet enough supply until thier next blister pack?</label>
+                <select id="bridgeUntilNextPack">
+                  <option value="yes" selected>Yes</option>
+                  <option value="no">No</option>
+                </select>
+                <div class="wizard-helper">
+                  Weekly batch only. If “No”, quantity is capped at 14 days (next two weekly blisters). If “Yes”, keeps the current logic.
+                </div>
+              </div>
+
               <div class="wizard-row" style="margin-top:10px;">
                 <label for="bridgeDrugName">Drug name / strength (for note)</label>
                 <input type="text" id="bridgeDrugName" placeholder="e.g., Rosuvastatin 20 mg" />
@@ -1878,6 +1890,24 @@ html{background:var(--bg);}
       const hasOnHandSelect = document.getElementById("bridgeHasOnHand");
       if (hasOnHandSelect && !hasOnHandSelect.value) { hasOnHandSelect.value = "no"; }
 
+      // Ensure default for "until next blister pack" is "yes"
+      const untilNextPackSelect = document.getElementById("bridgeUntilNextPack");
+      if (untilNextPackSelect && !untilNextPackSelect.value) { untilNextPackSelect.value = "yes"; }
+
+      // Show/hide weekly-only question based on batch type
+      const batchTypeSelect = document.getElementById("bridgeBatchType");
+      const untilRow = document.getElementById("bridgeUntilNextPackRow");
+      const updateUntilVisibility = () => {
+        if (!batchTypeSelect || !untilRow || !untilNextPackSelect) return;
+        const isWeekly = batchTypeSelect.value === "weekly";
+        untilRow.style.display = isWeekly ? "block" : "none";
+        if (!isWeekly) { untilNextPackSelect.value = "yes"; }
+      };
+      updateUntilVisibility();
+      if (batchTypeSelect) {
+        batchTypeSelect.addEventListener("change", updateUntilVisibility);
+      }
+
       calcBtn.addEventListener("click", () => {
         errorBox.style.display = "none";
         errorBox.textContent = "";
@@ -1887,6 +1917,7 @@ html{background:var(--bg);}
         const launchStr   = launchInput.value;
         const tpdStr      = document.getElementById("bridgeTabsPerDay").value;
         const hasOnHand   = (document.getElementById("bridgeHasOnHand")?.value === 'yes');
+        const wantsUntilNextPack = (document.getElementById("bridgeUntilNextPack")?.value !== 'no');
         const drugLabelIn = (document.getElementById("bridgeDrugName").value || "").trim();
 
         const outputBox   = document.getElementById("bridgeOutputBox");
@@ -1918,7 +1949,12 @@ html{background:var(--bg);}
         let bridgeDays;
         let quantity;
 
-        if (hasOnHand) {
+        // NEW: Weekly-only option to cap quantity at 14 days (next two weekly blisters)
+        if (batchType === "weekly" && !wantsUntilNextPack) {
+          bridgeDays = 14;
+          lastBridgeDay = addDays(todayDate, 14 - 1); // inclusive display
+          quantity = Math.round((tabsPerDay * 14) * 100) / 100;
+        } else if (hasOnHand) {
           // Always 3 weeks overlay when a blister is on hand
           bridgeDays = 21;
           lastBridgeDay = addDays(todayDate, 21 - 1); // inclusive display
@@ -1940,6 +1976,8 @@ html{background:var(--bg);}
         let actualDaysSupply;
         if (hasOnHand) {
           actualDaysSupply = 21;
+        } else if (batchType === "weekly" && !wantsUntilNextPack) {
+          actualDaysSupply = 14;
         } else {
           actualDaysSupply = quantity / tabsPerDay;
           actualDaysSupply = Math.round(actualDaysSupply * 100) / 100;
@@ -1955,7 +1993,13 @@ html{background:var(--bg);}
 
         const drugLabel = drugLabelIn || "this medication";
 
-        const noteEndDate = hasOnHand ? formatNiceDateNoWeekday(addDays(todayDate, 21)) : formatNiceDateNoWeekday(cpReady);
+        const noteEndDate =
+          (batchType === "weekly" && !wantsUntilNextPack)
+            ? formatNiceDateNoWeekday(addDays(todayDate, 14))
+            : hasOnHand
+              ? formatNiceDateNoWeekday(addDays(todayDate, 21))
+              : formatNiceDateNoWeekday(cpReady);
+
         const noteText =
           `Change for ${drugLabel}. Billed ${quantity} tablets for ${daysSupplyToBill} days to align for next launch date (${formatNiceDateNoWeekday(launchDate)}). ` +
           `However, patient was indeed given ${actualDaysSupply} days supply to cover (from ${formatNiceDateNoWeekday(todayDate)} until ${noteEndDate}).`;
