@@ -778,7 +778,7 @@ html{background:var(--bg);}
                 <div class="wizard-helper">Example: OD = 1, BID = 2, 1.5 tabs/day = 1.5.</div>
               </div>
 
-              <div class="wizard-row" style="margin-top:10px;">
+              <div class="wizard-row" id="bridgeHasOnHandRow" style="margin-top:10px;">
                 <label for="bridgeHasOnHand">Is there already a CPAK blister in the pharmacy for this patient?</label>
                 <select id="bridgeHasOnHand">
                   <option value="no" selected>No</option>
@@ -796,6 +796,24 @@ html{background:var(--bg);}
                 </select>
                 <div class="wizard-helper">
                   Weekly batch only. If “No”, quantity is capped at 14 days (next two weekly blisters). If “Yes”, keeps the current logic.
+                </div>
+              </div>
+
+              <!-- NEW (bi-weekly only): extra days supply -->
+              <div class="wizard-row" id="bridgeBiExtraRow" style="margin-top:10px; display:none;">
+                <label for="bridgeBiExtraYesNo">Extra days supply to account for</label>
+                <select id="bridgeBiExtraYesNo">
+                  <option value="no" selected>No</option>
+                  <option value="yes">Yes</option>
+                </select>
+                <div class="wizard-helper">
+                  Bi-weekly batch only. Default quantity is 14 days. If “Yes”, add extra days below.
+                </div>
+
+                <div style="margin-top:8px;">
+                  <label for="bridgeBiExtraDays">Extra days (manual)</label>
+                  <input type="number" id="bridgeBiExtraDays" min="0" step="1" value="0" />
+                  <div class="wizard-helper">Adds on top of the base 14 days (only when “Yes”).</div>
                 </div>
               </div>
 
@@ -1890,23 +1908,61 @@ html{background:var(--bg);}
       const hasOnHandSelect = document.getElementById("bridgeHasOnHand");
       if (hasOnHandSelect && !hasOnHandSelect.value) { hasOnHandSelect.value = "no"; }
 
-      // Ensure default for "until next blister pack" is "yes"
+      // Ensure default for weekly question is "yes"
       const untilNextPackSelect = document.getElementById("bridgeUntilNextPack");
       if (untilNextPackSelect && !untilNextPackSelect.value) { untilNextPackSelect.value = "yes"; }
 
-      // Show/hide weekly-only question based on batch type
+      // Ensure defaults for bi-weekly extras
+      const biExtraYesNo = document.getElementById("bridgeBiExtraYesNo");
+      const biExtraDays = document.getElementById("bridgeBiExtraDays");
+      if (biExtraYesNo && !biExtraYesNo.value) { biExtraYesNo.value = "no"; }
+      if (biExtraDays && (biExtraDays.value === "" || biExtraDays.value == null)) { biExtraDays.value = "0"; }
+
+      // Show/hide weekly-only and bi-weekly-only questions based on batch type
       const batchTypeSelect = document.getElementById("bridgeBatchType");
-      const untilRow = document.getElementById("bridgeUntilNextPackRow");
-      const updateUntilVisibility = () => {
-        if (!batchTypeSelect || !untilRow || !untilNextPackSelect) return;
-        const isWeekly = batchTypeSelect.value === "weekly";
-        untilRow.style.display = isWeekly ? "block" : "none";
-        if (!isWeekly) { untilNextPackSelect.value = "yes"; }
+      const weeklyRow = document.getElementById("bridgeUntilNextPackRow");
+      const biRow = document.getElementById("bridgeBiExtraRow");
+      const hasOnHandRow = document.getElementById("bridgeHasOnHandRow");
+
+      const updateBiExtraEnable = () => {
+        if (!biExtraYesNo || !biExtraDays) return;
+        const yes = biExtraYesNo.value === "yes";
+        biExtraDays.disabled = !yes;
+        if (!yes) biExtraDays.value = "0";
       };
-      updateUntilVisibility();
-      if (batchTypeSelect) {
-        batchTypeSelect.addEventListener("change", updateUntilVisibility);
-      }
+
+      const updateBridgeOptionVisibility = () => {
+        if (!batchTypeSelect) return;
+        const isWeekly = batchTypeSelect.value === "weekly";
+        const isBiWeekly = batchTypeSelect.value === "biweekly";
+
+        if (hasOnHandRow && hasOnHandSelect) {
+          hasOnHandRow.style.display = isBiWeekly ? "none" : "block";
+          if (isBiWeekly) { hasOnHandSelect.value = "no"; }
+        }
+
+        if (weeklyRow && untilNextPackSelect) {
+          weeklyRow.style.display = isWeekly ? "block" : "none";
+          if (!isWeekly) { untilNextPackSelect.value = "yes"; }
+        }
+
+        if (biRow && biExtraYesNo && biExtraDays) {
+          biRow.style.display = isBiWeekly ? "block" : "none";
+          if (!isBiWeekly) {
+            biExtraYesNo.value = "no";
+            biExtraDays.value = "0";
+            biExtraDays.disabled = true;
+          } else {
+            updateBiExtraEnable();
+          }
+        }
+      };
+
+      updateBridgeOptionVisibility();
+      updateBiExtraEnable();
+
+      if (batchTypeSelect) batchTypeSelect.addEventListener("change", updateBridgeOptionVisibility);
+      if (biExtraYesNo) biExtraYesNo.addEventListener("change", updateBiExtraEnable);
 
       calcBtn.addEventListener("click", () => {
         errorBox.style.display = "none";
@@ -1916,8 +1972,13 @@ html{background:var(--bg);}
         const todayStr    = todayInput.value;
         const launchStr   = launchInput.value;
         const tpdStr      = document.getElementById("bridgeTabsPerDay").value;
-        const hasOnHand   = (document.getElementById("bridgeHasOnHand")?.value === 'yes');
+
+        // If bi-weekly is selected, treat "has on hand" as false regardless (and row is hidden)
+        const hasOnHand   = (batchType === "biweekly") ? false : (document.getElementById("bridgeHasOnHand")?.value === 'yes');
+
         const wantsUntilNextPack = (document.getElementById("bridgeUntilNextPack")?.value !== 'no');
+        const biExtraChoice = (document.getElementById("bridgeBiExtraYesNo")?.value === 'yes');
+        const biExtraDaysRaw = document.getElementById("bridgeBiExtraDays")?.value;
         const drugLabelIn = (document.getElementById("bridgeDrugName").value || "").trim();
 
         const outputBox   = document.getElementById("bridgeOutputBox");
@@ -1925,6 +1986,9 @@ html{background:var(--bg);}
         const todayDate   = parseLocalDate(todayStr);
         const launchDate  = parseLocalDate(launchStr);
         const tabsPerDay  = parseFloat(tpdStr || "0");
+
+        let biExtraDaysVal = parseInt(String(biExtraDaysRaw || "0"), 10);
+        if (isNaN(biExtraDaysVal) || biExtraDaysVal < 0) biExtraDaysVal = 0;
 
         if (!todayDate || !launchDate) {
           errorBox.textContent = "Please enter valid dates for today and the next launch.";
@@ -1949,16 +2013,22 @@ html{background:var(--bg);}
         let bridgeDays;
         let quantity;
 
-        // NEW: Weekly-only option to cap quantity at 14 days (next two weekly blisters)
-        if (batchType === "weekly" && !wantsUntilNextPack) {
-          bridgeDays = 14;
-          lastBridgeDay = addDays(todayDate, 14 - 1); // inclusive display
-          quantity = Math.round((tabsPerDay * 14) * 100) / 100;
-        } else if (hasOnHand) {
+        if (hasOnHand) {
           // Always 3 weeks overlay when a blister is on hand
           bridgeDays = 21;
           lastBridgeDay = addDays(todayDate, 21 - 1); // inclusive display
           quantity = Math.round((tabsPerDay * 21) * 100) / 100;
+        } else if (batchType === "weekly" && !wantsUntilNextPack) {
+          // Weekly: cap quantity at 14 days (next two weekly blisters)
+          bridgeDays = 14;
+          lastBridgeDay = addDays(todayDate, 14 - 1); // inclusive display
+          quantity = Math.round((tabsPerDay * 14) * 100) / 100;
+        } else if (batchType === "biweekly") {
+          // Bi-weekly: default 14 days + optional manual extra days
+          const extra = biExtraChoice ? biExtraDaysVal : 0;
+          bridgeDays = 14 + extra;
+          lastBridgeDay = addDays(todayDate, bridgeDays - 1); // inclusive display
+          quantity = Math.round((tabsPerDay * bridgeDays) * 100) / 100;
         } else {
           // Default: cover until CPAK pack with change is ready
           bridgeDays = diffInDays(todayDate, cpReady);
@@ -1978,6 +2048,8 @@ html{background:var(--bg);}
           actualDaysSupply = 21;
         } else if (batchType === "weekly" && !wantsUntilNextPack) {
           actualDaysSupply = 14;
+        } else if (batchType === "biweekly") {
+          actualDaysSupply = bridgeDays;
         } else {
           actualDaysSupply = quantity / tabsPerDay;
           actualDaysSupply = Math.round(actualDaysSupply * 100) / 100;
@@ -1994,11 +2066,13 @@ html{background:var(--bg);}
         const drugLabel = drugLabelIn || "this medication";
 
         const noteEndDate =
-          (batchType === "weekly" && !wantsUntilNextPack)
-            ? formatNiceDateNoWeekday(addDays(todayDate, 14))
-            : hasOnHand
-              ? formatNiceDateNoWeekday(addDays(todayDate, 21))
-              : formatNiceDateNoWeekday(cpReady);
+          hasOnHand
+            ? formatNiceDateNoWeekday(addDays(todayDate, 21))
+            : (batchType === "weekly" && !wantsUntilNextPack)
+              ? formatNiceDateNoWeekday(addDays(todayDate, 14))
+              : (batchType === "biweekly")
+                ? formatNiceDateNoWeekday(addDays(todayDate, bridgeDays))
+                : formatNiceDateNoWeekday(cpReady);
 
         const noteText =
           `Change for ${drugLabel}. Billed ${quantity} tablets for ${daysSupplyToBill} days to align for next launch date (${formatNiceDateNoWeekday(launchDate)}). ` +
