@@ -19,88 +19,164 @@
       --calendar-cell-bg: #020617;
       --calendar-muted-text: #9ca3af;
       --calendar-other-month-opacity: 0.35;
+      --surface-1: #fffdf9;
+      --surface-2: #fbf5ea;
+      --surface-3: #fdf0dc;
+      --text-strong: #2e261e;
+      --text-soft: #6d5e4e;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 18px;
+      --radius-xl: 24px;
+      --shadow-soft: 0 12px 24px rgba(108, 72, 36, 0.10);
+      --shadow-strong: 0 24px 52px rgba(92, 63, 32, 0.16);
+      --ring-focus: 0 0 0 2px rgba(233, 189, 131, 0.55);
     }
   :root { --tab-hover-bg: rgba(56, 189, 248, 0.12); }
 
-    /* Dark theme */
+    /* Dark disabled: keep same palette as light */
     body[data-theme="dark"] {
-      --bg: #0f172a;
-      --text: #e5e7eb;
-      --card-bg: #020617;
-      --border: #1f2937;
-      --muted: #9ca3af;
-      --muted-strong: #d1d5db;
-      --pill-border: #4b5563;
-      --error-text: #fecaca;
-      --table-row-border: #111827;
-      --calendar-cell-bg: #020617;
-      --calendar-muted-text: #9ca3af;
-      --calendar-other-month-opacity: 0.35;
+      --bg: #f6f2ea;
+      --text: #2e261e;
+      --card-bg: #fffdf9;
+      --border: #e4d9c9;
+      --muted: #6d5e4e;
+      --muted-strong: #4f4031;
+      --pill-border: #b99b7e;
+      --error-text: #b91c1c;
+      --table-row-border: #eadfcf;
+      --calendar-cell-bg: #fffdf9;
+      --calendar-muted-text: #8b7b69;
+      --calendar-other-month-opacity: 0.42;
     }
 
     /* Light theme */
     body[data-theme="light"] {
-      --bg: #f3f4f6;
-      --text: #111827;
-      --card-bg: #ffffff;
-      --border: #e5e7eb;
-      --muted: #6b7280;
-      --muted-strong: #4b5563;
-      --pill-border: #9ca3af;
+      --bg: #f6f2ea;
+      --text: #2e261e;
+      --card-bg: #fffdf9;
+      --border: #e4d9c9;
+      --muted: #6d5e4e;
+      --muted-strong: #4f4031;
+      --pill-border: #b99b7e;
       --error-text: #b91c1c;
-      --table-row-border: #e5e7eb;
-      --calendar-cell-bg: #ffffff;
-      --calendar-muted-text: #9ca3af;
-      --calendar-other-month-opacity: 0.35;
+      --table-row-border: #eadfcf;
+      --calendar-cell-bg: #fffdf9;
+      --calendar-muted-text: #8b7b69;
+      --calendar-other-month-opacity: 0.42;
     }
 
-    body[data-theme="light"] { --tab-hover-bg: rgba(56, 189, 248, 0.10); }
-    body[data-theme="dark"]  { --tab-hover-bg: rgba(56, 189, 248, 0.16); }
+    body[data-theme="light"] { --tab-hover-bg: rgba(180, 83, 9, 0.10); }
+    body[data-theme="dark"]  { --tab-hover-bg: rgba(180, 83, 9, 0.10); }
 
     * {
       box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "Avenir Next", "Manrope", "Segoe UI", sans-serif;
     }
 
     body {
       margin: 0;
       padding: 0;
-      background: var(--bg);
+      background:
+        radial-gradient(circle at 95% 4%, rgba(217, 119, 6, 0.12), transparent 40%),
+        radial-gradient(circle at 0% 10%, rgba(120, 53, 15, 0.1), transparent 36%),
+        linear-gradient(165deg, #f8f3eb 0%, #f2ecdf 100%);
       color: var(--text);
       display: flex;
       justify-content: center;
       min-height: 100vh;
       position: relative;
     }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.2;
+      background-image: radial-gradient(rgba(90, 60, 30, 0.08) 0.5px, transparent 0.5px);
+      background-size: 3px 3px;
+      mix-blend-mode: multiply;
+    }
 
     .container {
-      max-width: 1000px;
+      max-width: 1080px;
       width: 100%;
-      padding: 24px 16px 40px;
+      padding: var(--space-6) var(--space-4) 44px;
       position: relative;
       z-index: 1;
     }
 
     .card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 24px 20px 28px;
-      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--surface-1), var(--surface-2));
+      border-radius: var(--radius-xl);
+      padding: var(--space-6) var(--space-5) 30px;
+      box-shadow: var(--shadow-strong);
+      border: 1px solid #dfd1bf;
     }
 
     .card-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: flex-start;
-      margin-bottom: 12px;
+      margin-bottom: var(--space-3);
+      border: 1px solid #efdfc9;
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      background:
+        linear-gradient(135deg, rgba(255, 247, 234, 0.98), rgba(255, 253, 249, 0.98)),
+        radial-gradient(circle at 96% 4%, rgba(180, 83, 9, 0.08), transparent 42%);
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      background: #fce8cc;
+      border: 1px solid #efc88f;
+      color: #8a4a11;
+      font-size: 0.69rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 800;
+      padding: 4px 9px;
+    }
+
+    .brand-meta {
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .utility-bar {
+      margin-top: var(--space-2);
+      display: grid;
+      grid-template-columns: auto;
+      gap: var(--space-2);
+      align-items: center;
+      justify-content: end;
+    }
+
+    .utility-note { font-size: 0.78rem; color: var(--muted); }
+    .utility-stamp {
+      border: 1px solid #efc88f;
+      border-radius: 999px;
+      background: #fce8cc;
+      color: #8a4a11;
+      font-size: 0.73rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      white-space: nowrap;
     }
 
     h1 {
-      font-size: 1.6rem;
+      font-size: 1.7rem;
       margin: 0 0 4px;
       color: var(--text);
+      font-family: "Space Grotesk", "Manrope", sans-serif;
+      letter-spacing: -0.01em;
     }
 
     .subtitle {
@@ -114,6 +190,7 @@
       align-items: flex-end;
       gap: 4px;
       min-width: 150px;
+      display: none;
     }
 
     .theme-label {
@@ -139,45 +216,101 @@
     /* Tabs */
     .tabs {
       display: flex;
-      gap: 6px;
+      gap: var(--space-2);
       border-bottom: 1px solid var(--border);
       margin-bottom: 14px;
-      margin-top: 4px;
+      margin-top: 12px;
+      padding-bottom: 8px;
       flex-wrap: wrap;
     }
 
     .tab-btn {
-      border: none;
-      background: transparent;
-      padding: 6px 12px;
-      font-size: 0.85rem;
+      border-radius: 999px;
+      border: 1px solid #eadfce;
+      background: #fffaf1;
+      padding: 7px 12px;
+      font-size: 0.82rem;
+      font-weight: 700;
       cursor: pointer;
-      color: var(--muted);
-      border-bottom: 2px solid transparent;
-      border-radius: 0;
+      color: var(--muted-strong);
       box-shadow: none;
       margin-top: 0;
     }
 
     .tab-btn:hover {
-      color: var(--muted-strong);
-      background: var(--tab-hover-bg);
+      background: #fdf0dc;
+    }
+    .tab-btn:focus-visible {
+      outline: 2px solid #e9bd83;
+      outline-offset: 2px;
+      border-radius: 8px;
     }
 
     .tab-btn--active {
-      color: var(--text);
-      border-bottom-color: #38bdf8;
-      font-weight: 600;
+      background: #fcead1;
+      border-color: #e9bd83;
+      color: #733f17;
+      font-weight: 700;
     }
 
-    .tab-content { display: none; }
+    .tab-content { display: none; position: relative; }
     .tab-content--active { display: block; }
+    .tab-content--active::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -8px;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, rgba(180, 83, 9, 0.65), transparent);
+    }
+
+    .top-kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+      margin-bottom: 8px;
+    }
+
+    .top-kpi-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: linear-gradient(180deg, #fffdf9, #f9f2e6);
+      padding: 8px 9px;
+      cursor: pointer;
+      transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+    }
+    .top-kpi-card:hover {
+      border-color: #e9bd83;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(138, 74, 17, 0.12);
+    }
+    .top-kpi-card:focus-visible {
+      outline: 2px solid #e9bd83;
+      outline-offset: 2px;
+    }
+    .top-kpi-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 800; }
+    .top-kpi-value { margin-top: 4px; font-size: 0.88rem; color: #8a4a11; font-weight: 700; }
+    .top-kpi-sub { margin-top: 2px; font-size: 0.72rem; color: var(--muted); }
+
+    .focus-jump {
+      animation: focus-pulse 1100ms ease-out 1;
+    }
+    @keyframes focus-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(233, 189, 131, 0.0); }
+      25% { box-shadow: 0 0 0 4px rgba(233, 189, 131, 0.45); }
+      100% { box-shadow: 0 0 0 0 rgba(233, 189, 131, 0.0); }
+    }
 
     .section-title {
-      font-size: 0.95rem;
+      font-size: 0.74rem;
       margin: 18px 0 8px;
-      color: var(--text);
-      font-weight: 600;
+      color: #9a3412;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
     }
 
     label {
@@ -188,37 +321,44 @@
     }
 
     input[type="date"],
-    select {
+    input[type="number"],
+    input[type="text"],
+    select,
+    textarea {
       width: 100%;
-      padding: 8px 10px;
-      border-radius: 8px;
+      padding: 9px 11px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--border);
-      background: var(--card-bg);
+      background: #fffdf9;
       color: var(--text);
       font-size: 0.9rem;
     }
 
     input[type="date"]:focus,
-    select:focus {
+    input[type="number"]:focus,
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus {
       outline: none;
-      border-color: #38bdf8;
-      box-shadow: 0 0 0 1px #38bdf8;
+      border-color: #e9bd83;
+      box-shadow: var(--ring-focus);
     }
 
     button {
       border-radius: 999px;
       border: none;
-      padding: 8px 16px;
-      font-size: 0.9rem;
-      font-weight: 500;
+      padding: 8px 15px;
+      font-size: 0.84rem;
+      font-weight: 700;
       cursor: pointer;
       margin-top: 16px;
-      background: linear-gradient(135deg, #38bdf8, #6366f1);
+      background: linear-gradient(135deg, #b45309, #c2410c);
       color: white;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
+      box-shadow: 0 8px 18px rgba(180, 83, 9, 0.22);
+      transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease, border-color 180ms ease, background 180ms ease;
     }
 
     button:hover { filter: brightness(1.07); transform: translateY(-0.5px); }
@@ -228,6 +368,132 @@
 
     .small { font-size: 0.72rem; color: var(--muted); margin-top: 6px; }
     .error { color: var(--error-text); font-size: 0.8rem; margin-top: 6px; }
+
+    .schedule-action-row {
+      margin-top: 10px;
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      align-items: center;
+      padding: var(--space-2);
+      border: 1px solid #ecdcca;
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, #fffdf9, #f9f2e7);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    }
+
+    .range-drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(37, 17, 3, 0.24);
+      z-index: 79;
+    }
+
+    .range-drawer {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      width: min(470px, calc(100vw - 20px));
+      max-height: calc(100vh - 28px);
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: linear-gradient(180deg, #fffdf9, #fbf5ea);
+      box-shadow: 0 22px 44px rgba(65, 40, 19, 0.25);
+      padding: 12px;
+      z-index: 80;
+      transform: translateX(112%);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 220ms ease, opacity 180ms ease;
+    }
+
+    .range-drawer--open {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .range-drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .range-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .range-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .range-actions button { margin-top: 0; }
+
+    .range-report-summary {
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      padding: 8px;
+      font-size: 0.76rem;
+      color: var(--muted-strong);
+      line-height: 1.45;
+    }
+
+    .range-report-body {
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      max-height: 460px;
+      overflow: auto;
+    }
+
+    .range-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.76rem;
+    }
+    .range-table th,
+    .range-table td {
+      padding: 7px 8px;
+      border-bottom: 1px solid #ece2d7;
+      text-align: left;
+      vertical-align: top;
+    }
+    .range-table th {
+      position: sticky;
+      top: 0;
+      background: #fcead1;
+      color: #733f17;
+      font-size: 0.68rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .range-event-badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 2px 7px;
+      border: 1px solid #dfd1bf;
+      font-size: 0.68rem;
+      white-space: nowrap;
+      background: #fff;
+    }
+
+    .range-event-badge--weekly { background: rgba(56, 189, 248, 0.14); border-color: rgba(56, 189, 248, 0.34); color: #0e5a75; }
+    .range-event-badge--bi { background: rgba(20, 184, 166, 0.14); border-color: rgba(20, 184, 166, 0.34); color: #0f6362; }
+    .range-event-badge--monthly { background: rgba(249, 115, 22, 0.14); border-color: rgba(249, 115, 22, 0.34); color: #8b3c08; }
+    .range-event-badge--fee { background: rgba(234, 179, 8, 0.16); border-color: rgba(234, 179, 8, 0.34); color: #7a4b05; }
 
     /* Dashboard */
     .dashboard {
@@ -274,53 +540,149 @@
     /* Main calendar */
     .calendar-wrapper {
       margin-top: 18px;
-      border-radius: 12px;
+      border-radius: 16px;
       border: 1px solid var(--border);
-      padding: 10px;
-      background: var(--card-bg);
+      padding: 12px;
+      background: linear-gradient(180deg, #fffdf9, #fbf5ea);
     }
 
-    .calendar-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 8px; }
-    .calendar-month-label { font-size: 0.95rem; font-weight: 600; }
+    .calendar-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 8px;
+      background: #fff7ea;
+      border: 1px solid #f0dcc0;
+      border-radius: 12px;
+      padding: 7px 9px;
+    }
+    .calendar-month-label {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #8a4a11;
+      letter-spacing: 0.01em;
+    }
     .calendar-nav { display: flex; gap: 6px; }
 
     .calendar-nav-btn {
       border-radius: 999px;
-      border: 1px solid var(--border);
-      padding: 4px 8px;
+      border: 1px solid #efc88f;
+      padding: 5px 10px;
       font-size: 0.8rem;
-      background: transparent;
-      color: var(--muted-strong);
+      background: #fff;
+      color: #8a4a11;
       cursor: pointer;
       box-shadow: none;
       margin-top: 0;
     }
 
-    .calendar-nav-btn:hover { background: rgba(148, 163, 184, 0.1); }
+    .calendar-nav-btn:hover { background: #fdf0dc; border-color: #e7ba79; }
 
-    table.calendar { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 0.78rem; }
-    .calendar thead th { padding: 4px 0; text-align: center; font-weight: 500; color: var(--calendar-muted-text); }
-    .calendar td { border-radius: 8px; padding: 4px; vertical-align: top; }
+    table.calendar {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 6px;
+      table-layout: fixed;
+      font-size: 0.78rem;
+      margin-top: 8px;
+    }
+    .calendar thead th {
+      padding: 5px 0 2px;
+      text-align: center;
+      font-weight: 700;
+      color: #8a4a11;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.65rem;
+    }
+    .calendar td { border-radius: 10px; padding: 0; vertical-align: top; background: transparent; }
 
-    .calendar-cell { background: var(--calendar-cell-bg); border: 1px solid transparent; cursor: pointer; min-height: 44px; display: flex; flex-direction: column; justify-content: space-between; }
-    .calendar-cell--today { border-color: #38bdf8; }
+    .calendar-cell {
+      background: #fff;
+      border: 1px solid #ecdcca;
+      border-radius: 12px;
+      cursor: pointer;
+      min-height: 74px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 5px 6px;
+      transition: transform 130ms ease, box-shadow 130ms ease, border-color 130ms ease;
+    }
+    .calendar-cell:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 9px 18px rgba(112, 72, 35, 0.12);
+      border-color: #e6c499;
+    }
+    .calendar-cell--today {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.24);
+    }
     .calendar-cell--other { opacity: var(--calendar-other-month-opacity); }
-    .calendar-cell--selected { border-color: #6366f1; box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.6); }
+    .calendar-cell--selected {
+      border-color: #0ea5e9;
+      box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.32), 0 10px 20px rgba(14, 165, 233, 0.13);
+    }
+    .calendar-cell--weekend { background: #fff9ef; }
+    .calendar-cell:focus-visible { outline: 2px solid #e9bd83; outline-offset: 2px; }
 
-    .calendar-day-number { font-size: 0.76rem; text-align: right; }
-    .calendar-dots { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 2px; }
-    .calendar-dot { width: 6px; height: 6px; border-radius: 999px; }
+    .calendar-day-number {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-align: right;
+      color: #6a533e;
+      align-self: flex-end;
+      border: 1px solid #ead8c3;
+      border-radius: 999px;
+      padding: 1px 7px;
+      background: #fffaf2;
+    }
+    .calendar-cell--has-events .calendar-day-number {
+      background: #fcead1;
+      border-color: #efc88f;
+      color: #8a4a11;
+    }
+    .calendar-dots { margin-top: 5px; display: flex; flex-wrap: wrap; gap: 3px; }
+    .calendar-dot { width: 8px; height: 8px; border-radius: 999px; }
     .dot-weekly-launch { background: #38bdf8; }
-    .dot-bi-launch { background: #a855f7; }
+    .dot-bi-launch { background: #14b8a6; }
     .dot-monthly-launch { background: #f97316; }
     .dot-automation { background: #22c55e; }
     .dot-delivery { background: #eab308; }
 
-    .calendar-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; font-size: 0.72rem; color: var(--muted); }
-    .calendar-legend span { display: inline-flex; align-items: center; gap: 4px; }
+    .calendar-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .calendar-legend > span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 999px;
+      border: 1px solid #e8d9c6;
+      background: #fffaf1;
+      padding: 3px 8px;
+      font-weight: 600;
+    }
+    .calendar-legend > .legend-weekly { color: #0e5a75; border-color: rgba(56, 189, 248, 0.36); background: rgba(56, 189, 248, 0.12); }
+    .calendar-legend > .legend-bi { color: #0f6362; border-color: rgba(20, 184, 166, 0.36); background: rgba(20, 184, 166, 0.12); }
+    .calendar-legend > .legend-monthly { color: #8b3c08; border-color: rgba(249, 115, 22, 0.36); background: rgba(249, 115, 22, 0.12); }
+    .calendar-legend > .legend-auto { color: #166534; border-color: rgba(34, 197, 94, 0.36); background: rgba(34, 197, 94, 0.12); }
+    .calendar-legend > .legend-delivery { color: #854d0e; border-color: rgba(234, 179, 8, 0.42); background: rgba(234, 179, 8, 0.14); }
 
-    .calendar-details { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border); }
-    .calendar-details-title { font-size: 0.82rem; font-weight: 600; margin-bottom: 4px; }
+    .calendar-details {
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      padding: 9px;
+    }
+    .calendar-details-title { font-size: 0.84rem; font-weight: 700; margin-bottom: 5px; color: #8a4a11; }
     .calendar-details-body { font-size: 0.78rem; color: var(--muted-strong); }
     .calendar-details-body ul { padding-left: 18px; margin: 4px 0; }
 
@@ -329,12 +691,24 @@
     .results-title { font-size: 0.95rem; margin-bottom: 8px; font-weight: 600; }
     table.results-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
     .results-table th, .results-table td { padding: 8px 6px; text-align: left; border-bottom: 1px solid var(--table-row-border); }
-    .results-table th { font-weight: 600; color: var(--muted); font-size: 0.78rem; }
+    .results-table th {
+      font-weight: 700;
+      color: #733f17;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: #fcead1;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .results-table tbody tr:nth-child(even) { background: rgba(249, 241, 230, 0.55); }
+    .results-table tbody tr:hover { background: rgba(252, 234, 209, 0.55); }
 
     .status-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 999px; font-size: 0.7rem; border: 1px solid var(--pill-border); color: var(--text); }
-    .status-today { border-color: #22c55e; background: rgba(34, 197, 94, 0.12); color: #bbf7d0; }
-    .status-upcoming { border-color: #38bdf8; background: rgba(56, 189, 248, 0.12); color: #000000; }
-    .status-past { border-color: #f97316; background: rgba(249, 115, 22, 0.12); color: #fed7aa; }
+    .status-today { border-color: #22c55e; background: rgba(34, 197, 94, 0.12); color: #14532d; }
+    .status-upcoming { border-color: #38bdf8; background: rgba(56, 189, 248, 0.12); color: var(--text); }
+    .status-past { border-color: #f97316; background: rgba(249, 115, 22, 0.12); color: #9a3412; }
 
     /* Wizard */
     .wizard-card { margin-top: 8px; border-radius: 12px; border: 1px solid var(--border); padding: 10px 10px 12px; background: var(--card-bg); }
@@ -343,6 +717,21 @@
     .wizard-section-title { font-weight: 600; margin-bottom: 4px; }
     .wizard-row { margin-top: 8px; }
     .wizard-helper { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+    .dose-presets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+    .dose-chip {
+      margin-top: 0;
+      border-radius: 999px;
+      border: 1px solid #efc88f;
+      background: #fff;
+      color: #8a4a11;
+      box-shadow: none;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      cursor: pointer;
+    }
+    .dose-chip:hover { background: #fdf0dc; border-color: #e7ba79; }
+    .dose-chip--active { background: #fce8cc; border-color: #e0a860; color: #7c2d12; }
 
     .wizard-output-card { border-radius: 10px; border: 1px solid var(--border); padding: 8px 9px; font-size: 0.78rem; background: rgba(148, 163, 184, 0.04); margin-bottom: 8px; }
     .wizard-output-title { font-weight: 600; margin-bottom: 4px; }
@@ -356,20 +745,22 @@
     .wizard-checklist ul { padding-left: 18px; margin: 4px 0; }
 
     /* Patient mini calendar */
-    .patient-calendar-card { border-radius: 10px; border: 1px solid var(--border); padding: 8px 9px 10px; font-size: 0.78rem; background: rgba(148, 163, 184, 0.04); margin-bottom: 8px; margin-top: 4px; }
+    .patient-calendar-card { border-radius: 12px; border: 1px solid var(--border); padding: 9px 10px 10px; font-size: 0.78rem; background: linear-gradient(180deg, #fffdf9, #fbf5ea); margin-bottom: 8px; margin-top: 4px; }
     .patient-calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; gap: 6px; }
-    .patient-calendar-title { font-weight: 600; }
+    .patient-calendar-title { font-weight: 700; color: #8a4a11; }
     .patient-calendar-months { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; margin-top: 4px; }
-    .patient-calendar-wrapper { border-radius: 8px; border: 1px solid var(--border); padding: 4px 4px 6px; background: var(--calendar-cell-bg); }
-    .patient-calendar-month-label { font-size: 0.8rem; font-weight: 600; margin-bottom: 2px; text-align: center; }
-    table.patient-calendar { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 0.72rem; }
-    .patient-calendar thead th { padding: 3px 0; text-align: center; font-weight: 500; color: var(--calendar-muted-text); }
-    .patient-calendar td { border-radius: 6px; padding: 3px; vertical-align: top; }
-    .patient-calendar-cell { background: var(--calendar-cell-bg); border: 1px solid transparent; min-height: 32px; display: flex; flex-direction: column; justify-content: space-between; }
+    .patient-calendar-wrapper { border-radius: 10px; border: 1px solid var(--border); padding: 6px 6px 7px; background: #fff; box-shadow: 0 7px 16px rgba(86, 58, 31, 0.08); }
+    .patient-calendar-month-label { font-size: 0.78rem; font-weight: 700; margin-bottom: 4px; text-align: center; color: #8a4a11; }
+    table.patient-calendar { width: 100%; border-collapse: separate; border-spacing: 3px; table-layout: fixed; font-size: 0.72rem; }
+    .patient-calendar thead th { padding: 2px 0; text-align: center; font-weight: 700; color: #8a4a11; text-transform: uppercase; letter-spacing: 0.07em; font-size: 0.6rem; }
+    .patient-calendar td { border-radius: 6px; padding: 0; vertical-align: top; background: transparent; }
+    .patient-calendar-cell { background: #fffdf8; border: 1px solid #ecdfcd; border-radius: 8px; min-height: 36px; display: flex; flex-direction: column; justify-content: space-between; padding: 2px 4px 3px; }
     .patient-calendar-cell--other { opacity: var(--calendar-other-month-opacity); }
-    .patient-calendar-day-number { font-size: 0.7rem; text-align: right; }
+    .patient-calendar-cell--weekend { background: #fff9ef; }
+    .patient-calendar-day-number { font-size: 0.62rem; text-align: right; font-weight: 700; align-self: flex-end; border-radius: 999px; border: 1px solid #ead8c3; padding: 1px 6px; background: #fffaf2; color: #6a533e; }
+    .patient-calendar-cell--has-events .patient-calendar-day-number { background: #fcead1; border-color: #efc88f; color: #8a4a11; }
     .patient-calendar-dots { margin-top: 3px; display: flex; flex-wrap: wrap; gap: 2px; }
-    .patient-cal-dot { width: 6px; height: 6px; border-radius: 999px; }
+    .patient-cal-dot { width: 7px; height: 7px; border-radius: 999px; }
     .patient-cal-dot--start { background: #22c55e; }
     .patient-cal-dot--launch { background: #38bdf8; }
     .patient-cal-dot--auto { background: #0ea5e9; }
@@ -400,6 +791,7 @@
     .accordion { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
     .accordion-item { border: 1px solid var(--border); border-radius: 10px; background: rgba(148, 163, 184, 0.04); overflow: hidden; }
     .accordion-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; cursor: pointer; user-select: none; }
+    .accordion-header:focus-visible { outline: 2px solid #e9bd83; outline-offset: -2px; }
     .accordion-title { font-weight: 600; font-size: 0.95rem; }
     .accordion-caret { transition: transform 0.18s ease; font-size: 0.9rem; }
     .accordion-item.open .accordion-caret { transform: rotate(90deg); }
@@ -422,7 +814,7 @@
     }
     .links-title { font-weight: 600; margin-bottom: 4px; }
     .links-subtitle { font-weight: 600; margin-bottom: 4px; }
-    .quick-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #38bdf8; text-decoration: none; }
+    .quick-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #8a4a11; text-decoration: none; }
     .quick-link:hover { text-decoration: underline; }
     .quick-link-pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--border); font-size: 0.75rem; background: rgba(148, 163, 184, 0.06); }
     .quick-link-desc {
@@ -431,55 +823,99 @@
       margin-top: 4px;
     }
 
+    .card { animation: rise-in 380ms ease-out both; }
+    .tab-content--active { animation: fade-in-up 300ms ease both; }
+    @keyframes rise-in {
+      from { opacity: 0; transform: translateY(10px) scale(0.995); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .card, .tab-content--active, .focus-jump { animation: none !important; }
+      .top-kpi-card { transition: none; }
+    }
+
+    @media print {
+      body * { visibility: hidden !important; }
+      #printReport, #printReport * { visibility: visible !important; }
+      #printReport {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background: #fff;
+        color: #000;
+      }
+    }
+
     @media (max-width: 800px) { .wizard-grid { grid-template-columns: minmax(0, 1fr); } }
     @media (max-width: 640px) {
       .card { padding: 18px 14px 22px; }
       h1 { font-size: 1.3rem; }
       .calendar-day-number { font-size: 0.7rem; }
-      .theme-select-wrapper { min-width: 0; }
+      .schedule-action-row { flex-direction: column; align-items: stretch; }
+      .range-controls { grid-template-columns: 1fr; }
+      .utility-bar { grid-template-columns: 1fr; }
+      .top-kpi-strip { grid-template-columns: 1fr; }
+      .wizard-output-row { flex-direction: column; align-items: flex-start; }
+      .wizard-output-value { text-align: left; }
+      button { width: 100%; justify-content: center; }
+      .dose-presets .dose-chip { width: auto; }
     }
-  /* === Style 2: Glassier card (theme-aware) – particles removed === */
-:root { --card-glass-bg: rgba(2, 6, 23, 0.48); }
-body[data-theme="light"] {
-  --card-glass-bg: rgba(255, 255, 255, 0.58);
-}
-body[data-theme="dark"]  {
-  --card-glass-bg: rgba(2, 6, 23, 0.50);
-}
-
-/* Make the main card a bit more glassy */
-.card{background:var(--card-glass-bg)!important;-webkit-backdrop-filter:blur(16px) saturate(180%);backdrop-filter:blur(16px) saturate(180%);border-color: rgba(148,163,184,0.35);} 
-
-html{background:var(--bg);} 
+  /* Keep card soft; no dark-mode glass override */
+  .card{background:var(--card-bg)!important;-webkit-backdrop-filter:blur(10px) saturate(140%);backdrop-filter:blur(10px) saturate(140%);}
+  html{background:var(--bg);}
   </style>
 </head>
-<body data-theme="light"><div class="container">
+<body><div class="container">
     <div class="card">
       <div class="card-header">
-        <div>
-          <h1>The Blister Packs Tool</h1>
-          <div class="small">Created by Ali Al-Dirawi (PharmD Student)</div>
-        </div>
-        <div class="theme-select-wrapper">
-          <span class="theme-label">Theme</span>
-          <select id="themeSelect" class="theme-select">
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-          </select>
+        <div class="brand-badge">Operations Console</div>
+        <h1>The Blister Packs Tool</h1>
+        <div class="brand-meta">Created by Ali Al-Dirawi (PharmD Student)</div>
+        <div class="utility-bar">
+          <div class="utility-stamp" id="lastCalculatedStamp">Last calculated: not yet</div>
         </div>
       </div>
 
       <!-- Tabs -->
-      <div class="tabs">
-        <button class="tab-btn tab-btn--active" data-tab-target="schedule">Schedule</button>
-        <button class="tab-btn" data-tab-target="new-patient">New blister patient</button>
-        <button class="tab-btn" data-tab-target="bill-rx">Bill New RX</button>
-        <button class="tab-btn" data-tab-target="training">Training</button>
-        <button class="tab-btn" data-tab-target="quick-links">Quick Links Hub</button>
+      <div class="tabs" role="tablist" aria-label="Main sections">
+        <button type="button" id="tab-btn-schedule" class="tab-btn tab-btn--active" data-tab-target="schedule" role="tab" aria-controls="tab-schedule" aria-selected="true" tabindex="0">Schedule</button>
+        <button type="button" id="tab-btn-new-patient" class="tab-btn" data-tab-target="new-patient" role="tab" aria-controls="tab-new-patient" aria-selected="false" tabindex="-1">New blister patient</button>
+        <button type="button" id="tab-btn-bill-rx" class="tab-btn" data-tab-target="bill-rx" role="tab" aria-controls="tab-bill-rx" aria-selected="false" tabindex="-1">Bill New RX</button>
+        <button type="button" id="tab-btn-training" class="tab-btn" data-tab-target="training" role="tab" aria-controls="tab-training" aria-selected="false" tabindex="-1">Training</button>
+        <button type="button" id="tab-btn-quick-links" class="tab-btn" data-tab-target="quick-links" role="tab" aria-controls="tab-quick-links" aria-selected="false" tabindex="-1">Quick Links Hub</button>
+      </div>
+      <div class="top-kpi-strip" id="topKpiStrip">
+        <div class="top-kpi-card" role="button" tabindex="0" data-kpi-target="dashboardBox" data-kpi-requires-calc="true">
+          <div class="top-kpi-label">Weekly Launch</div>
+          <div class="top-kpi-value" id="kpiWeeklyDate">-</div>
+          <div class="top-kpi-sub" id="kpiWeeklyDays">-</div>
+        </div>
+        <div class="top-kpi-card" role="button" tabindex="0" data-kpi-target="dashboardBox" data-kpi-requires-calc="true">
+          <div class="top-kpi-label">Bi-weekly Launch</div>
+          <div class="top-kpi-value" id="kpiBiDate">-</div>
+          <div class="top-kpi-sub" id="kpiBiDays">-</div>
+        </div>
+        <div class="top-kpi-card" role="button" tabindex="0" data-kpi-target="dashboardBox" data-kpi-requires-calc="true">
+          <div class="top-kpi-label">Monthly Launch</div>
+          <div class="top-kpi-value" id="kpiMonthlyDate">-</div>
+          <div class="top-kpi-sub" id="kpiMonthlyDays">-</div>
+        </div>
+        <div class="top-kpi-card" role="button" tabindex="0" data-kpi-target="feeReminderBox" data-kpi-requires-calc="true">
+          <div class="top-kpi-label">Next Fee Charge</div>
+          <div class="top-kpi-value" id="kpiFeeDate">-</div>
+          <div class="top-kpi-sub" id="kpiFeeDays">-</div>
+        </div>
       </div>
 
       <!-- TAB: Schedule -->
-      <div id="tab-schedule" class="tab-content tab-content--active">
+      <div id="tab-schedule" class="tab-content tab-content--active" role="tabpanel" aria-labelledby="tab-btn-schedule">
         <!-- 1. Today's date + Today button -->
         <div>
           <div class="section-title">1. Pick today’s date</div>
@@ -495,11 +931,11 @@ html{background:var(--bg);}
           </div>
         </div>
 
-        <button id="calcBtn" class="primary-btn">
-          <span>Calculate next launch dates</span>
-          <span>🧮</span>
-        </button>
-        <div id="errorBox" class="error" style="display:none;"></div>
+        <div class="schedule-action-row">
+          <button id="calcBtn" class="primary-btn">Calculate next launch dates</button>
+          <button type="button" id="openRangeDrawerBtn" class="secondary">Range report</button>
+        </div>
+        <div id="errorBox" class="error" role="alert" aria-live="polite" style="display:none;"></div>
 
         <!-- 2. Weekly dashboard -->
         <div class="dashboard" id="dashboardBox" style="display:none;">
@@ -537,11 +973,11 @@ html{background:var(--bg);}
             <tbody id="calendarBody"><!-- Filled by JS --></tbody>
           </table>
           <div class="calendar-legend">
-            <span><span class="calendar-dot dot-weekly-launch"></span> Weekly launch</span>
-            <span><span class="calendar-dot dot-bi-launch"></span> Bi-weekly launch</span>
-            <span><span class="calendar-dot dot-monthly-launch"></span> 28-day “monthly” launch</span>
-            <span><span class="calendar-dot dot-automation"></span> Automation day</span>
-            <span><span class="calendar-dot dot-delivery"></span> Delivery day</span>
+            <span class="legend-weekly"><span class="calendar-dot dot-weekly-launch"></span> Weekly launch</span>
+            <span class="legend-bi"><span class="calendar-dot dot-bi-launch"></span> Bi-weekly launch</span>
+            <span class="legend-monthly"><span class="calendar-dot dot-monthly-launch"></span> 28-day “monthly” launch</span>
+            <span class="legend-auto"><span class="calendar-dot dot-automation"></span> Automation day</span>
+            <span class="legend-delivery"><span class="calendar-dot dot-delivery"></span> Delivery day</span>
           </div>
           <div class="calendar-details" id="calendarDetails">
             <div class="calendar-details-title">Day details</div>
@@ -582,7 +1018,7 @@ html{background:var(--bg);}
       </div>
 
       <!-- TAB: New blister patient -->
-      <div id="tab-new-patient" class="tab-content">
+      <div id="tab-new-patient" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-new-patient" hidden>
         <div class="section-title">New blister pack patient wizard</div>
         <div class="small">
           Use this wizard when a brand-new blister patient is added. It helps you plan bridge blister (if needed),
@@ -632,9 +1068,8 @@ html{background:var(--bg);}
 
               <button id="wizardGenerateBtn" class="primary-btn">
                 <span>Generate plan</span>
-                <span>✨</span>
               </button>
-              <div id="wizardErrorBox" class="error" style="display:none;"></div>
+              <div id="wizardErrorBox" class="error" role="alert" aria-live="polite" style="display:none;"></div>
             </div>
 
             <!-- Right: output -->
@@ -736,7 +1171,7 @@ html{background:var(--bg);}
       </div>
 
       <!-- TAB: Bill new Rx (bridge) -->
-      <div id="tab-bill-rx" class="tab-content">
+      <div id="tab-bill-rx" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-bill-rx" hidden>
         <div class="section-title">Bill New RX</div>
         <div class="small">
           Use this when an existing blister-pack patient gets a new Rx or dose change mid-cycle. The tool will calculate:
@@ -775,6 +1210,12 @@ html{background:var(--bg);}
               <div class="wizard-row" style="margin-top:10px;">
                 <label for="bridgeTabsPerDay">Tablets per day</label>
                 <input type="number" id="bridgeTabsPerDay" step="0.25" min="0" />
+                <div id="bridgeDosePresets" class="dose-presets" aria-label="Common dosing presets">
+                  <button type="button" class="dose-chip" data-dose-value="1">OD (1)</button>
+                  <button type="button" class="dose-chip" data-dose-value="2">BID (2)</button>
+                  <button type="button" class="dose-chip" data-dose-value="3">TID (3)</button>
+                  <button type="button" class="dose-chip" data-dose-value="1.5">1.5/day</button>
+                </div>
                 <div class="wizard-helper">Example: OD = 1, BID = 2, 1.5 tabs/day = 1.5.</div>
               </div>
 
@@ -789,7 +1230,7 @@ html{background:var(--bg);}
 
               <!-- NEW (weekly only): until next blister pack? -->
               <div class="wizard-row" id="bridgeUntilNextPackRow" style="margin-top:10px; display:none;">
-                <label for="bridgeUntilNextPack">Do you want to give the patinet enough supply until thier next blister pack?</label>
+                <label for="bridgeUntilNextPack">Do you want to give the patient enough supply until their next blister pack?</label>
                 <select id="bridgeUntilNextPack">
                   <option value="yes" selected>Yes</option>
                   <option value="no">No</option>
@@ -799,21 +1240,19 @@ html{background:var(--bg);}
                 </div>
               </div>
 
-              <!-- NEW (bi-weekly only): extra days supply -->
-              <div class="wizard-row" id="bridgeBiExtraRow" style="margin-top:10px; display:none;">
-                <label for="bridgeBiExtraYesNo">Extra days supply to account for</label>
-                <select id="bridgeBiExtraYesNo">
+              <!-- Bi-weekly / monthly: extra days supply -->
+              <div class="wizard-row" id="bridgeExtraRow" style="margin-top:10px; display:none;">
+                <label for="bridgeExtraYesNo">Extra days supply to account for</label>
+                <select id="bridgeExtraYesNo">
                   <option value="no" selected>No</option>
                   <option value="yes">Yes</option>
                 </select>
-                <div class="wizard-helper">
-                  Bi-weekly batch only. Default quantity is 14 days. If “Yes”, add extra days below.
-                </div>
+                <div class="wizard-helper" id="bridgeExtraHelper"></div>
 
                 <div style="margin-top:8px;">
-                  <label for="bridgeBiExtraDays">Extra days (manual)</label>
-                  <input type="number" id="bridgeBiExtraDays" min="0" step="1" value="0" />
-                  <div class="wizard-helper">Adds on top of the base 14 days (only when “Yes”).</div>
+                  <label for="bridgeExtraDays">Extra days (manual)</label>
+                  <input type="number" id="bridgeExtraDays" min="0" step="1" value="0" />
+                  <div class="wizard-helper" id="bridgeExtraSubHelper"></div>
                 </div>
               </div>
 
@@ -824,9 +1263,8 @@ html{background:var(--bg);}
 
               <button id="bridgeCalcBtn" class="primary-btn">
                 <span>Calculate bridge quantity & days supply</span>
-                <span>💊</span>
               </button>
-              <div id="bridgeErrorBox" class="error" style="display:none;"></div>
+              <div id="bridgeErrorBox" class="error" role="alert" aria-live="polite" style="display:none;"></div>
             </div>
 
             <!-- Right: output -->
@@ -847,7 +1285,7 @@ html{background:var(--bg);}
       </div>
 
       <!-- TAB: Training -->
-      <div id="tab-training" class="tab-content">
+      <div id="tab-training" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-training" hidden>
         <div class="section-title">Training – blister pack workflow refresher</div>
         <div class="small training-intro">
           This tab mirrors the Blister Pack Guide. Click a task to expand its steps. Use the controls to open/close all. State is remembered per browser.
@@ -1116,7 +1554,7 @@ html{background:var(--bg);}
       </div>
 
       <!-- TAB: Quick Links Hub -->
-      <div id="tab-quick-links" class="tab-content">
+      <div id="tab-quick-links" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-quick-links" hidden>
         <div class="section-title">Quick Links Hub</div>
         <div class="small">
           One place for the key tools you use around blister packs. All links open in a new tab.
@@ -1244,6 +1682,32 @@ html{background:var(--bg);}
 
     </div>
   </div>
+  <div id="rangeDrawerOverlay" class="range-drawer-overlay" hidden></div>
+  <aside id="rangeReportDrawer" class="range-drawer" aria-hidden="true">
+    <div class="range-drawer-header">
+      <div class="section-title" style="margin-top:0;">Range Report</div>
+      <button type="button" id="closeRangeDrawerBtn" class="secondary" style="margin-top:0;">Close</button>
+    </div>
+    <div class="small">Choose a date range to list all launches and fee charges between those dates.</div>
+    <div class="range-controls">
+      <div>
+        <label for="rangeStartDate">From date</label>
+        <input type="date" id="rangeStartDate" />
+      </div>
+      <div>
+        <label for="rangeEndDate">To date</label>
+        <input type="date" id="rangeEndDate" />
+      </div>
+    </div>
+    <div class="range-actions">
+      <button type="button" id="generateRangeReportBtn">Generate report</button>
+      <button type="button" id="printRangeReportBtn" class="secondary">Print report</button>
+    </div>
+    <div id="rangeReportError" class="error" role="alert" aria-live="polite" style="display:none;"></div>
+    <div id="rangeReportSummary" class="range-report-summary">Pick a start and end date, then click “Generate report”.</div>
+    <div id="rangeReportBody" class="range-report-body"><div class="small" style="padding:10px;">No report generated yet.</div></div>
+  </aside>
+  <div id="printReport" style="display:none;"></div>
 
   <script>
     // ---- CONFIG (anchors & rules) ----
@@ -1342,6 +1806,27 @@ html{background:var(--bg);}
       return next;
     }
 
+    function buildScheduleSnapshot(today) {
+      const weeklyNext = getNextWeeklyLaunch(today);
+      const biNext = getNextCycleLaunch(today, BIWEEKLY_ANCHOR, BIWEEKLY_INTERVAL);
+      const monthlyNext = getNextCycleLaunch(today, MONTHLY_ANCHOR, MONTHLY_INTERVAL);
+      const batches = [
+        { name: "Weekly batch", nextLaunch: weeklyNext },
+        { name: "Bi-weekly batch", nextLaunch: biNext },
+        { name: "28-day “monthly” batch", nextLaunch: monthlyNext }
+      ];
+      batches.forEach((batch) => {
+        const automation = addDays(batch.nextLaunch, 3);
+        const delivery = addDays(batch.nextLaunch, 8);
+        batch.automationDate = automation;
+        batch.deliveryDate = delivery;
+        batch.daysUntilLaunch = diffInDays(today, batch.nextLaunch);
+      });
+      const nextFeeDate = getNextFeeChargeDate(today);
+      const feeDaysUntil = diffInDays(today, nextFeeDate);
+      return { today, batches, nextFeeDate, feeDaysUntil };
+    }
+
     // ---- THEME ----
     function applyTheme(theme) {
       document.body.setAttribute("data-theme", theme);
@@ -1351,27 +1836,12 @@ html{background:var(--bg);}
     }
 
     function initTheme() {
-      let saved = null;
-      try { saved = localStorage.getItem("batchTheme"); } catch (e) {}
-      // Clamp to supported themes only
-      if (saved !== "light" && saved !== "dark") {
-        saved = "light";
-      }
-      const defaultTheme = saved;
-      applyTheme(defaultTheme);
-      const select = document.getElementById("themeSelect");
-      if (select) {
-        select.value = defaultTheme;
-        select.addEventListener("change", (e) => {
-          const next = e.target.value === "dark" ? "dark" : "light";
-          applyTheme(next);
-        });
-      }
+      applyTheme("light");
     }
 
     // ---- TABS ----
     function initTabs() {
-      const tabButtons = document.querySelectorAll(".tab-btn");
+      const tabButtons = Array.from(document.querySelectorAll(".tab-btn"));
       const tabContents = {
         "schedule": document.getElementById("tab-schedule"),
         "new-patient": document.getElementById("tab-new-patient"),
@@ -1380,41 +1850,158 @@ html{background:var(--bg);}
         "quick-links": document.getElementById("tab-quick-links")
       };
 
-      tabButtons.forEach((btn) => {
+      const setActiveTab = (target, shouldFocus = false) => {
+        tabButtons.forEach((btn) => {
+          const isActive = btn.getAttribute("data-tab-target") === target;
+          btn.classList.toggle("tab-btn--active", isActive);
+          btn.setAttribute("aria-selected", isActive ? "true" : "false");
+          btn.setAttribute("tabindex", isActive ? "0" : "-1");
+          if (isActive && shouldFocus) btn.focus();
+        });
+
+        Object.keys(tabContents).forEach((key) => {
+          const panel = tabContents[key];
+          if (!panel) return;
+          const isActive = key === target;
+          panel.classList.toggle("tab-content--active", isActive);
+          panel.hidden = !isActive;
+        });
+      };
+
+      tabButtons.forEach((btn, idx) => {
         btn.addEventListener("click", () => {
           const target = btn.getAttribute("data-tab-target");
           if (!target) return;
-          tabButtons.forEach((b) => b.classList.remove("tab-btn--active"));
-          btn.classList.add("tab-btn--active");
-          Object.keys(tabContents).forEach((key) => {
-            const el = tabContents[key];
-            if (!el) return;
-            el.classList.toggle("tab-content--active", key === target);
-          });
+          setActiveTab(target, false);
+        });
+
+        btn.addEventListener("keydown", (e) => {
+          const key = e.key;
+          if (key !== "ArrowRight" && key !== "ArrowLeft" && key !== "Home" && key !== "End" && key !== "Enter" && key !== " ") return;
+          e.preventDefault();
+
+          if (key === "Enter" || key === " ") {
+            const target = btn.getAttribute("data-tab-target");
+            if (target) setActiveTab(target, true);
+            return;
+          }
+
+          let nextIndex = idx;
+          if (key === "ArrowRight") nextIndex = (idx + 1) % tabButtons.length;
+          else if (key === "ArrowLeft") nextIndex = (idx - 1 + tabButtons.length) % tabButtons.length;
+          else if (key === "Home") nextIndex = 0;
+          else if (key === "End") nextIndex = tabButtons.length - 1;
+
+          const nextBtn = tabButtons[nextIndex];
+          const target = nextBtn ? nextBtn.getAttribute("data-tab-target") : null;
+          if (target) setActiveTab(target, true);
         });
       });
+
+      const activeBtn = tabButtons.find((btn) => btn.classList.contains("tab-btn--active"));
+      const defaultActive = (activeBtn ? activeBtn.getAttribute("data-tab-target") : null) || "schedule";
+      setActiveTab(defaultActive, false);
     }
 
     // ---- TODAY INPUT & BUTTON ----
     function setDefaultToday() {
       const todayInput = document.getElementById("todayInput");
+      const bridgeTodayInput = document.getElementById("bridgeTodayDate");
+      const wizardStart = document.getElementById("wizardStartDate");
+      const rangeStartInput = document.getElementById("rangeStartDate");
+      const rangeEndInput = document.getElementById("rangeEndDate");
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      todayInput.value = formatDateYMD(today);
+      if (todayInput) todayInput.value = formatDateYMD(today);
+      if (bridgeTodayInput) bridgeTodayInput.value = formatDateYMD(today);
+      if (wizardStart) wizardStart.value = formatDateYMD(today);
+      if (rangeStartInput) rangeStartInput.value = formatDateYMD(today);
+      if (rangeEndInput) rangeEndInput.value = formatDateYMD(addDays(today, 90));
     }
 
     function initTodayButton() {
       const todayBtn = document.getElementById("todayBtn");
       const todayInput = document.getElementById("todayInput");
-      const calcBtn = document.getElementById("calcBtn");
-      if (todayBtn && todayInput && calcBtn) {
+      if (todayBtn && todayInput) {
         todayBtn.addEventListener("click", () => {
           const today = new Date();
           today.setHours(0, 0, 0, 0);
           todayInput.value = formatDateYMD(today);
-          calcBtn.click();
+          currentMonthDate = new Date(today.getFullYear(), today.getMonth(), 1);
+          if (typeof window.performScheduleCalculation === "function") {
+            window.performScheduleCalculation();
+          } else {
+            const calcBtn = document.getElementById("calcBtn");
+            if (calcBtn) calcBtn.click();
+          }
         });
       }
+    }
+
+    function renderTopKpis(today) {
+      const snapshot = buildScheduleSnapshot(today);
+      const weeklyDate = document.getElementById("kpiWeeklyDate");
+      const weeklyDays = document.getElementById("kpiWeeklyDays");
+      const biDate = document.getElementById("kpiBiDate");
+      const biDays = document.getElementById("kpiBiDays");
+      const monthlyDate = document.getElementById("kpiMonthlyDate");
+      const monthlyDays = document.getElementById("kpiMonthlyDays");
+      const feeDate = document.getElementById("kpiFeeDate");
+      const feeDays = document.getElementById("kpiFeeDays");
+      if (!weeklyDate || !weeklyDays || !biDate || !biDays || !monthlyDate || !monthlyDays || !feeDate || !feeDays) return;
+
+      weeklyDate.textContent = formatNiceDate(snapshot.batches[0].nextLaunch);
+      weeklyDays.textContent = `${snapshot.batches[0].daysUntilLaunch} day(s)`;
+      biDate.textContent = formatNiceDate(snapshot.batches[1].nextLaunch);
+      biDays.textContent = `${snapshot.batches[1].daysUntilLaunch} day(s)`;
+      monthlyDate.textContent = formatNiceDate(snapshot.batches[2].nextLaunch);
+      monthlyDays.textContent = `${snapshot.batches[2].daysUntilLaunch} day(s)`;
+      feeDate.textContent = formatNiceDate(snapshot.nextFeeDate);
+      feeDays.textContent = `${snapshot.feeDaysUntil} day(s)`;
+    }
+
+    function initTopKpiInteractions() {
+      const cards = Array.from(document.querySelectorAll(".top-kpi-card"));
+      if (!cards.length) return;
+
+      const flashTarget = (target) => {
+        if (!target) return;
+        target.classList.remove("focus-jump");
+        // Force reflow so repeated clicks replay the animation.
+        void target.offsetWidth;
+        target.classList.add("focus-jump");
+      };
+
+      cards.forEach((card) => {
+        const activate = () => {
+          const scheduleTab = document.getElementById("tab-btn-schedule");
+          if (scheduleTab) scheduleTab.click();
+
+          if (card.getAttribute("data-kpi-requires-calc") === "true") {
+            if (typeof window.performScheduleCalculation === "function") {
+              window.performScheduleCalculation();
+            } else {
+              const calcBtn = document.getElementById("calcBtn");
+              if (calcBtn) calcBtn.click();
+            }
+          }
+
+          const targetId = card.getAttribute("data-kpi-target");
+          if (!targetId) return;
+          const target = document.getElementById(targetId);
+          if (!target) return;
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          flashTarget(target);
+        };
+
+        card.addEventListener("click", activate);
+        card.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            activate();
+          }
+        });
+      });
     }
 
     // ---- CALENDAR EVENTS FOR MAIN CALENDAR ----
@@ -1518,6 +2105,9 @@ html{background:var(--bg);}
           if (cellMonth !== month) { cellDiv.classList.add("calendar-cell--other"); }
           if (cellKey === todayKey) { cellDiv.classList.add("calendar-cell--today"); }
           cellDiv.dataset.dateKey = cellKey;
+          cellDiv.setAttribute("role", "button");
+          cellDiv.setAttribute("tabindex", "0");
+          cellDiv.setAttribute("aria-pressed", "false");
 
           const dayNumber = document.createElement("div");
           dayNumber.classList.add("calendar-day-number");
@@ -1527,6 +2117,8 @@ html{background:var(--bg);}
           dotsDiv.classList.add("calendar-dots");
 
           const events = calendarEventsMap[cellKey] || [];
+          if (cellDate.getDay() === 0 || cellDate.getDay() === 6) { cellDiv.classList.add("calendar-cell--weekend"); }
+          if (events.length) { cellDiv.classList.add("calendar-cell--has-events"); }
           const usedTypes = new Set();
           events.forEach((ev) => {
             if (usedTypes.has(ev.type)) return;
@@ -1540,6 +2132,12 @@ html{background:var(--bg);}
           cellDiv.appendChild(dayNumber);
           cellDiv.appendChild(dotsDiv);
           cellDiv.addEventListener("click", () => { selectCalendarDate(cellKey); });
+          cellDiv.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              selectCalendarDate(cellKey);
+            }
+          });
           td.appendChild(cellDiv);
           tr.appendChild(td);
 
@@ -1555,10 +2153,16 @@ html{background:var(--bg);}
       const tbody = document.getElementById("calendarBody");
       if (!tbody) return;
       const prevSelected = tbody.querySelector(".calendar-cell--selected");
-      if (prevSelected) { prevSelected.classList.remove("calendar-cell--selected"); }
+      if (prevSelected) {
+        prevSelected.classList.remove("calendar-cell--selected");
+        prevSelected.setAttribute("aria-pressed", "false");
+      }
 
       const cell = tbody.querySelector('[data-date-key="' + dateKey + '"]');
-      if (cell) { cell.classList.add("calendar-cell--selected"); }
+      if (cell) {
+        cell.classList.add("calendar-cell--selected");
+        cell.setAttribute("aria-pressed", "true");
+      }
 
       const detailsEl = document.getElementById("calendarDetails");
       const titleEl = detailsEl.querySelector(".calendar-details-title");
@@ -1680,15 +2284,24 @@ html{background:var(--bg);}
             const cellDate = new Date(current);
             const cellDiv = document.createElement("div"); cellDiv.classList.add("patient-calendar-cell");
             if (cellDate.getMonth() !== monthIndex) { cellDiv.classList.add("patient-calendar-cell--other"); }
+            if (cellDate.getDay() === 0 || cellDate.getDay() === 6) { cellDiv.classList.add("patient-calendar-cell--weekend"); }
 
             const dayNumber = document.createElement("div"); dayNumber.classList.add("patient-calendar-day-number"); dayNumber.textContent = cellDate.getDate();
             const dotsDiv = document.createElement("div"); dotsDiv.classList.add("patient-calendar-dots");
+            let hasEvents = false;
+            const addDot = (cls) => {
+              const dot = document.createElement("span");
+              dot.classList.add("patient-cal-dot", cls);
+              dotsDiv.appendChild(dot);
+              hasEvents = true;
+            };
 
-            if (sameDay(cellDate, startDate)) { const dot = document.createElement("span"); dot.classList.add("patient-cal-dot", "patient-cal-dot--start"); dotsDiv.appendChild(dot); }
-            if (sameDay(cellDate, launch))    { const dot = document.createElement("span"); dot.classList.add("patient-cal-dot", "patient-cal-dot--launch"); dotsDiv.appendChild(dot); }
-            if (sameDay(cellDate, automation)){ const dot = document.createElement("span"); dot.classList.add("patient-cal-dot", "patient-cal-dot--auto"); dotsDiv.appendChild(dot); }
-            if (sameDay(cellDate, delivery))  { const dot = document.createElement("span"); dot.classList.add("patient-cal-dot", "patient-cal-dot--delivery"); dotsDiv.appendChild(dot); }
-            if (sameDay(cellDate, bagging))   { const dot = document.createElement("span"); dot.classList.add("patient-cal-dot", "patient-cal-dot--bagging"); dotsDiv.appendChild(dot); }
+            if (sameDay(cellDate, startDate)) { addDot("patient-cal-dot--start"); }
+            if (sameDay(cellDate, launch))    { addDot("patient-cal-dot--launch"); }
+            if (sameDay(cellDate, automation)){ addDot("patient-cal-dot--auto"); }
+            if (sameDay(cellDate, delivery))  { addDot("patient-cal-dot--delivery"); }
+            if (sameDay(cellDate, bagging))   { addDot("patient-cal-dot--bagging"); }
+            if (hasEvents) { cellDiv.classList.add("patient-calendar-cell--has-events"); }
 
             cellDiv.appendChild(dayNumber);
             cellDiv.appendChild(dotsDiv);
@@ -1814,44 +2427,195 @@ html{background:var(--bg);}
       });
     }
 
+    function buildRangeReportData(startDate, endDate) {
+      const events = [];
+      const push = (date, eventType, eventLabel, badgeClass) => {
+        if (date < startDate || date > endDate) return;
+        events.push({
+          date: new Date(date),
+          dayName: getDayName(date),
+          eventType,
+          eventLabel,
+          badgeClass
+        });
+      };
+
+      for (let d = new Date(startDate); d <= endDate; d = addDays(d, 1)) {
+        if (isSunday(d)) push(d, "weekly", "Weekly launch", "range-event-badge--weekly");
+      }
+      for (let d = new Date(BIWEEKLY_ANCHOR); d <= endDate; d = addDays(d, BIWEEKLY_INTERVAL)) {
+        push(d, "biweekly", "Bi-weekly launch", "range-event-badge--bi");
+      }
+      for (let d = new Date(MONTHLY_ANCHOR); d <= endDate; d = addDays(d, MONTHLY_INTERVAL)) {
+        push(d, "monthly", "28-day monthly launch", "range-event-badge--monthly");
+      }
+      for (let y = startDate.getFullYear(); y <= endDate.getFullYear(); y++) {
+        [1, 4, 7, 10].forEach((m) => {
+          push(getFirstSundayOfMonth(y, m), "fee", "Fee charge", "range-event-badge--fee");
+        });
+      }
+
+      events.sort((a, b) => a.date - b.date || a.eventLabel.localeCompare(b.eventLabel));
+      const totals = {
+        weekly: events.filter((e) => e.eventType === "weekly").length,
+        biweekly: events.filter((e) => e.eventType === "biweekly").length,
+        monthly: events.filter((e) => e.eventType === "monthly").length,
+        fee: events.filter((e) => e.eventType === "fee").length
+      };
+      return { start: startDate, end: endDate, events, totals };
+    }
+
     // ---- SCHEDULE ("Calculate next launch dates") ----
     function initSchedule() {
       const calcBtn  = document.getElementById("calcBtn");
+      const openRangeDrawerBtn = document.getElementById("openRangeDrawerBtn");
+      const closeRangeDrawerBtn = document.getElementById("closeRangeDrawerBtn");
+      const rangeReportDrawer = document.getElementById("rangeReportDrawer");
+      const rangeDrawerOverlay = document.getElementById("rangeDrawerOverlay");
+      const generateRangeBtn = document.getElementById("generateRangeReportBtn");
+      const printRangeBtn = document.getElementById("printRangeReportBtn");
+      const rangeStartInput = document.getElementById("rangeStartDate");
+      const rangeEndInput = document.getElementById("rangeEndDate");
+      const rangeReportError = document.getElementById("rangeReportError");
+      const rangeReportSummary = document.getElementById("rangeReportSummary");
+      const rangeReportBody = document.getElementById("rangeReportBody");
+      const printHost = document.getElementById("printReport");
       const errorBox = document.getElementById("errorBox");
       const resultsBox = document.getElementById("resultsBox");
       const tbody = document.getElementById("resultsTableBody");
+      const todayInput = document.getElementById("todayInput");
+      const lastCalculatedStamp = document.getElementById("lastCalculatedStamp");
+      let lastRangeReportHtml = "";
 
       if (!calcBtn) return;
 
-      calcBtn.addEventListener("click", () => {
+      const openRangeDrawer = () => {
+        if (!rangeReportDrawer || !rangeDrawerOverlay) return;
+        rangeReportDrawer.classList.add("range-drawer--open");
+        rangeReportDrawer.setAttribute("aria-hidden", "false");
+        rangeDrawerOverlay.hidden = false;
+      };
+
+      const closeRangeDrawer = () => {
+        if (!rangeReportDrawer || !rangeDrawerOverlay) return;
+        rangeReportDrawer.classList.remove("range-drawer--open");
+        rangeReportDrawer.setAttribute("aria-hidden", "true");
+        rangeDrawerOverlay.hidden = true;
+      };
+
+      if (openRangeDrawerBtn) openRangeDrawerBtn.addEventListener("click", openRangeDrawer);
+      if (closeRangeDrawerBtn) closeRangeDrawerBtn.addEventListener("click", closeRangeDrawer);
+      if (rangeDrawerOverlay) rangeDrawerOverlay.addEventListener("click", closeRangeDrawer);
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeRangeDrawer(); });
+
+      const renderRangeReport = () => {
+        if (!rangeStartInput || !rangeEndInput || !rangeReportError || !rangeReportSummary || !rangeReportBody) return false;
+        rangeReportError.style.display = "none";
+        rangeReportError.textContent = "";
+
+        const start = parseLocalDate(rangeStartInput.value);
+        const end = parseLocalDate(rangeEndInput.value);
+        if (!start || !end) {
+          rangeReportError.textContent = "Please select valid start and end dates.";
+          rangeReportError.style.display = "block";
+          return false;
+        }
+        if (end < start) {
+          rangeReportError.textContent = "End date must be the same as or after start date.";
+          rangeReportError.style.display = "block";
+          return false;
+        }
+
+        const data = buildRangeReportData(start, end);
+        rangeReportSummary.innerHTML =
+          `<strong>${formatNiceDateNoWeekday(data.start)} -> ${formatNiceDateNoWeekday(data.end)}</strong><br/>` +
+          `Weekly: ${data.totals.weekly} · Bi-weekly: ${data.totals.biweekly} · Monthly: ${data.totals.monthly} · Fee charges: ${data.totals.fee} · Total events: ${data.events.length}`;
+
+        if (!data.events.length) {
+          rangeReportBody.innerHTML = `<div class="small" style="padding:10px;">No launches or fee charges found in this date range.</div>`;
+          lastRangeReportHtml = `
+            <div style="padding:24px;font-family:'Avenir Next','Segoe UI',sans-serif;">
+              <h1 style="margin:0 0 8px;font-size:22px;color:#7c2d12;">Launch & Fee Range Report</h1>
+              <div>Range: <strong>${formatNiceDateNoWeekday(data.start)}</strong> to <strong>${formatNiceDateNoWeekday(data.end)}</strong></div>
+              <p>No events in this range.</p>
+            </div>
+          `;
+          return true;
+        }
+
+        const rows = data.events.map((e) => `
+          <tr>
+            <td>${formatNiceDateNoWeekday(e.date)}</td>
+            <td>${e.dayName}</td>
+            <td><span class="range-event-badge ${e.badgeClass}">${e.eventLabel}</span></td>
+          </tr>
+        `).join("");
+
+        rangeReportBody.innerHTML = `
+          <table class="range-table">
+            <thead><tr><th>Date</th><th>Day</th><th>Event</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+
+        lastRangeReportHtml = `
+          <div style="padding:24px 28px;font-family:'Avenir Next','Segoe UI',sans-serif;">
+            <h1 style="margin:0 0 8px;font-size:22px;color:#7c2d12;">Launch & Fee Range Report</h1>
+            <div style="margin-bottom:10px;font-size:13px;color:#475569;">
+              Range: <strong>${formatNiceDateNoWeekday(data.start)}</strong> to <strong>${formatNiceDateNoWeekday(data.end)}</strong><br/>
+              Weekly: ${data.totals.weekly} · Bi-weekly: ${data.totals.biweekly} · Monthly: ${data.totals.monthly} · Fee charges: ${data.totals.fee}
+            </div>
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+              <thead>
+                <tr style="background:#fcead1;">
+                  <th style="padding:8px;border:1px solid #e2c8aa;text-align:left;">Date</th>
+                  <th style="padding:8px;border:1px solid #e2c8aa;text-align:left;">Day</th>
+                  <th style="padding:8px;border:1px solid #e2c8aa;text-align:left;">Event</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${data.events.map((e) => `
+                  <tr>
+                    <td style="padding:8px;border:1px solid #e2c8aa;">${formatNiceDateNoWeekday(e.date)}</td>
+                    <td style="padding:8px;border:1px solid #e2c8aa;">${e.dayName}</td>
+                    <td style="padding:8px;border:1px solid #e2c8aa;">${e.eventLabel}</td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+        return true;
+      };
+
+      const updateCalculatedStamp = (dateObj) => {
+        if (!lastCalculatedStamp || !dateObj) return;
+        const stampText = dateObj.toLocaleString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit"
+        });
+        lastCalculatedStamp.textContent = `Last calculated: ${stampText}`;
+      };
+
+      const performScheduleCalculation = () => {
         errorBox.style.display = "none";
         errorBox.textContent = "";
         resultsBox.style.display = "none";
         tbody.innerHTML = "";
 
-        const todayStr = document.getElementById("todayInput").value;
-        const today = parseLocalDate(todayStr);
+        const today = parseLocalDate(todayInput ? todayInput.value : "");
         if (!today) {
           errorBox.textContent = "Please enter a valid value for today’s date.";
           errorBox.style.display = "block";
-          return;
+          return false;
         }
 
-        const batches = [];
-        const weeklyNext  = getNextWeeklyLaunch(today);
-        batches.push({ name: "Weekly batch", nextLaunch: weeklyNext });
-        const biNext      = getNextCycleLaunch(today, BIWEEKLY_ANCHOR, BIWEEKLY_INTERVAL);
-        batches.push({ name: "Bi-weekly batch", nextLaunch: biNext });
-        const monthlyNext = getNextCycleLaunch(today, MONTHLY_ANCHOR, MONTHLY_INTERVAL);
-        batches.push({ name: "28-day “monthly” batch", nextLaunch: monthlyNext });
-
-        // Enrich with automation + countdowns
-        batches.forEach((batch) => {
-          const automation = addDays(batch.nextLaunch, 3);
-          batch.automationDate = automation;
-          batch.daysUntilLaunch = diffInDays(today, batch.nextLaunch);
-          batch.daysUntilAutomation = diffInDays(today, automation);
-        });
+        renderTopKpis(today);
+        const snapshot = buildScheduleSnapshot(today);
+        const batches = snapshot.batches;
 
         // Populate table
         batches.forEach((batch) => {
@@ -1878,67 +2642,113 @@ html{background:var(--bg);}
         const feeNext = document.getElementById("feeNextDate");
         const feeDays = document.getElementById("feeDaysUntil");
         if (feeBox && feeNext && feeDays) {
-          const nextFeeDate = getNextFeeChargeDate(today);
-          feeNext.textContent = formatNiceDate(nextFeeDate);
-          feeDays.textContent = diffInDays(today, nextFeeDate);
+          feeNext.textContent = formatNiceDate(snapshot.nextFeeDate);
+          feeDays.textContent = snapshot.feeDaysUntil;
           feeBox.style.display = "block";
         }
-      });
+        updateCalculatedStamp(new Date());
+        renderCalendar();
+        return true;
+      };
+
+      window.performScheduleCalculation = performScheduleCalculation;
+      calcBtn.addEventListener("click", performScheduleCalculation);
+      if (todayInput) {
+        todayInput.addEventListener("change", () => {
+          const selected = parseLocalDate(todayInput.value);
+          if (selected) renderTopKpis(selected);
+        });
+      }
+
+      if (generateRangeBtn) generateRangeBtn.addEventListener("click", renderRangeReport);
+      if (printRangeBtn) {
+        printRangeBtn.addEventListener("click", () => {
+          if (!renderRangeReport()) return;
+          if (!printHost || !lastRangeReportHtml) return;
+          printHost.innerHTML = lastRangeReportHtml;
+          printHost.style.display = "block";
+          window.print();
+          printHost.style.display = "none";
+          printHost.innerHTML = "";
+        });
+      }
+
+      if (rangeStartInput && rangeEndInput) renderRangeReport();
+      const initialToday = parseLocalDate(todayInput ? todayInput.value : "");
+      if (initialToday) renderTopKpis(initialToday);
     }
 
     // ---- BRIDGE TOOL (Bill new Rx tab) ----
     function initBridgeTool() {
-      // Grab elements
       const todayInput = document.getElementById("bridgeTodayDate");
       const launchInput = document.getElementById("bridgeNextLaunch");
+      const tabsPerDayInput = document.getElementById("bridgeTabsPerDay");
       const calcBtn = document.getElementById("bridgeCalcBtn");
       const errorBox = document.getElementById("bridgeErrorBox");
-
       if (!todayInput || !launchInput || !calcBtn || !errorBox) return;
 
-      // Prefill dates: today and coming Sunday
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       todayInput.value = formatDateYMD(today);
-      const daysUntilSunday = (7 - today.getDay()) % 7;
-      const comingSunday = addDays(today, daysUntilSunday);
-      launchInput.value = formatDateYMD(comingSunday);
-
-      // Ensure default for on-hand select is "no"
       const hasOnHandSelect = document.getElementById("bridgeHasOnHand");
       if (hasOnHandSelect && !hasOnHandSelect.value) { hasOnHandSelect.value = "no"; }
-
-      // Ensure default for weekly question is "yes"
       const untilNextPackSelect = document.getElementById("bridgeUntilNextPack");
       if (untilNextPackSelect && !untilNextPackSelect.value) { untilNextPackSelect.value = "yes"; }
+      const extraYesNo = document.getElementById("bridgeExtraYesNo");
+      const extraDays = document.getElementById("bridgeExtraDays");
+      const extraHelper = document.getElementById("bridgeExtraHelper");
+      const extraSubHelper = document.getElementById("bridgeExtraSubHelper");
+      if (extraYesNo && !extraYesNo.value) { extraYesNo.value = "no"; }
+      if (extraDays && (extraDays.value === "" || extraDays.value == null)) { extraDays.value = "0"; }
 
-      // Ensure defaults for bi-weekly extras
-      const biExtraYesNo = document.getElementById("bridgeBiExtraYesNo");
-      const biExtraDays = document.getElementById("bridgeBiExtraDays");
-      if (biExtraYesNo && !biExtraYesNo.value) { biExtraYesNo.value = "no"; }
-      if (biExtraDays && (biExtraDays.value === "" || biExtraDays.value == null)) { biExtraDays.value = "0"; }
-
-      // Show/hide weekly-only and bi-weekly-only questions based on batch type
       const batchTypeSelect = document.getElementById("bridgeBatchType");
       const weeklyRow = document.getElementById("bridgeUntilNextPackRow");
-      const biRow = document.getElementById("bridgeBiExtraRow");
+      const extraRow = document.getElementById("bridgeExtraRow");
       const hasOnHandRow = document.getElementById("bridgeHasOnHandRow");
+      const dosePresetButtons = Array.from(document.querySelectorAll("#bridgeDosePresets .dose-chip"));
 
-      const updateBiExtraEnable = () => {
-        if (!biExtraYesNo || !biExtraDays) return;
-        const yes = biExtraYesNo.value === "yes";
-        biExtraDays.disabled = !yes;
-        if (!yes) biExtraDays.value = "0";
+      const getAutoNextLaunch = (batchType, refDate) => {
+        if (!refDate) return null;
+        if (batchType === "biweekly") return getNextCycleLaunch(refDate, BIWEEKLY_ANCHOR, BIWEEKLY_INTERVAL);
+        if (batchType === "monthly") return getNextCycleLaunch(refDate, MONTHLY_ANCHOR, MONTHLY_INTERVAL);
+        return getNextWeeklyLaunch(refDate);
+      };
+
+      const autoFillNextLaunch = () => {
+        if (!batchTypeSelect || !todayInput || !launchInput) return;
+        const refDate = parseLocalDate(todayInput.value);
+        if (!refDate) return;
+        const nextLaunch = getAutoNextLaunch(batchTypeSelect.value, refDate);
+        if (!nextLaunch) return;
+        launchInput.value = formatDateYMD(nextLaunch);
+      };
+
+      const updateExtraEnable = () => {
+        if (!extraYesNo || !extraDays) return;
+        const yes = extraYesNo.value === "yes";
+        extraDays.disabled = !yes;
+        if (!yes) extraDays.value = "0";
+      };
+
+      const updateDosePresetState = () => {
+        if (!tabsPerDayInput || !dosePresetButtons.length) return;
+        const current = parseFloat(tabsPerDayInput.value || "");
+        dosePresetButtons.forEach((btn) => {
+          const val = parseFloat(btn.getAttribute("data-dose-value") || "");
+          const isActive = !isNaN(current) && !isNaN(val) && Math.abs(current - val) < 0.001;
+          btn.classList.toggle("dose-chip--active", isActive);
+        });
       };
 
       const updateBridgeOptionVisibility = () => {
         if (!batchTypeSelect) return;
         const isWeekly = batchTypeSelect.value === "weekly";
         const isBiWeekly = batchTypeSelect.value === "biweekly";
+        const isMonthly = batchTypeSelect.value === "monthly";
 
         if (hasOnHandRow && hasOnHandSelect) {
-          hasOnHandRow.style.display = isBiWeekly ? "none" : "block";
-          if (isBiWeekly) { hasOnHandSelect.value = "no"; }
+          hasOnHandRow.style.display = (isBiWeekly || isMonthly) ? "none" : "block";
+          if (isBiWeekly || isMonthly) { hasOnHandSelect.value = "no"; }
         }
 
         if (weeklyRow && untilNextPackSelect) {
@@ -1946,25 +2756,60 @@ html{background:var(--bg);}
           if (!isWeekly) { untilNextPackSelect.value = "yes"; }
         }
 
-        if (biRow && biExtraYesNo && biExtraDays) {
-          biRow.style.display = isBiWeekly ? "block" : "none";
-          if (!isBiWeekly) {
-            biExtraYesNo.value = "no";
-            biExtraDays.value = "0";
-            biExtraDays.disabled = true;
+        const needsExtraRow = isBiWeekly || isMonthly;
+        if (extraRow && extraYesNo && extraDays) {
+          extraRow.style.display = needsExtraRow ? "block" : "none";
+          if (!needsExtraRow) {
+            extraYesNo.value = "no";
+            extraDays.value = "0";
+            extraDays.disabled = true;
+            if (extraHelper) extraHelper.textContent = "";
+            if (extraSubHelper) extraSubHelper.textContent = "";
           } else {
-            updateBiExtraEnable();
+            const baseDays = isMonthly ? 28 : 14;
+            if (extraHelper) extraHelper.textContent = `Default quantity is ${baseDays} days. If “Yes”, add extra days below.`;
+            if (extraSubHelper) extraSubHelper.textContent = `Adds on top of the base ${baseDays} days (only when “Yes”).`;
+            updateExtraEnable();
           }
         }
       };
 
       updateBridgeOptionVisibility();
-      updateBiExtraEnable();
+      updateExtraEnable();
+      autoFillNextLaunch();
+      updateDosePresetState();
 
-      if (batchTypeSelect) batchTypeSelect.addEventListener("change", updateBridgeOptionVisibility);
-      if (biExtraYesNo) biExtraYesNo.addEventListener("change", updateBiExtraEnable);
+      if (batchTypeSelect) {
+        batchTypeSelect.addEventListener("change", () => {
+          updateBridgeOptionVisibility();
+          autoFillNextLaunch();
+          scheduleAutoCalc();
+        });
+      }
+      if (todayInput) {
+        todayInput.addEventListener("change", () => {
+          autoFillNextLaunch();
+          scheduleAutoCalc();
+        });
+      }
+      if (extraYesNo) extraYesNo.addEventListener("change", () => { updateExtraEnable(); scheduleAutoCalc(); });
+      if (tabsPerDayInput) {
+        tabsPerDayInput.addEventListener("input", () => { updateDosePresetState(); scheduleAutoCalc(); });
+        tabsPerDayInput.addEventListener("change", () => { scheduleAutoCalc(); });
+      }
+      dosePresetButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (!tabsPerDayInput) return;
+          const preset = btn.getAttribute("data-dose-value");
+          if (!preset) return;
+          tabsPerDayInput.value = preset;
+          updateDosePresetState();
+          scheduleAutoCalc();
+        });
+      });
 
-      calcBtn.addEventListener("click", () => {
+      const runBridgeCalculation = (opts = {}) => {
+        const silent = opts.silent === true;
         errorBox.style.display = "none";
         errorBox.textContent = "";
 
@@ -1973,12 +2818,15 @@ html{background:var(--bg);}
         const launchStr   = launchInput.value;
         const tpdStr      = document.getElementById("bridgeTabsPerDay").value;
 
-        // If bi-weekly is selected, treat "has on hand" as false regardless (and row is hidden)
-        const hasOnHand   = (batchType === "biweekly") ? false : (document.getElementById("bridgeHasOnHand")?.value === 'yes');
+        const hasOnHandSelectEl = document.getElementById("bridgeHasOnHand");
+        const untilNextPackEl = document.getElementById("bridgeUntilNextPack");
+        const extraChoiceEl = document.getElementById("bridgeExtraYesNo");
+        const extraDaysEl = document.getElementById("bridgeExtraDays");
+        const hasOnHand   = (batchType === "biweekly" || batchType === "monthly") ? false : ((hasOnHandSelectEl ? hasOnHandSelectEl.value : "") === "yes");
 
-        const wantsUntilNextPack = (document.getElementById("bridgeUntilNextPack")?.value !== 'no');
-        const biExtraChoice = (document.getElementById("bridgeBiExtraYesNo")?.value === 'yes');
-        const biExtraDaysRaw = document.getElementById("bridgeBiExtraDays")?.value;
+        const wantsUntilNextPack = ((untilNextPackEl ? untilNextPackEl.value : "") !== "no");
+        const extraChoice = ((extraChoiceEl ? extraChoiceEl.value : "") === "yes");
+        const extraDaysRaw = extraDaysEl ? extraDaysEl.value : "";
         const drugLabelIn = (document.getElementById("bridgeDrugName").value || "").trim();
 
         const outputBox   = document.getElementById("bridgeOutputBox");
@@ -1987,27 +2835,28 @@ html{background:var(--bg);}
         const launchDate  = parseLocalDate(launchStr);
         const tabsPerDay  = parseFloat(tpdStr || "0");
 
-        let biExtraDaysVal = parseInt(String(biExtraDaysRaw || "0"), 10);
-        if (isNaN(biExtraDaysVal) || biExtraDaysVal < 0) biExtraDaysVal = 0;
+        let extraDaysVal = parseInt(String(extraDaysRaw || "0"), 10);
+        if (isNaN(extraDaysVal) || extraDaysVal < 0) extraDaysVal = 0;
 
-        if (!todayDate || !launchDate) {
-          errorBox.textContent = "Please enter valid dates for today and the next launch.";
-          errorBox.style.display = "block";
-          outputBox.innerHTML = "";
-          return;
-        }
-        if (!tabsPerDay || tabsPerDay <= 0) {
-          errorBox.textContent = "Please enter a valid number for tablets per day (e.g., 1 for OD, 2 for BID).";
-          errorBox.style.display = "block";
-          outputBox.innerHTML = "";
-          return;
+        if (!todayDate || !launchDate || !tabsPerDay || tabsPerDay <= 0) {
+          if (!silent) {
+            if (!todayDate || !launchDate) {
+              errorBox.textContent = "Please enter valid dates for today and the next launch.";
+            } else {
+              errorBox.textContent = "Please enter a valid number for tablets per day (e.g., 1 for OD, 2 for BID).";
+            }
+            errorBox.style.display = "block";
+            outputBox.innerHTML = "";
+          }
+          return false;
         }
         if (!isSunday(launchDate)) {
-          errorBox.textContent = "The next launch date should be a Sunday based on your workflow. You can still calculate, but double-check the date.";
-          errorBox.style.display = "block";
+          if (!silent) {
+            errorBox.textContent = "The next launch date should be a Sunday based on your workflow. You can still calculate, but double-check the date.";
+            errorBox.style.display = "block";
+          }
         }
 
-        // CPAK blister with this change ready for pickup: launch + 14 days (Sunday → Sunday)
         const cpReady = addDays(launchDate, 14);
         let lastBridgeDay;
         let bridgeDays;
@@ -2024,13 +2873,16 @@ html{background:var(--bg);}
           lastBridgeDay = addDays(todayDate, 14 - 1); // inclusive display
           quantity = Math.round((tabsPerDay * 14) * 100) / 100;
         } else if (batchType === "biweekly") {
-          // Bi-weekly: default 14 days + optional manual extra days
-          const extra = biExtraChoice ? biExtraDaysVal : 0;
+          const extra = extraChoice ? extraDaysVal : 0;
           bridgeDays = 14 + extra;
           lastBridgeDay = addDays(todayDate, bridgeDays - 1); // inclusive display
           quantity = Math.round((tabsPerDay * bridgeDays) * 100) / 100;
+        } else if (batchType === "monthly") {
+          const extra = extraChoice ? extraDaysVal : 0;
+          bridgeDays = 28 + extra;
+          lastBridgeDay = addDays(todayDate, bridgeDays - 1);
+          quantity = Math.round((tabsPerDay * bridgeDays) * 100) / 100;
         } else {
-          // Default: cover until CPAK pack with change is ready
           bridgeDays = diffInDays(todayDate, cpReady);
           if (bridgeDays < 0) bridgeDays = 0;
           lastBridgeDay = addDays(cpReady, -1);
@@ -2038,17 +2890,15 @@ html{background:var(--bg);}
           quantity = Math.round(rawQty * 100) / 100; // 2 decimals
         }
 
-        // Days supply to bill = days from TODAY → NEXT LAUNCH
         let daysSupplyToBill = diffInDays(todayDate, launchDate);
         if (daysSupplyToBill <= 0) daysSupplyToBill = 1; // at least 1 day if same-day
 
-        // Actual days supplied A = quantity / tabsPerDay (rounded to 2 decimals)
         let actualDaysSupply;
         if (hasOnHand) {
           actualDaysSupply = 21;
         } else if (batchType === "weekly" && !wantsUntilNextPack) {
           actualDaysSupply = 14;
-        } else if (batchType === "biweekly") {
+        } else if (batchType === "biweekly" || batchType === "monthly") {
           actualDaysSupply = bridgeDays;
         } else {
           actualDaysSupply = quantity / tabsPerDay;
@@ -2065,18 +2915,11 @@ html{background:var(--bg);}
 
         const drugLabel = drugLabelIn || "this medication";
 
-        const noteEndDate =
-          hasOnHand
-            ? formatNiceDateNoWeekday(addDays(todayDate, 21))
-            : (batchType === "weekly" && !wantsUntilNextPack)
-              ? formatNiceDateNoWeekday(addDays(todayDate, 14))
-              : (batchType === "biweekly")
-                ? formatNiceDateNoWeekday(addDays(todayDate, bridgeDays))
-                : formatNiceDateNoWeekday(cpReady);
+        const noteEndDate = formatNiceDateNoWeekday(lastBridgeDay);
 
         const noteText =
-          `Change for ${drugLabel}. Billed ${quantity} tablets for ${daysSupplyToBill} days to align for next launch date (${formatNiceDateNoWeekday(launchDate)}). ` +
-          `However, patient was indeed given ${actualDaysSupply} days supply to cover (from ${formatNiceDateNoWeekday(todayDate)} until ${noteEndDate}).`;
+          `New prescription update for ${drugLabel}. Billed ${quantity} tablets for ${daysSupplyToBill} days to align with the next launch date (${formatNiceDateNoWeekday(launchDate)}). ` +
+          `Patient was dispensed ${actualDaysSupply} days supply to cover ${formatNiceDateNoWeekday(todayDate)} through ${noteEndDate} (inclusive).`;
 
         const techHint = `
           <div class="wizard-output-card">
@@ -2103,7 +2946,7 @@ html{background:var(--bg);}
             <div class="wizard-output-title">Suggested supplemental note</div>
             <textarea id="bridgeNoteText" class="wizard-note-textarea">${noteText}</textarea>
             <button type="button" id="bridgeCopyBtn" class="bridge-copy-btn">Copy note</button>
-            <div id="bridgeNoteStatus" class="bridge-note-status">You can tweak the wording before copying.</div>
+            <div id="bridgeNoteStatus" class="bridge-note-status" role="status" aria-live="polite">You can tweak the wording before copying.</div>
           </div>`;
 
         outputBox.innerHTML = html;
@@ -2117,7 +2960,38 @@ html{background:var(--bg);}
             catch (e) { statusEl.textContent = "Unable to auto-copy. You can select and copy manually."; }
           });
         }
+        return true;
+      };
+
+      var autoCalcTimer = null;
+      function scheduleAutoCalc() {
+        if (autoCalcTimer) clearTimeout(autoCalcTimer);
+        autoCalcTimer = setTimeout(() => {
+          runBridgeCalculation({ silent: true });
+        }, 250);
+      }
+
+      const autoCalcInputIds = [
+        "bridgeBatchType",
+        "bridgeTodayDate",
+        "bridgeNextLaunch",
+        "bridgeTabsPerDay",
+        "bridgeHasOnHand",
+        "bridgeUntilNextPack",
+        "bridgeExtraYesNo",
+        "bridgeExtraDays",
+        "bridgeDrugName"
+      ];
+      autoCalcInputIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const eventName = (id === "bridgeTabsPerDay" || id === "bridgeDrugName" || id === "bridgeExtraDays") ? "input" : "change";
+        el.addEventListener(eventName, scheduleAutoCalc);
+        if (eventName === "input") el.addEventListener("change", scheduleAutoCalc);
       });
+
+      calcBtn.addEventListener("click", () => runBridgeCalculation({ silent: false }));
+      scheduleAutoCalc();
     }
 
     // ---- TRAINING ACCORDION ----
@@ -2130,20 +3004,45 @@ html{background:var(--bg);}
 
       const items = Array.from(container.querySelectorAll('.accordion-item'));
       const persist = () => { try { localStorage.setItem(ACCORDION_STORAGE_KEY, JSON.stringify([...openSet])); } catch (e) {} };
-
-      items.forEach((item) => {
-        const id = item.getAttribute('data-id');
+      const setItemOpen = (item, isOpen) => {
+        const id = item.getAttribute('data-id') || '';
         const header = item.querySelector('.accordion-header');
         const panel = item.querySelector('.accordion-panel');
-        const shouldOpen = openSet.has(id);
-        if (shouldOpen) { item.classList.add('open'); panel.style.display = 'block'; }
-        else { item.classList.remove('open'); panel.style.display = 'none'; }
+        if (!header || !panel) return;
+
+        item.classList.toggle('open', isOpen);
+        panel.style.display = isOpen ? 'block' : 'none';
+        header.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        if (isOpen) openSet.add(id);
+        else openSet.delete(id);
+      };
+
+      items.forEach((item, index) => {
+        const id = item.getAttribute('data-id') || String(index + 1);
+        item.setAttribute('data-id', id);
+        const header = item.querySelector('.accordion-header');
+        const panel = item.querySelector('.accordion-panel');
+        if (!header || !panel) return;
+
+        const panelId = panel.id || `training-panel-${id}`;
+        panel.id = panelId;
+        header.setAttribute('role', 'button');
+        header.setAttribute('tabindex', '0');
+        header.setAttribute('aria-controls', panelId);
+
+        setItemOpen(item, openSet.has(id));
 
         header.addEventListener('click', () => {
           const isOpen = item.classList.contains('open');
-          if (isOpen) { item.classList.remove('open'); panel.style.display = 'none'; openSet.delete(id); }
-          else { item.classList.add('open'); panel.style.display = 'block'; openSet.add(id); }
+          setItemOpen(item, !isOpen);
           persist();
+        });
+
+        header.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            header.click();
+          }
         });
       });
 
@@ -2151,15 +3050,13 @@ html{background:var(--bg);}
       const collapseAllBtn = document.getElementById('accCollapseAll');
       if (expandAllBtn) {
         expandAllBtn.addEventListener('click', () => {
-          items.forEach((item) => { item.classList.add('open'); item.querySelector('.accordion-panel').style.display = 'block'; });
-          openSet = new Set(items.map(i => i.getAttribute('data-id')));
+          items.forEach((item) => setItemOpen(item, true));
           persist();
         });
       }
       if (collapseAllBtn) {
         collapseAllBtn.addEventListener('click', () => {
-          items.forEach((item) => { item.classList.remove('open'); item.querySelector('.accordion-panel').style.display = 'none'; });
-          openSet = new Set();
+          items.forEach((item) => setItemOpen(item, false));
           persist();
         });
       }
@@ -2198,18 +3095,30 @@ html{background:var(--bg);}
     }
 
     // ---- INIT ----
-    // Initialize theme first so styles are available to other features
-    initTheme();
-    setDefaultToday();
-    initTodayButton();
-    initTabs();
-    initCalendar();
-    initWizard();
-    initSchedule();
-    initBridgeTool();
-    initTrainingAccordion();
-    initLinkSafety();
-    selfTest();
+    function safeInit(name, fn) {
+      try { fn(); }
+      catch (e) { console.error(`[init:${name}]`, e); }
+    }
+
+    safeInit("theme", initTheme);
+    safeInit("default-today", setDefaultToday);
+    safeInit("tabs", initTabs);
+    safeInit("calendar", initCalendar);
+    safeInit("wizard", initWizard);
+    safeInit("schedule", initSchedule);
+    safeInit("today-button", initTodayButton);
+    safeInit("kpi-interactions", initTopKpiInteractions);
+    safeInit("bridge", initBridgeTool);
+    safeInit("training", initTrainingAccordion);
+    safeInit("links", initLinkSafety);
+    safeInit("self-test", selfTest);
+
+    if (typeof window.performScheduleCalculation === "function") {
+      window.performScheduleCalculation();
+    } else {
+      const calcBtn = document.getElementById("calcBtn");
+      if (calcBtn) calcBtn.click();
+    }
   </script>
 </body>
 </html>
