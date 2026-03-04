@@ -74,6 +74,23 @@
 
     body[data-theme="light"] { --tab-hover-bg: rgba(180, 83, 9, 0.10); }
     body[data-theme="dark"]  { --tab-hover-bg: rgba(180, 83, 9, 0.10); }
+    body[data-theme="wcag-cool"] { --tab-hover-bg: rgba(30, 58, 95, 0.10); }
+
+    /* Accessible theme */
+    body[data-theme="wcag-cool"] {
+      --bg: #f3f7fb;
+      --text: #111827;
+      --card-bg: #ffffff;
+      --border: #cfd8e3;
+      --muted: #334155;
+      --muted-strong: #1f2937;
+      --pill-border: #aebdce;
+      --error-text: #991b1b;
+      --table-row-border: #dde6f0;
+      --calendar-cell-bg: #ffffff;
+      --calendar-muted-text: #4b5563;
+      --calendar-other-month-opacity: 0.5;
+    }
 
     * {
       box-sizing: border-box;
@@ -105,7 +122,7 @@
     }
 
     .container {
-      max-width: 1080px;
+      max-width: 1220px;
       width: 100%;
       padding: var(--space-6) var(--space-4) 44px;
       position: relative;
@@ -170,7 +187,6 @@
       padding: 4px 10px;
       white-space: nowrap;
     }
-
     h1 {
       font-size: 1.7rem;
       margin: 0 0 4px;
@@ -733,6 +749,25 @@
     .dose-chip:hover { background: #fdf0dc; border-color: #e7ba79; }
     .dose-chip--active { background: #fce8cc; border-color: #e0a860; color: #7c2d12; }
 
+    /* WCAG cool component overrides */
+    body[data-theme="wcag-cool"] {
+      background: #f3f7fb;
+    }
+    body[data-theme="wcag-cool"] .brand-badge,
+    body[data-theme="wcag-cool"] .utility-stamp {
+      background: #e6eef8;
+      border-color: #b8c9df;
+      color: #1e3a5f;
+    }
+    body[data-theme="wcag-cool"] .tab-btn { background:#f7faff; border-color:#cfd8e3; color:#1f2937; }
+    body[data-theme="wcag-cool"] .tab-btn--active { background:#dfe9f7; border-color:#9fb4d1; color:#1e3a5f; }
+    body[data-theme="wcag-cool"] .section-title { color:#1e3a5f; }
+    body[data-theme="wcag-cool"] button { background:#1e3a5f; color:#fff; border:1px solid #172d49; }
+    body[data-theme="wcag-cool"] button.secondary { background:#fff; color:#1e3a5f; border:1px solid #738eaf; }
+    body[data-theme="wcag-cool"] .dose-chip { background:#1e3a5f; color:#fff; border-color:#172d49; }
+    body[data-theme="wcag-cool"] .dose-chip:hover { background:#172d49; border-color:#102036; }
+    body[data-theme="wcag-cool"] .dose-chip--active { background:#102036; color:#fff; border-color:#0a1422; }
+
     .wizard-output-card { border-radius: 10px; border: 1px solid var(--border); padding: 8px 9px; font-size: 0.78rem; background: rgba(148, 163, 184, 0.04); margin-bottom: 8px; }
     .wizard-output-title { font-weight: 600; margin-bottom: 4px; }
     .wizard-output-row { display: flex; justify-content: space-between; gap: 6px; margin-top: 2px; }
@@ -774,6 +809,47 @@
     .bridge-note-status { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
     .bridge-copy-btn { border-radius: 999px; border: 1px solid var(--border); padding: 4px 10px; font-size: 0.78rem; background: transparent; color: var(--muted-strong); box-shadow: none; margin-top: 8px; }
     .bridge-copy-btn:hover { background: rgba(148, 163, 184, 0.1); }
+    .bridge-output-box {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--card-bg);
+      padding: 10px;
+      min-height: 120px;
+      box-shadow: 0 7px 16px rgba(30, 58, 95, 0.06);
+    }
+    .bridge-output-box.bridge-output-pop {
+      animation: bridge-output-pop 300ms ease-out;
+    }
+    .bridge-live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #b8c9df;
+      background: #e6eef8;
+      color: #1e3a5f;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    @keyframes bridge-output-pop {
+      0% {
+        transform: translateY(6px) scale(0.992);
+        opacity: 0.72;
+        box-shadow: 0 0 0 0 rgba(30, 58, 95, 0);
+      }
+      55% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+        box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.16);
+      }
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+        box-shadow: 0 7px 16px rgba(30, 58, 95, 0.06);
+      }
+    }
 
     @media (max-width: 640px) {
       .patient-calendar-day-number { font-size: 0.68rem; }
@@ -855,6 +931,7 @@
 
     @media (max-width: 800px) { .wizard-grid { grid-template-columns: minmax(0, 1fr); } }
     @media (max-width: 640px) {
+      html { font-size: 16px; }
       .card { padding: 18px 14px 22px; }
       h1 { font-size: 1.3rem; }
       .calendar-day-number { font-size: 0.7rem; }
@@ -869,7 +946,7 @@
     }
   /* Keep card soft; no dark-mode glass override */
   .card{background:var(--card-bg)!important;-webkit-backdrop-filter:blur(10px) saturate(140%);backdrop-filter:blur(10px) saturate(140%);}
-  html{background:var(--bg);}
+  html{font-size:18px;background:var(--bg);}
   </style>
 </head>
 <body><div class="container">
@@ -1270,7 +1347,7 @@
             <!-- Right: output -->
             <div class="wizard-section">
               <div class="wizard-section-title">Bridge output</div>
-              <div id="bridgeOutputBox" class="wizard-helper">
+              <div id="bridgeOutputBox" class="bridge-output-box">
                 Enter the details on the left and click <strong>“Calculate bridge quantity & days supply”</strong>. The tool will:
                 <ul style="margin-top:4px; padding-left:18px;">
                   <li>Assume the CPAK blister with this change will be <strong>ready for pickup 14 days after the launch Sunday</strong>.</li>
@@ -1828,15 +1905,15 @@
     }
 
     // ---- THEME ----
-    function applyTheme(theme) {
-      document.body.setAttribute("data-theme", theme);
-      try { localStorage.setItem("batchTheme", theme); } catch (e) {}
-      const select = document.getElementById("themeSelect");
-      if (select && select.value !== theme) { select.value = theme; }
+    function applyTheme() {
+      const safeTheme = "wcag-cool";
+      document.body.setAttribute("data-theme", safeTheme);
+      try { localStorage.setItem("batchTheme", safeTheme); } catch (e) {}
     }
 
     function initTheme() {
-      applyTheme("light");
+      applyTheme();
+      try { localStorage.setItem("batchTheme", "wcag-cool"); } catch (e) {}
     }
 
     // ---- TABS ----
@@ -2931,6 +3008,7 @@
           </div>`;
 
         const html = `
+          <div class="bridge-live-indicator" role="status" aria-live="polite">Updated just now</div>
           <div class="wizard-output-card">
             <div class="wizard-output-title">Bridge summary</div>
             <div class="wizard-output-row"><span class="wizard-output-label">Batch</span><span class="wizard-output-value">${batchLabel}</span></div>
@@ -2950,6 +3028,9 @@
           </div>`;
 
         outputBox.innerHTML = html;
+        outputBox.classList.remove("bridge-output-pop");
+        void outputBox.offsetWidth;
+        outputBox.classList.add("bridge-output-pop");
 
         const copyBtn = document.getElementById("bridgeCopyBtn");
         const noteTextarea = document.getElementById("bridgeNoteText");
