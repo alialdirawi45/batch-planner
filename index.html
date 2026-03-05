@@ -965,6 +965,7 @@
         <button type="button" id="tab-btn-schedule" class="tab-btn tab-btn--active" data-tab-target="schedule" role="tab" aria-controls="tab-schedule" aria-selected="true" tabindex="0">Schedule</button>
         <button type="button" id="tab-btn-new-patient" class="tab-btn" data-tab-target="new-patient" role="tab" aria-controls="tab-new-patient" aria-selected="false" tabindex="-1">New blister patient</button>
         <button type="button" id="tab-btn-bill-rx" class="tab-btn" data-tab-target="bill-rx" role="tab" aria-controls="tab-bill-rx" aria-selected="false" tabindex="-1">Bill New RX</button>
+        <button type="button" id="tab-btn-vacation-billing" class="tab-btn" data-tab-target="vacation-billing" role="tab" aria-controls="tab-vacation-billing" aria-selected="false" tabindex="-1">Billing Vacation Supply</button>
         <button type="button" id="tab-btn-training" class="tab-btn" data-tab-target="training" role="tab" aria-controls="tab-training" aria-selected="false" tabindex="-1">Training</button>
         <button type="button" id="tab-btn-quick-links" class="tab-btn" data-tab-target="quick-links" role="tab" aria-controls="tab-quick-links" aria-selected="false" tabindex="-1">Quick Links Hub</button>
       </div>
@@ -1354,6 +1355,96 @@
                   <li>Calculate the <strong>quantity</strong> as: <em>tablets per day × days from today until the CPAK blister is ready</em>.</li>
                   <li>Set <strong>days supply</strong> as: <em>number of days from today until the next launch Sunday</em> (your “from now until launch” rule).</li>
                   <li>Generate a <strong>copy-ready note</strong> for patient supplemental notes.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Billing vacation supply -->
+      <div id="tab-vacation-billing" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-vacation-billing" hidden>
+        <div class="section-title">Billing For Vacation Supply</div>
+        <div class="small">
+          Use this when a blister-pack patient is traveling and needs multiple packs in advance. The tool calculates:
+          <strong>quantity to bill</strong>, <strong>entered days supply</strong> (vacation start to resume launch),
+          and the <strong>resume billing launch date</strong> aligned to the batch cycle.
+        </div>
+
+        <div class="wizard-card">
+          <div class="wizard-grid">
+            <div class="wizard-section">
+              <div class="wizard-section-title">1. Vacation & batch details</div>
+
+              <div class="wizard-row">
+                <label for="vacBatchType">Batch type</label>
+                <select id="vacBatchType">
+                  <option value="weekly">Weekly batch</option>
+                  <option value="biweekly">Bi-weekly batch</option>
+                  <option value="monthly">28-day “monthly” batch</option>
+                </select>
+              </div>
+
+              <div class="wizard-row" style="margin-top:10px;">
+                <label for="vacStartDate">Vacation start date</label>
+                <input type="date" id="vacStartDate" />
+              </div>
+
+              <div class="wizard-row" style="margin-top:10px;">
+                <label for="vacReturnDate">Return date (patient back)</label>
+                <input type="date" id="vacReturnDate" />
+                <div class="wizard-helper">Tool will choose the latest valid launch Sunday/cycle so CPAK is ready by return date.</div>
+              </div>
+
+              <div class="wizard-row" style="margin-top:10px;">
+                <label for="vacTabsPerDay">Tablets per day</label>
+                <input type="number" id="vacTabsPerDay" step="0.25" min="0" />
+                <div id="vacDosePresets" class="dose-presets" aria-label="Common dosing presets">
+                  <button type="button" class="dose-chip" data-dose-value="1">OD (1)</button>
+                  <button type="button" class="dose-chip" data-dose-value="2">BID (2)</button>
+                  <button type="button" class="dose-chip" data-dose-value="3">TID (3)</button>
+                  <button type="button" class="dose-chip" data-dose-value="1.5">1.5/day</button>
+                </div>
+              </div>
+
+              <div class="wizard-row" style="margin-top:10px;">
+                <label for="vacPacksTotal">How many blister packs is patient receiving?</label>
+                <input type="number" id="vacPacksTotal" min="0" step="1" />
+              </div>
+
+              <div class="wizard-row" style="margin-top:10px;">
+                <label for="vacPacksOnHand">How many packs are already in pharmacy?</label>
+                <input type="number" id="vacPacksOnHand" min="0" step="1" />
+              </div>
+
+              <div class="wizard-row" style="margin-top:10px;">
+                <label for="vacPacksToMake">How many packs are being made in store?</label>
+                <input type="number" id="vacPacksToMake" min="0" step="1" />
+                <div id="vacPackCheck" class="wizard-helper"></div>
+                <div id="vacPackSuggestion" class="wizard-helper"></div>
+                <button type="button" id="vacApplySuggestionBtn" class="secondary" style="margin-top:8px;">Use suggested pack counts</button>
+              </div>
+
+              <div class="wizard-row" style="margin-top:10px;">
+                <label for="vacDrugName">Drug name / strength (for note)</label>
+                <input type="text" id="vacDrugName" placeholder="e.g., Rosuvastatin 20 mg" />
+              </div>
+
+              <button id="vacCalcBtn" class="primary-btn">
+                <span>Calculate vacation billing</span>
+              </button>
+              <div id="vacErrorBox" class="error" role="alert" aria-live="polite" style="display:none;"></div>
+            </div>
+
+            <div class="wizard-section">
+              <div class="wizard-section-title">Vacation billing output</div>
+              <div id="vacOutputBox" class="bridge-output-box">
+                Enter vacation details and click <strong>Calculate vacation billing</strong>. The tool will:
+                <ul style="margin-top:4px; padding-left:18px;">
+                  <li>Calculate billed quantity from packs made in store for this vacation period.</li>
+                  <li>Set entered days supply from vacation start date until resume launch date.</li>
+                  <li>Align resume billing to the correct launch cycle (weekly/bi-weekly/monthly).</li>
+                  <li>Generate a copy-ready supplemental note.</li>
                 </ul>
               </div>
             </div>
@@ -1883,6 +1974,35 @@
       return next;
     }
 
+    function getLatestCycleLaunchOnOrBefore(targetDate, anchor, intervalDays) {
+      const target = new Date(targetDate);
+      target.setHours(0, 0, 0, 0);
+      const base = new Date(anchor);
+      base.setHours(0, 0, 0, 0);
+      if (target < base) return null;
+      const daysFromAnchor = diffInDays(base, target);
+      const cycles = Math.floor(daysFromAnchor / intervalDays);
+      return addDays(base, cycles * intervalDays);
+    }
+
+    function getResumeLaunchForVacation(returnDate, batchType) {
+      // CPAK readiness in this tool is modeled as launch + 14 days.
+      const latestAllowedLaunch = addDays(returnDate, -14);
+      if (batchType === "weekly") {
+        const d = new Date(latestAllowedLaunch);
+        while (d.getDay() !== WEEKLY_TARGET_WEEKDAY) d.setDate(d.getDate() - 1);
+        d.setHours(0, 0, 0, 0);
+        return d;
+      }
+      if (batchType === "biweekly") {
+        return getLatestCycleLaunchOnOrBefore(latestAllowedLaunch, BIWEEKLY_ANCHOR, BIWEEKLY_INTERVAL);
+      }
+      if (batchType === "monthly") {
+        return getLatestCycleLaunchOnOrBefore(latestAllowedLaunch, MONTHLY_ANCHOR, MONTHLY_INTERVAL);
+      }
+      return null;
+    }
+
     function buildScheduleSnapshot(today) {
       const weeklyNext = getNextWeeklyLaunch(today);
       const biNext = getNextCycleLaunch(today, BIWEEKLY_ANCHOR, BIWEEKLY_INTERVAL);
@@ -1923,6 +2043,7 @@
         "schedule": document.getElementById("tab-schedule"),
         "new-patient": document.getElementById("tab-new-patient"),
         "bill-rx": document.getElementById("tab-bill-rx"),
+        "vacation-billing": document.getElementById("tab-vacation-billing"),
         "training": document.getElementById("tab-training"),
         "quick-links": document.getElementById("tab-quick-links")
       };
@@ -1984,6 +2105,8 @@
     function setDefaultToday() {
       const todayInput = document.getElementById("todayInput");
       const bridgeTodayInput = document.getElementById("bridgeTodayDate");
+      const vacStartInput = document.getElementById("vacStartDate");
+      const vacReturnInput = document.getElementById("vacReturnDate");
       const wizardStart = document.getElementById("wizardStartDate");
       const rangeStartInput = document.getElementById("rangeStartDate");
       const rangeEndInput = document.getElementById("rangeEndDate");
@@ -1991,6 +2114,8 @@
       today.setHours(0, 0, 0, 0);
       if (todayInput) todayInput.value = formatDateYMD(today);
       if (bridgeTodayInput) bridgeTodayInput.value = formatDateYMD(today);
+      if (vacStartInput) vacStartInput.value = formatDateYMD(today);
+      if (vacReturnInput) vacReturnInput.value = formatDateYMD(addDays(today, 28));
       if (wizardStart) wizardStart.value = formatDateYMD(today);
       if (rangeStartInput) rangeStartInput.value = formatDateYMD(today);
       if (rangeEndInput) rangeEndInput.value = formatDateYMD(addDays(today, 90));
@@ -3075,6 +3200,244 @@
       scheduleAutoCalc();
     }
 
+    // ---- VACATION BILLING TOOL ----
+    function initVacationBillingTool() {
+      const batchTypeInput = document.getElementById("vacBatchType");
+      const startInput = document.getElementById("vacStartDate");
+      const returnInput = document.getElementById("vacReturnDate");
+      const tabsInput = document.getElementById("vacTabsPerDay");
+      const packsTotalInput = document.getElementById("vacPacksTotal");
+      const packsOnHandInput = document.getElementById("vacPacksOnHand");
+      const packsToMakeInput = document.getElementById("vacPacksToMake");
+      const drugInput = document.getElementById("vacDrugName");
+      const calcBtn = document.getElementById("vacCalcBtn");
+      const errorBox = document.getElementById("vacErrorBox");
+      const outputBox = document.getElementById("vacOutputBox");
+      const packCheck = document.getElementById("vacPackCheck");
+      const packSuggestion = document.getElementById("vacPackSuggestion");
+      const applySuggestionBtn = document.getElementById("vacApplySuggestionBtn");
+      const dosePresetButtons = Array.from(document.querySelectorAll("#vacDosePresets .dose-chip"));
+      if (!batchTypeInput || !startInput || !returnInput || !tabsInput || !packsTotalInput || !packsOnHandInput || !packsToMakeInput || !calcBtn || !errorBox || !outputBox) return;
+
+      const cycleDays = (batchType) => (batchType === "weekly" ? 7 : (batchType === "biweekly" ? 14 : 28));
+      const batchLabel = (batchType) => (batchType === "weekly" ? "Weekly batch" : (batchType === "biweekly" ? "Bi-weekly batch" : "28-day “monthly” batch"));
+
+      let lastSuggestedTotalPacks = null;
+      let lastSuggestedToMakePacks = null;
+
+      const updateDosePresetState = () => {
+        const current = parseFloat(tabsInput.value || "");
+        dosePresetButtons.forEach((btn) => {
+          const val = parseFloat(btn.getAttribute("data-dose-value") || "");
+          const isActive = !isNaN(current) && !isNaN(val) && Math.abs(current - val) < 0.001;
+          btn.classList.toggle("dose-chip--active", isActive);
+        });
+      };
+
+      const updatePackConsistencyHint = () => {
+        if (!packCheck) return;
+        const startDate = parseLocalDate(startInput.value);
+        const returnDate = parseLocalDate(returnInput.value);
+        const total = parseInt(packsTotalInput.value || "0", 10);
+        const onHand = parseInt(packsOnHandInput.value || "0", 10);
+        const make = parseInt(packsToMakeInput.value || "0", 10);
+
+        lastSuggestedTotalPacks = null;
+        lastSuggestedToMakePacks = null;
+        if (packSuggestion) {
+          packSuggestion.textContent = "";
+        }
+
+        if (startDate && returnDate && returnDate >= startDate) {
+          const daysAway = Math.max(0, diffInDays(startDate, returnDate));
+          const suggestedTotal = Math.ceil(daysAway / 7); // full 7-day blister packs only
+          const onHandSafe = (!isNaN(onHand) && onHand >= 0) ? onHand : 0;
+          const suggestedToMake = Math.max(0, suggestedTotal - onHandSafe);
+          lastSuggestedTotalPacks = suggestedTotal;
+          lastSuggestedToMakePacks = suggestedToMake;
+          if (packSuggestion) {
+            packSuggestion.textContent =
+              `Suggestion from dates: ${daysAway} day(s) away requires ${suggestedTotal} full pack(s) (7 days each). With ${onHandSafe} on-hand, suggest making ${suggestedToMake}.`;
+          }
+        }
+
+        if ([total, onHand, make].some((n) => isNaN(n) || n < 0)) {
+          packCheck.textContent = "";
+          return;
+        }
+        const sum = onHand + make;
+        if (sum === total) {
+          packCheck.textContent = `Check passed: on-hand (${onHand}) + to-make (${make}) = total (${total}).`;
+          return;
+        }
+        packCheck.textContent = `Check: on-hand (${onHand}) + to-make (${make}) = ${sum}, but patient total is ${total}.`;
+      };
+
+      const runVacationCalc = (opts = {}) => {
+        const silent = opts.silent === true;
+        errorBox.style.display = "none";
+        errorBox.textContent = "";
+
+        const batchType = batchTypeInput.value;
+        const startDate = parseLocalDate(startInput.value);
+        const returnDate = parseLocalDate(returnInput.value);
+        const tabsPerDay = parseFloat(tabsInput.value || "0");
+        const packsTotal = parseInt(packsTotalInput.value || "0", 10);
+        const packsOnHand = parseInt(packsOnHandInput.value || "0", 10);
+        const packsToMake = parseInt(packsToMakeInput.value || "0", 10);
+        const drugLabel = (drugInput.value || "").trim() || "this medication";
+
+        if (!startDate || !returnDate || !tabsPerDay || tabsPerDay <= 0 || isNaN(packsTotal) || isNaN(packsOnHand) || isNaN(packsToMake)) {
+          if (!silent) {
+            errorBox.textContent = "Please enter valid values for dates, tablets/day, and pack counts.";
+            errorBox.style.display = "block";
+          }
+          return false;
+        }
+        if (packsTotal < 0 || packsOnHand < 0 || packsToMake < 0) {
+          if (!silent) {
+            errorBox.textContent = "Pack counts cannot be negative.";
+            errorBox.style.display = "block";
+          }
+          return false;
+        }
+        if (returnDate < startDate) {
+          if (!silent) {
+            errorBox.textContent = "Return date must be the same as or after vacation start date.";
+            errorBox.style.display = "block";
+          }
+          return false;
+        }
+
+        const resumeLaunch = getResumeLaunchForVacation(returnDate, batchType);
+        if (!resumeLaunch) {
+          if (!silent) {
+            errorBox.textContent = "No valid resume launch date found for this return date and batch cycle.";
+            errorBox.style.display = "block";
+          }
+          return false;
+        }
+        if (resumeLaunch < startDate) {
+          if (!silent) {
+            errorBox.textContent = "Resume launch is before vacation start date. Please review dates.";
+            errorBox.style.display = "block";
+          }
+          return false;
+        }
+
+        const perPackDays = cycleDays(batchType);
+        const actualDaysSupply = packsTotal * perPackDays;
+        const billedDaysByPacks = packsToMake * perPackDays;
+        const enteredDaysSupply = Math.max(1, diffInDays(startDate, resumeLaunch));
+        const quantityToBill = Math.round((tabsPerDay * billedDaysByPacks) * 100) / 100;
+
+        const vacationEndBySupply = addDays(startDate, Math.max(0, actualDaysSupply - 1));
+        const automationDate = addDays(resumeLaunch, 3);
+        const cpakDeliveryDate = addDays(resumeLaunch, 8);
+        const baggingReadyDate = addDays(resumeLaunch, 14);
+
+        const noteText =
+          `Patient is going on a vacation from ${formatNiceDateNoWeekday(startDate)} to ${formatNiceDateNoWeekday(returnDate)}. ` +
+          `Billing ${quantityToBill} tabs for ${enteredDaysSupply} days to align with launch date and ensure patient gets a blister pack when they are back from vacation. ` +
+          `Patient received ${actualDaysSupply} days supply. Days supply accounted for ${packsOnHand} blister pack(s) already in pharmacy. ` +
+          `Resume billing launch date: ${formatNiceDateNoWeekday(resumeLaunch)}.`;
+
+        const html = `
+          <div class="bridge-live-indicator" role="status" aria-live="polite">Updated just now</div>
+          <div class="wizard-output-card">
+            <div class="wizard-output-title">Vacation billing summary</div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Batch</span><span class="wizard-output-value">${batchLabel(batchType)}</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Vacation start</span><span class="wizard-output-value">${formatNiceDateNoWeekday(startDate)}</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Return date</span><span class="wizard-output-value">${formatNiceDateNoWeekday(returnDate)}</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Packs (total / on-hand / to-make)</span><span class="wizard-output-value">${packsTotal} / ${packsOnHand} / ${packsToMake}</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Actual supply given</span><span class="wizard-output-value">${actualDaysSupply} day(s) (${formatNiceDateNoWeekday(startDate)} → ${formatNiceDateNoWeekday(vacationEndBySupply)})</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Resume billing launch date</span><span class="wizard-output-value">${formatNiceDateNoWeekday(resumeLaunch)}</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Days supply to enter</span><span class="wizard-output-value">${enteredDaysSupply} day(s) (${formatNiceDateNoWeekday(startDate)} → ${formatNiceDateNoWeekday(resumeLaunch)})</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Billing basis (packs made)</span><span class="wizard-output-value">${billedDaysByPacks} day(s)</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Quantity to bill</span><span class="wizard-output-value">${quantityToBill} tab(s)</span></div>
+          </div>
+          <div class="wizard-output-card">
+            <div class="wizard-output-title">Resume cycle checkpoints</div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Launch</span><span class="wizard-output-value">${formatNiceDateNoWeekday(resumeLaunch)}</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Automation</span><span class="wizard-output-value">${formatNiceDateNoWeekday(automationDate)}</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">CPAK delivery</span><span class="wizard-output-value">${formatNiceDateNoWeekday(cpakDeliveryDate)}</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Bagging / ready</span><span class="wizard-output-value">${formatNiceDateNoWeekday(baggingReadyDate)}</span></div>
+          </div>
+          <div class="wizard-output-card">
+            <div class="wizard-output-title">Suggested supplemental note</div>
+            <textarea id="vacNoteText" class="wizard-note-textarea">${noteText}</textarea>
+            <button type="button" id="vacCopyBtn" class="bridge-copy-btn">Copy note</button>
+            <div id="vacNoteStatus" class="bridge-note-status" role="status" aria-live="polite">You can tweak the wording before copying.</div>
+          </div>`;
+
+        outputBox.innerHTML = html;
+        outputBox.classList.remove("bridge-output-pop");
+        void outputBox.offsetWidth;
+        outputBox.classList.add("bridge-output-pop");
+
+        const copyBtn = document.getElementById("vacCopyBtn");
+        const noteTextarea = document.getElementById("vacNoteText");
+        const statusEl = document.getElementById("vacNoteStatus");
+        if (copyBtn && noteTextarea && statusEl) {
+          copyBtn.addEventListener("click", async () => {
+            try { await navigator.clipboard.writeText(noteTextarea.value); statusEl.textContent = "Note copied to clipboard ✅"; }
+            catch (e) { statusEl.textContent = "Unable to auto-copy. You can select and copy manually."; }
+          });
+        }
+        return true;
+      };
+
+      if (applySuggestionBtn) {
+        applySuggestionBtn.addEventListener("click", () => {
+          if (lastSuggestedTotalPacks == null || lastSuggestedToMakePacks == null) return;
+          packsTotalInput.value = String(lastSuggestedTotalPacks);
+          packsToMakeInput.value = String(lastSuggestedToMakePacks);
+          updatePackConsistencyHint();
+          scheduleAutoVacationCalc();
+        });
+      }
+
+      dosePresetButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const preset = btn.getAttribute("data-dose-value");
+          if (!preset) return;
+          tabsInput.value = preset;
+          updateDosePresetState();
+          scheduleAutoVacationCalc();
+        });
+      });
+
+      var autoVacationTimer = null;
+      function scheduleAutoVacationCalc() {
+        updatePackConsistencyHint();
+        if (autoVacationTimer) clearTimeout(autoVacationTimer);
+        autoVacationTimer = setTimeout(() => runVacationCalc({ silent: true }), 250);
+      }
+
+      [
+        "vacBatchType",
+        "vacStartDate",
+        "vacReturnDate",
+        "vacTabsPerDay",
+        "vacPacksTotal",
+        "vacPacksOnHand",
+        "vacPacksToMake",
+        "vacDrugName"
+      ].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const isTyping = (id === "vacTabsPerDay" || id === "vacPacksTotal" || id === "vacPacksOnHand" || id === "vacPacksToMake" || id === "vacDrugName");
+        el.addEventListener(isTyping ? "input" : "change", scheduleAutoVacationCalc);
+        if (isTyping) el.addEventListener("change", scheduleAutoVacationCalc);
+      });
+
+      tabsInput.addEventListener("input", updateDosePresetState);
+      updateDosePresetState();
+      updatePackConsistencyHint();
+      calcBtn.addEventListener("click", () => runVacationCalc({ silent: false }));
+      scheduleAutoVacationCalc();
+    }
+
     // ---- TRAINING ACCORDION ----
     const ACCORDION_STORAGE_KEY = 'trainingAccordionOpen';
     function initTrainingAccordion() {
@@ -3190,6 +3553,7 @@
     safeInit("today-button", initTodayButton);
     safeInit("kpi-interactions", initTopKpiInteractions);
     safeInit("bridge", initBridgeTool);
+    safeInit("vacation-billing", initVacationBillingTool);
     safeInit("training", initTrainingAccordion);
     safeInit("links", initLinkSafety);
     safeInit("self-test", selfTest);
