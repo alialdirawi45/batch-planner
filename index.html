@@ -920,6 +920,119 @@
       margin-top: 4px;
     }
 
+    /* Local helper */
+    .helper-fab {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      z-index: 120;
+      border-radius: 999px;
+      padding: 10px 14px;
+      margin-top: 0;
+      border: 1px solid #60a5fa;
+      background: #1e3a5f;
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(30, 58, 95, 0.28);
+      font-size: 0.8rem;
+    }
+    .helper-panel {
+      position: fixed;
+      right: 14px;
+      bottom: 62px;
+      width: min(360px, calc(100vw - 20px));
+      max-height: min(560px, calc(100vh - 86px));
+      z-index: 121;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 20px 50px rgba(30, 58, 95, 0.28);
+      display: none;
+      overflow: hidden;
+    }
+    .helper-panel--open { display: flex; flex-direction: column; }
+    .helper-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: #e6eef8;
+      border-bottom: 1px solid #cfd8e3;
+    }
+    .helper-title { font-size: 0.82rem; font-weight: 800; color: #1e3a5f; }
+    .helper-close {
+      border: 1px solid #b8c9df;
+      background: #fff;
+      color: #1e3a5f;
+      margin-top: 0;
+      padding: 4px 8px;
+      font-size: 0.74rem;
+      box-shadow: none;
+    }
+    .helper-messages {
+      padding: 10px;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 180px;
+      background: #f8fbff;
+    }
+    .helper-msg {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 7px 9px;
+      font-size: 0.78rem;
+      line-height: 1.35;
+      white-space: pre-wrap;
+    }
+    .helper-msg--user {
+      align-self: flex-end;
+      background: #dbeafe;
+      border-color: #93c5fd;
+      color: #1e3a5f;
+    }
+    .helper-msg--bot {
+      align-self: flex-start;
+      background: #fff;
+      color: var(--text);
+    }
+    .helper-quick {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 8px 10px;
+      border-top: 1px solid #e5edf6;
+      background: #fff;
+    }
+    .helper-chip {
+      margin-top: 0;
+      border: 1px solid #cfd8e3;
+      border-radius: 999px;
+      background: #f8fbff;
+      color: #1e3a5f;
+      font-size: 0.72rem;
+      padding: 4px 9px;
+      box-shadow: none;
+    }
+    .helper-input-row {
+      display: flex;
+      gap: 6px;
+      border-top: 1px solid #e5edf6;
+      padding: 8px;
+      background: #fff;
+    }
+    .helper-input-row input {
+      margin: 0;
+      font-size: 0.8rem;
+      padding: 8px 10px;
+    }
+    .helper-send {
+      margin-top: 0;
+      padding: 8px 11px;
+      font-size: 0.76rem;
+    }
+
     .card { animation: rise-in 380ms ease-out both; }
     .tab-content--active { animation: fade-in-up 300ms ease both; }
     @keyframes rise-in {
@@ -1781,7 +1894,7 @@
               <div class="links-subtitle">ISP – Pre-Verification Batch Report</div>
               <a
                 class="quick-link"
-                href="http://isp:6777/login"
+                href="http://10.7.79.247:6777/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -1920,6 +2033,24 @@
     <div id="rangeReportBody" class="range-report-body"><div class="small" style="padding:10px;">No report generated yet.</div></div>
   </aside>
   <div id="printReport" style="display:none;"></div>
+  <button type="button" id="helperToggleBtn" class="helper-fab">Helper</button>
+  <div id="helperPanel" class="helper-panel" aria-hidden="true">
+    <div class="helper-head">
+      <div class="helper-title">Blister Tool Helper</div>
+      <button type="button" id="helperCloseBtn" class="helper-close">Close</button>
+    </div>
+    <div id="helperMessages" class="helper-messages"></div>
+    <div class="helper-quick" id="helperQuick">
+      <button type="button" class="helper-chip" data-prompt="How do I bill a new RX bridge?">New RX bridge</button>
+      <button type="button" class="helper-chip" data-prompt="How does vacation billing work?">Vacation billing</button>
+      <button type="button" class="helper-chip" data-prompt="How do I use the launch dates report?">Launch report</button>
+      <button type="button" class="helper-chip" data-prompt="Open Bill New RX tab">Open Bill New RX</button>
+    </div>
+    <div class="helper-input-row">
+      <input id="helperInput" type="text" placeholder="Ask about bridge, vacation, report, tabs..." />
+      <button type="button" id="helperSendBtn" class="helper-send">Send</button>
+    </div>
+  </div>
 
   <script>
     // ---- CONFIG (anchors & rules) ----
@@ -3601,6 +3732,199 @@
       });
     }
 
+    // ---- LOCAL HELPER (no backend) ----
+    function initLocalHelper() {
+      const panel = document.getElementById("helperPanel");
+      const toggleBtn = document.getElementById("helperToggleBtn");
+      const closeBtn = document.getElementById("helperCloseBtn");
+      const messages = document.getElementById("helperMessages");
+      const input = document.getElementById("helperInput");
+      const sendBtn = document.getElementById("helperSendBtn");
+      const quickButtons = Array.from(document.querySelectorAll("#helperQuick .helper-chip"));
+      if (!panel || !toggleBtn || !closeBtn || !messages || !input || !sendBtn) return;
+
+      const appendMessage = (text, who) => {
+        const div = document.createElement("div");
+        div.className = `helper-msg helper-msg--${who}`;
+        div.textContent = text;
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+      };
+
+      const openPanel = () => {
+        panel.classList.add("helper-panel--open");
+        panel.setAttribute("aria-hidden", "false");
+        input.focus();
+      };
+      const closePanel = () => {
+        panel.classList.remove("helper-panel--open");
+        panel.setAttribute("aria-hidden", "true");
+      };
+
+      const normalize = (s) => (s || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9#\s]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+      const toTokens = (s) => new Set(normalize(s).split(" ").filter(Boolean));
+      const hasAnyPhrase = (norm, phrases) => phrases.some((p) => norm.includes(p));
+      const tokenHitCount = (tokens, words) => words.reduce((n, w) => n + (tokens.has(w) ? 1 : 0), 0);
+
+      const tabAliases = [
+        { id: "tab-btn-schedule", labels: ["schedule", "calendar", "main"] },
+        { id: "tab-btn-new-patient", labels: ["new blister patient", "new patient", "patient wizard", "wizard"] },
+        { id: "tab-btn-bill-rx", labels: ["bill new rx", "bridge", "bridge billing", "rx"] },
+        { id: "tab-btn-vacation-billing", labels: ["vacation", "vacation supply", "billing vacation supply", "travel"] },
+        { id: "tab-btn-training", labels: ["training", "guide"] },
+        { id: "tab-btn-quick-links", labels: ["quick links", "links", "resources"] }
+      ];
+
+      const openTabByName = (name) => {
+        const key = normalize(name);
+        const match = tabAliases.find((t) => t.labels.some((label) => key.includes(label)));
+        const btn = match ? document.getElementById(match.id) : null;
+        if (btn) { btn.click(); return match.labels[0]; }
+        return null;
+      };
+
+      const tryTabCommand = (raw) => {
+        const norm = normalize(raw);
+        const commandWords = ["open", "go", "switch", "take", "show"];
+        const hasCommand = commandWords.some((w) => norm.startsWith(w + " ") || norm.includes(` ${w} `));
+        if (!hasCommand) return null;
+        const matched = openTabByName(norm);
+        if (!matched) return "I could not find that tab. Try: schedule, new patient, bill new rx, vacation, training, quick links.";
+        return `Opened ${matched} tab.`;
+      };
+
+      const extractVacationPackSuggestion = (raw) => {
+        const norm = normalize(raw);
+        const weekMatch = norm.match(/(\d+(?:\.\d+)?)\s*(week|weeks|wk|wks)\b/);
+        const dayMatch = norm.match(/(\d+)\s*(day|days)\b/);
+        const onHandMatch = norm.match(/(?:on hand|in pharmacy|already)\s*(?:is|=|:)?\s*(\d+)/);
+        let days = null;
+        if (weekMatch) days = Math.ceil(parseFloat(weekMatch[1]) * 7);
+        else if (dayMatch) days = parseInt(dayMatch[1], 10);
+        if (days == null || isNaN(days) || days <= 0) return null;
+        const suggestedTotal = Math.ceil(days / 7);
+        const onHand = onHandMatch ? parseInt(onHandMatch[1], 10) : 0;
+        const toMake = Math.max(0, suggestedTotal - (isNaN(onHand) ? 0 : onHand));
+        return { days, suggestedTotal, onHand: isNaN(onHand) ? 0 : onHand, toMake };
+      };
+
+      let lastTopic = null;
+      const intents = [
+        {
+          id: "greeting",
+          phrases: ["hello", "hi", "hey", "good morning", "good afternoon"],
+          tokens: ["hello", "hi", "hey"],
+          response: () => "Hi. I can help with bridge billing, vacation supply, launch dates report, fee highlighting, and tab navigation."
+        },
+        {
+          id: "bridge",
+          phrases: ["bill new rx", "bridge billing", "bridge"],
+          tokens: ["bridge", "rx", "launch"],
+          response: () => "Bridge flow: set batch + today + next launch + tabs/day. Quantity follows batch rules; entered days supply is from today to next launch."
+        },
+        {
+          id: "vacation",
+          phrases: ["vacation supply", "billing vacation", "vacation", "travel supply"],
+          tokens: ["vacation", "travel", "packs", "return"],
+          response: (raw) => {
+            const quick = extractVacationPackSuggestion(raw);
+            if (quick) {
+              return `Based on ${quick.days} day(s): suggest ${quick.suggestedTotal} full blister pack(s). With ${quick.onHand} on-hand, suggest making ${quick.toMake}.`;
+            }
+            return "Vacation flow: enter start + return + pack counts. The tool rounds to full 7-day packs, aligns resume billing to cycle launch, and generates a note.";
+          }
+        },
+        {
+          id: "report",
+          phrases: ["launch dates report", "range report", "report", "fee report"],
+          tokens: ["report", "launch", "dates"],
+          response: () => "Launch Dates Report: choose date range, generate, and print. Rows are grouped by date and Dispensing Fee charges are highlighted on-screen and in print."
+        },
+        {
+          id: "fee",
+          phrases: ["dispensing fee", "fee charge", "fee"],
+          tokens: ["fee", "charge"],
+          response: () => "Dispensing Fee charge events are highlighted in the Launch Dates Report. Open Schedule -> Launch Dates Report."
+        },
+        {
+          id: "days-supply",
+          phrases: ["days supply", "day supply", "d s"],
+          tokens: ["days", "supply"],
+          response: () => "Days supply aligns to cycle timing: Bridge uses today -> launch. Vacation uses start -> resume launch. Quantity can differ from entered days supply by design."
+        },
+        {
+          id: "packs",
+          phrases: ["blister pack", "packs", "pack"],
+          tokens: ["pack", "packs", "blister"],
+          response: () => "Pack rule: each blister pack = 7 days. Vacation suggestion always rounds up to full packs (no partial packs)."
+        }
+      ];
+
+      const respond = (text) => {
+        const raw = (text || "").trim();
+        const norm = normalize(raw);
+        if (!norm) return "Type a question like: 'How does vacation billing work?'";
+
+        const tabCommandResponse = tryTabCommand(raw);
+        if (tabCommandResponse) return tabCommandResponse;
+
+        const tokens = toTokens(raw);
+        const scored = intents.map((i) => {
+          const phraseScore = hasAnyPhrase(norm, i.phrases) ? 3 : 0;
+          const tokenScore = tokenHitCount(tokens, i.tokens);
+          return { intent: i, score: phraseScore + tokenScore };
+        }).sort((a, b) => b.score - a.score);
+
+        if (scored[0] && scored[0].score > 0) {
+          lastTopic = scored[0].intent.id;
+          return scored[0].intent.response(raw);
+        }
+
+        if ((norm.startsWith("what about") || norm.startsWith("and ")) && lastTopic) {
+          const fallback = intents.find((i) => i.id === lastTopic);
+          if (fallback) return fallback.response(raw);
+        }
+
+        return "I can help with bridge billing, vacation supply, launch dates report, fee highlighting, and opening tabs. Try: 'take me to vacation tab' or 'for 5 weeks with 1 on hand, how many packs to make?'.";
+      };
+
+      const send = (presetText) => {
+        const text = (presetText != null ? presetText : input.value).trim();
+        if (!text) return;
+        appendMessage(text, "user");
+        const answer = respond(text);
+        appendMessage(answer, "bot");
+        input.value = "";
+      };
+
+      toggleBtn.addEventListener("click", () => {
+        if (panel.classList.contains("helper-panel--open")) closePanel();
+        else openPanel();
+      });
+      closeBtn.addEventListener("click", closePanel);
+      sendBtn.addEventListener("click", () => send());
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          send();
+        }
+      });
+      quickButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const prompt = btn.getAttribute("data-prompt") || "";
+          if (!prompt) return;
+          if (!panel.classList.contains("helper-panel--open")) openPanel();
+          send(prompt);
+        });
+      });
+
+      appendMessage("Local helper ready. Ask me about bridge billing, vacation supply, or launch dates report.", "bot");
+    }
+
     // ---- LIGHTWEIGHT SELF-TESTS (console only) ----
     function selfTest() {
       try {
@@ -3635,6 +3959,7 @@
     safeInit("vacation-billing", initVacationBillingTool);
     safeInit("training", initTrainingAccordion);
     safeInit("links", initLinkSafety);
+    safeInit("local-helper", initLocalHelper);
     safeInit("self-test", selfTest);
 
     if (typeof window.performScheduleCalculation === "function") {
