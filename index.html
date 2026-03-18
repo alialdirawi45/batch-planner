@@ -1443,6 +1443,21 @@
               </div>
 
               <div class="wizard-row" style="margin-top:10px;">
+                <label for="bridgeChangeType">What kind of change is this?</label>
+                <select id="bridgeChangeType">
+                  <option value="new" selected>New medication</option>
+                  <option value="dose-change">Dose change</option>
+                </select>
+                <div class="wizard-helper">Use dose change when the medication already exists in the blister and you are only increasing or decreasing the daily amount.</div>
+              </div>
+
+              <div class="wizard-row" id="bridgeOldTabsRow" style="margin-top:10px; display:none;">
+                <label for="bridgeOldTabsPerDay">Old tablets per day</label>
+                <input type="number" id="bridgeOldTabsPerDay" step="0.25" min="0" />
+                <div class="wizard-helper">For example: old TID = 3, old 1.5 once daily = 1.5.</div>
+              </div>
+
+              <div class="wizard-row" style="margin-top:10px;">
                 <label for="bridgeTabsPerDay">Tablets per day</label>
                 <input type="number" id="bridgeTabsPerDay" step="0.25" min="0" />
                 <div id="bridgeDosePresets" class="dose-presets" aria-label="Common dosing presets">
@@ -1460,7 +1475,7 @@
                   <option value="no" selected>No</option>
                   <option value="yes">Yes</option>
                 </select>
-                <div class="wizard-helper">If <strong>Yes</strong>, quantity will cover <strong>3 weeks (21 days)</strong> of doses to account for the blister on hand and the next two blisters until the change arrives.</div>
+                <div class="wizard-helper">If <strong>Yes</strong>, the tool covers <strong>3 weeks (21 days)</strong>. For a new medication it uses the full new regimen; for a dose change it uses only the positive daily difference.</div>
               </div>
 
               <!-- NEW (weekly only): until next blister pack? -->
@@ -1509,7 +1524,8 @@
                 Enter the details on the left and click <strong>“Calculate bridge quantity & days supply”</strong>. The tool will:
                 <ul style="margin-top:4px; padding-left:18px;">
                   <li>Assume the CPAK blister with this change will be <strong>ready for pickup 14 days after the launch Sunday</strong>.</li>
-                  <li>Calculate the <strong>quantity</strong> as: <em>tablets per day × days from today until the CPAK blister is ready</em>.</li>
+                  <li>For a <strong>new medication</strong>, quantity uses the full new regimen.</li>
+                  <li>For a <strong>dose change</strong>, quantity uses only the positive difference between old and new daily dosing.</li>
                   <li>Set <strong>days supply</strong> as: <em>number of days from today until the next launch Sunday</em> (your “from now until launch” rule).</li>
                   <li>Generate a <strong>copy-ready note</strong> for patient supplemental notes.</li>
                 </ul>
@@ -3114,6 +3130,9 @@
       if (extraDays && (extraDays.value === "" || extraDays.value == null)) { extraDays.value = "0"; }
 
       const batchTypeSelect = document.getElementById("bridgeBatchType");
+      const changeTypeSelect = document.getElementById("bridgeChangeType");
+      const oldTabsRow = document.getElementById("bridgeOldTabsRow");
+      const oldTabsInput = document.getElementById("bridgeOldTabsPerDay");
       const weeklyRow = document.getElementById("bridgeUntilNextPackRow");
       const extraRow = document.getElementById("bridgeExtraRow");
       const hasOnHandRow = document.getElementById("bridgeHasOnHandRow");
@@ -3152,6 +3171,13 @@
         });
       };
 
+      const updateChangeTypeVisibility = () => {
+        if (!changeTypeSelect || !oldTabsRow || !oldTabsInput) return;
+        const isDoseChange = changeTypeSelect.value === "dose-change";
+        oldTabsRow.style.display = isDoseChange ? "block" : "none";
+        if (!isDoseChange) oldTabsInput.value = "";
+      };
+
       const updateBridgeOptionVisibility = () => {
         if (!batchTypeSelect) return;
         const isWeekly = batchTypeSelect.value === "weekly";
@@ -3187,6 +3213,7 @@
       };
 
       updateBridgeOptionVisibility();
+      updateChangeTypeVisibility();
       updateExtraEnable();
       autoFillNextLaunch();
       updateDosePresetState();
@@ -3195,6 +3222,12 @@
         batchTypeSelect.addEventListener("change", () => {
           updateBridgeOptionVisibility();
           autoFillNextLaunch();
+          scheduleAutoCalc();
+        });
+      }
+      if (changeTypeSelect) {
+        changeTypeSelect.addEventListener("change", () => {
+          updateChangeTypeVisibility();
           scheduleAutoCalc();
         });
       }
@@ -3226,9 +3259,11 @@
         errorBox.textContent = "";
 
         const batchType   = document.getElementById("bridgeBatchType").value;
+        const changeType  = (document.getElementById("bridgeChangeType").value || "new");
         const todayStr    = todayInput.value;
         const launchStr   = launchInput.value;
         const tpdStr      = document.getElementById("bridgeTabsPerDay").value;
+        const oldTpdStr   = document.getElementById("bridgeOldTabsPerDay") ? document.getElementById("bridgeOldTabsPerDay").value : "";
 
         const hasOnHandSelectEl = document.getElementById("bridgeHasOnHand");
         const untilNextPackEl = document.getElementById("bridgeUntilNextPack");
@@ -3246,6 +3281,7 @@
         const todayDate   = parseLocalDate(todayStr);
         const launchDate  = parseLocalDate(launchStr);
         const tabsPerDay  = parseFloat(tpdStr || "0");
+        const oldTabsPerDay = parseFloat(oldTpdStr || "0");
 
         let extraDaysVal = parseInt(String(extraDaysRaw || "0"), 10);
         if (isNaN(extraDaysVal) || extraDaysVal < 0) extraDaysVal = 0;
@@ -3257,6 +3293,14 @@
             } else {
               errorBox.textContent = "Please enter a valid number for tablets per day (e.g., 1 for OD, 2 for BID).";
             }
+            errorBox.style.display = "block";
+            outputBox.innerHTML = "";
+          }
+          return false;
+        }
+        if (changeType === "dose-change" && (isNaN(oldTabsPerDay) || oldTabsPerDay < 0)) {
+          if (!silent) {
+            errorBox.textContent = "Please enter a valid old tablets/day value for a dose change.";
             errorBox.style.display = "block";
             outputBox.innerHTML = "";
           }
@@ -3302,11 +3346,22 @@
           quantity = Math.round(rawQty * 100) / 100; // 2 decimals
         }
 
+        const fullRegimenQuantity = quantity;
+        const doseDelta = changeType === "dose-change"
+          ? Math.round(((tabsPerDay - oldTabsPerDay) + Number.EPSILON) * 100) / 100
+          : null;
+        if (changeType === "dose-change") {
+          const positiveDelta = Math.max(0, doseDelta);
+          quantity = Math.round((positiveDelta * bridgeDays) * 100) / 100;
+        }
+
         let daysSupplyToBill = diffInDays(todayDate, launchDate);
         if (daysSupplyToBill <= 0) daysSupplyToBill = 1; // at least 1 day if same-day
 
         let actualDaysSupply;
-        if (hasOnHand) {
+        if (changeType === "dose-change" && doseDelta <= 0) {
+          actualDaysSupply = 0;
+        } else if (hasOnHand) {
           actualDaysSupply = 21;
         } else if (batchType === "weekly" && !wantsUntilNextPack) {
           actualDaysSupply = 14;
@@ -3328,12 +3383,20 @@
         const drugLabel = drugLabelIn || "this medication";
 
         const noteEndDate = formatNiceDateNoWeekday(lastBridgeDay);
+        const changeSummary = changeType === "dose-change"
+          ? `Dose change from ${oldTabsPerDay}/day to ${tabsPerDay}/day.`
+          : "New medication added.";
+        const noteText = (changeType === "dose-change" && doseDelta <= 0)
+          ? `New prescription update for ${drugLabel}. ${changeSummary} No extra billing required because the updated daily dose does not increase tablets used before the next CPAK blister arrives. Next launch date is ${formatNiceDateNoWeekday(launchDate)}.`
+          : `New prescription update for ${drugLabel}. ${changeSummary} Billed ${quantity} tablets for ${daysSupplyToBill} days to align with the next launch date (${formatNiceDateNoWeekday(launchDate)}). Patient was dispensed ${actualDaysSupply} days supply to cover ${formatNiceDateNoWeekday(todayDate)} through ${noteEndDate} (inclusive).`;
 
-        const noteText =
-          `New prescription update for ${drugLabel}. Billed ${quantity} tablets for ${daysSupplyToBill} days to align with the next launch date (${formatNiceDateNoWeekday(launchDate)}). ` +
-          `Patient was dispensed ${actualDaysSupply} days supply to cover ${formatNiceDateNoWeekday(todayDate)} through ${noteEndDate} (inclusive).`;
-
-        const techHint = `
+        const techHint = (changeType === "dose-change" && doseDelta <= 0) ? `
+          <div class="wizard-output-card">
+            <div class="wizard-output-title">Technician action</div>
+            <div class="small" style="color: var(--muted-strong);">
+              <strong>No extra billing needed.</strong> This dose change reduces or does not increase use, so correct the blister contents without billing extra quantity.
+            </div>
+          </div>` : `
           <div class="wizard-output-card">
             <div class="wizard-output-title">Technician action</div>
             <div class="small" style="color: var(--muted-strong);">
@@ -3346,11 +3409,15 @@
           <div class="bridge-live-indicator" role="status" aria-live="polite">Updated just now</div>
           <div class="wizard-output-card">
             <div class="wizard-output-title">Bridge summary</div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Change type</span><span class="wizard-output-value">${changeType === "dose-change" ? "Dose change" : "New medication"}</span></div>
             <div class="wizard-output-row"><span class="wizard-output-label">Batch</span><span class="wizard-output-value">${batchLabel}</span></div>
             <div class="wizard-output-row"><span class="wizard-output-label">Today</span><span class="wizard-output-value">${formatNiceDateNoWeekday(todayDate)}</span></div>
             <div class="wizard-output-row"><span class="wizard-output-label">Next launch (Sunday)</span><span class="wizard-output-value">${formatNiceDateNoWeekday(launchDate)}</span></div>
             <div class="wizard-output-row"><span class="wizard-output-label">CPAK with change ready</span><span class="wizard-output-value">${formatNiceDateNoWeekday(cpReady)}</span></div>
             <div class="wizard-output-row"><span class="wizard-output-label">Bridge coverage (calendar)</span><span class="wizard-output-value">${bridgeDays} day(s) (${formatNiceDateNoWeekday(todayDate)} → ${formatNiceDateNoWeekday(lastBridgeDay)})</span></div>
+            ${changeType === "dose-change" ? `<div class="wizard-output-row"><span class="wizard-output-label">Old -> new daily dose</span><span class="wizard-output-value">${oldTabsPerDay} -> ${tabsPerDay}</span></div>` : ""}
+            ${changeType === "dose-change" ? `<div class="wizard-output-row"><span class="wizard-output-label">Net daily change</span><span class="wizard-output-value">${doseDelta >= 0 ? "+" : ""}${doseDelta}/day</span></div>` : ""}
+            ${changeType === "dose-change" ? `<div class="wizard-output-row"><span class="wizard-output-label">Full-regimen quantity avoided</span><span class="wizard-output-value">${fullRegimenQuantity} tab(s)</span></div>` : ""}
             <div class="wizard-output-row"><span class="wizard-output-label">Quantity to bill</span><span class="wizard-output-value">${quantity} tab(s)</span></div>
             <div class="wizard-output-row"><span class="wizard-output-label">Days supply to enter</span><span class="wizard-output-value">${daysSupplyToBill} day(s) (from today until launch)</span></div>
           </div>
@@ -3389,8 +3456,10 @@
 
       const autoCalcInputIds = [
         "bridgeBatchType",
+        "bridgeChangeType",
         "bridgeTodayDate",
         "bridgeNextLaunch",
+        "bridgeOldTabsPerDay",
         "bridgeTabsPerDay",
         "bridgeHasOnHand",
         "bridgeUntilNextPack",
@@ -3401,7 +3470,7 @@
       autoCalcInputIds.forEach((id) => {
         const el = document.getElementById(id);
         if (!el) return;
-        const eventName = (id === "bridgeTabsPerDay" || id === "bridgeDrugName" || id === "bridgeExtraDays") ? "input" : "change";
+        const eventName = (id === "bridgeTabsPerDay" || id === "bridgeOldTabsPerDay" || id === "bridgeDrugName" || id === "bridgeExtraDays") ? "input" : "change";
         el.addEventListener(eventName, scheduleAutoCalc);
         if (eventName === "input") el.addEventListener("change", scheduleAutoCalc);
       });
