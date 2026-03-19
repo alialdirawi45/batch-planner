@@ -142,6 +142,8 @@
       border: 1px solid #efdfc9;
       border-radius: var(--radius-lg);
       padding: var(--space-4);
+      padding-right: 300px;
+      position: relative;
       background:
         linear-gradient(135deg, rgba(255, 247, 234, 0.98), rgba(255, 253, 249, 0.98)),
         radial-gradient(circle at 96% 4%, rgba(180, 83, 9, 0.08), transparent 42%);
@@ -186,6 +188,23 @@
       font-weight: 700;
       padding: 4px 10px;
       white-space: nowrap;
+    }
+    .header-verse {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      max-width: 250px;
+      padding: 10px 14px;
+      border: 1px solid rgba(239, 200, 143, 0.95);
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(252, 232, 204, 0.88), rgba(255, 250, 242, 0.96));
+      color: #8a4a11;
+      font-size: 1rem;
+      line-height: 1.7;
+      text-align: right;
+      direction: rtl;
+      font-family: "Noto Naskh Arabic", "Amiri", "Scheherazade New", serif;
+      box-shadow: 0 10px 24px rgba(138, 74, 17, 0.10);
     }
     h1 {
       font-size: 1.7rem;
@@ -1090,6 +1109,17 @@
     @media (max-width: 640px) {
       html { font-size: 16px; }
       .card { padding: 18px 14px 22px; }
+      .card-header {
+        padding-right: var(--space-4);
+        padding-top: 92px;
+      }
+      .header-verse {
+        left: 14px;
+        right: 14px;
+        top: 12px;
+        max-width: none;
+        font-size: 0.92rem;
+      }
       h1 { font-size: 1.3rem; }
       .calendar-day-number { font-size: 0.7rem; }
       .schedule-action-row { flex-direction: column; align-items: stretch; }
@@ -1112,6 +1142,7 @@
         <h1>The Blister Packs Tool</h1>
         <div class="brand-meta">Created by Ali Al-Dirawi (PharmD Student)</div>
         <div class="brand-meta">Primarily designed to support blister packs flow operations at SDM#779.</div>
+        <div class="header-verse">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
         <div class="utility-bar">
           <div class="utility-stamp" id="lastCalculatedStamp">Last calculated: not yet</div>
         </div>
@@ -2134,6 +2165,12 @@
     function addDays(date, days) { const d = new Date(date); d.setDate(d.getDate() + days); return d; }
     function diffInDays(a, b) { const msPerDay = 24 * 60 * 60 * 1000; return Math.round((b - a) / msPerDay); }
     function isSunday(date) { return date.getDay() === 0; }
+    function getNextWeekdayOnOrAfter(date, weekday) {
+      const d = new Date(date);
+      d.setHours(0, 0, 0, 0);
+      while (d.getDay() !== weekday) d.setDate(d.getDate() + 1);
+      return d;
+    }
 
     // --- Dispensing fee helpers ---
     function getFirstSundayOfMonth(year, monthIndex) {
@@ -3390,6 +3427,38 @@
           ? `New prescription update for ${drugLabel}. ${changeSummary} No extra billing required because the updated daily dose does not increase tablets used before the next CPAK blister arrives. Next launch date is ${formatNiceDateNoWeekday(launchDate)}.`
           : `New prescription update for ${drugLabel}. ${changeSummary} Billed ${quantity} tablets for ${daysSupplyToBill} days to align with the next launch date (${formatNiceDateNoWeekday(launchDate)}). Patient was dispensed ${actualDaysSupply} days supply to cover ${formatNiceDateNoWeekday(todayDate)} through ${noteEndDate} (inclusive).`;
 
+        let whyCalculatedText = "";
+        if (changeType === "dose-change" && doseDelta <= 0) {
+          whyCalculatedText = `No extra billing was suggested because this dose change does not increase how many tablets/capsules the patient uses each day. In simple terms: you are taking something out or lowering the amount, not adding more.`;
+        } else if (batchType === "weekly" && hasOnHand && changeType === "new") {
+          const firstDeliveryMonday = getNextWeekdayOnOrAfter(todayDate, 1);
+          const secondDeliveryMonday = addDays(firstDeliveryMonday, 7);
+          whyCalculatedText = `3 weeks billed to account for current pack, pack that will come as part of CPAK delivery this Monday ${formatNiceDateNoWeekday(firstDeliveryMonday)}, and for the pack that will come next week Monday ${formatNiceDateNoWeekday(secondDeliveryMonday)}. This is why the billed quantity covers 21 days, even though the entered days supply only goes until the next launch date.`;
+        } else if (batchType === "weekly" && hasOnHand && changeType === "dose-change" && doseDelta > 0) {
+          whyCalculatedText = `A smaller quantity was billed because this is a dose change, not a brand-new medication. The tool only bills for the extra amount being added each day across the 3 weekly packs that still need to be corrected before CPAK fully catches up.`;
+        } else if (batchType === "weekly" && !hasOnHand && !wantsUntilNextPack) {
+          whyCalculatedText = `2 weeks were used because this weekly case was capped at the next two weekly blisters. In simple terms: the tool is only trying to cover the short gap before the regular cycle catches up.`;
+        } else if (batchType === "biweekly" || batchType === "monthly") {
+          whyCalculatedText = `The billed quantity follows the ${batchType === "biweekly" ? "bi-weekly" : "monthly"} cycle length used by this tool. It counts the number of days that need to be covered before the regular blister cycle takes over again.`;
+        } else {
+          whyCalculatedText = `The billed quantity was calculated from the daily amount and the number of days that need coverage before the next regular blister cycle takes over. The entered days supply stays tied to the next launch date so billing remains aligned with the cycle.`;
+        }
+
+        const inventoryAdded = Math.max(0, quantity);
+        const inventoryAvoided = changeType === "dose-change"
+          ? Math.max(0, Math.round(((fullRegimenQuantity - quantity) + Number.EPSILON) * 100) / 100)
+          : 0;
+        const inventoryRemoved = (changeType === "dose-change" && doseDelta < 0)
+          ? Math.round((Math.abs(doseDelta) * bridgeDays) * 100) / 100
+          : 0;
+        const inventoryImpactText = (changeType === "dose-change" && doseDelta < 0)
+          ? `This is a dose reduction. The tool does not suggest extra billing because you are taking medication out of the blister packs, not adding more.`
+          : (changeType === "dose-change" && doseDelta === 0)
+            ? `This dose change does not increase daily use, so there is no extra quantity to bill.`
+            : (changeType === "dose-change")
+              ? `This is a dose increase, so the tool bills only the extra tablets/capsules being added. It avoids rebilling the part that was already billed under the old dose.`
+              : `This is treated as a new medication, so the billed quantity reflects the full amount that must be added to the blister packs for the coverage window.`;
+
         const techHint = (changeType === "dose-change" && doseDelta <= 0) ? `
           <div class="wizard-output-card">
             <div class="wizard-output-title">Technician action</div>
@@ -3420,6 +3489,18 @@
             ${changeType === "dose-change" ? `<div class="wizard-output-row"><span class="wizard-output-label">Full-regimen quantity avoided</span><span class="wizard-output-value">${fullRegimenQuantity} tab(s)</span></div>` : ""}
             <div class="wizard-output-row"><span class="wizard-output-label">Quantity to bill</span><span class="wizard-output-value">${quantity} tab(s)</span></div>
             <div class="wizard-output-row"><span class="wizard-output-label">Days supply to enter</span><span class="wizard-output-value">${daysSupplyToBill} day(s) (from today until launch)</span></div>
+          </div>
+          <div class="wizard-output-card">
+            <div class="wizard-output-title">Why This Was Calculated</div>
+            <div class="small" style="color: var(--muted-strong); line-height: 1.5;">${whyCalculatedText}</div>
+          </div>
+          <div class="wizard-output-card">
+            <div class="wizard-output-title">Inventory Impact</div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Quantity billed</span><span class="wizard-output-value">${quantity} tab(s)</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Quantity being added to blisters</span><span class="wizard-output-value">${inventoryAdded} tab(s)</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Quantity avoided</span><span class="wizard-output-value">${inventoryAvoided} tab(s)</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Quantity being removed</span><span class="wizard-output-value">${inventoryRemoved} tab(s)</span></div>
+            <div class="small" style="color: var(--muted-strong); line-height: 1.5; margin-top: 10px;">${inventoryImpactText}</div>
           </div>
           ${techHint}
           <div class="wizard-output-card">
