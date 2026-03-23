@@ -1153,6 +1153,7 @@
         <button type="button" id="tab-btn-schedule" class="tab-btn tab-btn--active" data-tab-target="schedule" role="tab" aria-controls="tab-schedule" aria-selected="true" tabindex="0">Schedule</button>
         <button type="button" id="tab-btn-new-patient" class="tab-btn" data-tab-target="new-patient" role="tab" aria-controls="tab-new-patient" aria-selected="false" tabindex="-1">New blister patient</button>
         <button type="button" id="tab-btn-bill-rx" class="tab-btn" data-tab-target="bill-rx" role="tab" aria-controls="tab-bill-rx" aria-selected="false" tabindex="-1">Bill New RX</button>
+        <button type="button" id="tab-btn-hold-resume" class="tab-btn" data-tab-target="hold-resume" role="tab" aria-controls="tab-hold-resume" aria-selected="false" tabindex="-1">Hold / Resume Weekly</button>
         <button type="button" id="tab-btn-vacation-billing" class="tab-btn" data-tab-target="vacation-billing" role="tab" aria-controls="tab-vacation-billing" aria-selected="false" tabindex="-1">Billing Vacation Supply</button>
         <button type="button" id="tab-btn-training" class="tab-btn" data-tab-target="training" role="tab" aria-controls="tab-training" aria-selected="false" tabindex="-1">Training</button>
         <button type="button" id="tab-btn-quick-links" class="tab-btn" data-tab-target="quick-links" role="tab" aria-controls="tab-quick-links" aria-selected="false" tabindex="-1">Quick Links Hub</button>
@@ -1560,6 +1561,54 @@
                   <li>Set <strong>days supply</strong> as: <em>number of days from today until the next launch Sunday</em> (your “from now until launch” rule).</li>
                   <li>Generate a <strong>copy-ready note</strong> for patient supplemental notes.</li>
                 </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Hold / Resume Weekly -->
+      <div id="tab-hold-resume" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-hold-resume" hidden>
+        <div class="section-title">Hold / Resume Weekly</div>
+        <div class="small">
+          Use this when a <strong>weekly</strong> blister patient is not picking up packs and you need to stop new accumulation.
+          This tool helps you decide which <strong>current weekly launch to hold</strong> and what <strong>weekly resume date</strong> to use once the extra packs in pharmacy are used up.
+        </div>
+
+        <div class="wizard-card">
+          <div class="wizard-grid">
+            <div class="wizard-section">
+              <div class="wizard-section-title">1. Weekly hold details</div>
+
+              <div class="wizard-row">
+                <label for="holdWeeklyLaunchDate">Current weekly launch date being held</label>
+                <input type="date" id="holdWeeklyLaunchDate" />
+                <div class="wizard-helper">Enter the Sunday launch date you are planning to cancel / place on hold.</div>
+              </div>
+
+              <div class="wizard-row" style="margin-top:10px;">
+                <label for="holdWeeklyPacksInPharmacy">How many full weekly packs are already in the pharmacy?</label>
+                <input type="number" id="holdWeeklyPacksInPharmacy" min="0" step="1" value="2" />
+                <div class="wizard-helper">Count only full weekly packs already sitting in pharmacy right now.</div>
+              </div>
+
+              <div class="wizard-row" style="margin-top:10px;">
+                <label for="holdWeeklyDrugName">Patient / note label</label>
+                <input type="text" id="holdWeeklyDrugName" placeholder="e.g., Weekly blister patient" />
+                <div class="wizard-helper">Optional. Used only in the generated note.</div>
+              </div>
+
+              <button id="holdWeeklyCalcBtn" class="primary-btn">
+                <span>Calculate hold / resume plan</span>
+              </button>
+              <div id="holdWeeklyErrorBox" class="error" role="alert" aria-live="polite" style="display:none;"></div>
+            </div>
+
+            <div class="wizard-section">
+              <div class="wizard-section-title">Hold / resume output</div>
+              <div id="holdWeeklyOutputBox" class="bridge-output-box">
+                Enter the weekly launch date and how many full packs are already in pharmacy, then click
+                <strong>Calculate hold / resume plan</strong>. The tool will recommend whether to hold the current weekly launch and what Sunday to resume on.
               </div>
             </div>
           </div>
@@ -2161,6 +2210,14 @@
     }
 
     function getDayName(date) { return date.toLocaleDateString(undefined, { weekday: "long" }); }
+    function escapeHtml(str) {
+      return String(str == null ? "" : str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
 
     function addDays(date, days) { const d = new Date(date); d.setDate(d.getDate() + days); return d; }
     function diffInDays(a, b) { const msPerDay = 24 * 60 * 60 * 1000; return Math.round((b - a) / msPerDay); }
@@ -2170,6 +2227,17 @@
       d.setHours(0, 0, 0, 0);
       while (d.getDay() !== weekday) d.setDate(d.getDate() + 1);
       return d;
+    }
+    function buildCasePrintHtml(title, bodyHtml) {
+      return `
+        <div style="font-family: Avenir, system-ui, sans-serif; color: #21304a; padding: 10px 14px; font-size: 12px; line-height: 1.32;">
+          <style>
+            @page { size: auto; margin: 10mm; }
+          </style>
+          <h1 style="font-size: 20px; margin: 0 0 4px;">${escapeHtml(title)}</h1>
+          <div style="color: #5f6e84; margin-bottom: 10px; font-size: 11px;">Printed ${escapeHtml(formatNiceDate(new Date()))}</div>
+          ${bodyHtml}
+        </div>`;
     }
 
     // --- Dispensing fee helpers ---
@@ -2271,6 +2339,7 @@
         "schedule": document.getElementById("tab-schedule"),
         "new-patient": document.getElementById("tab-new-patient"),
         "bill-rx": document.getElementById("tab-bill-rx"),
+        "hold-resume": document.getElementById("tab-hold-resume"),
         "vacation-billing": document.getElementById("tab-vacation-billing"),
         "training": document.getElementById("tab-training"),
         "quick-links": document.getElementById("tab-quick-links")
@@ -3150,6 +3219,7 @@
       const tabsPerDayInput = document.getElementById("bridgeTabsPerDay");
       const calcBtn = document.getElementById("bridgeCalcBtn");
       const errorBox = document.getElementById("bridgeErrorBox");
+      const printHost = document.getElementById("printReport");
       if (!todayInput || !launchInput || !calcBtn || !errorBox) return;
 
       const today = new Date();
@@ -3474,6 +3544,21 @@
             </div>
           </div>`;
 
+        let physicalActionText = "";
+        if (changeType === "dose-change" && doseDelta <= 0) {
+          physicalActionText = `Remove or reduce the medication in the affected blister packs as needed. Do not add extra billed quantity for this change. Keep the current workflow moving until the corrected CPAK blister arrives on ${formatNiceDateNoWeekday(cpReady)}.`;
+        } else if (batchType === "weekly" && hasOnHand && changeType === "new") {
+          physicalActionText = `Add this medication into the current blister pack in the pharmacy, then add it to the blister you are fixing for this week, and also account for the next weekly blister that will arrive from CPAK. This is why the tool covers 3 weekly packs.`;
+        } else if (batchType === "weekly" && hasOnHand && changeType === "dose-change" && doseDelta > 0) {
+          physicalActionText = `Add only the extra amount into the current blister pack, the blister being fixed this week, and the next weekly blister coming from CPAK. Do not bill the full new regimen because part of it was already billed under the old dose.`;
+        } else if (batchType === "weekly" && !hasOnHand && !wantsUntilNextPack) {
+          physicalActionText = `Prepare only enough medication to cover the short gap before the next regular weekly blister cycle takes over. This case is limited to the next two weekly blisters only.`;
+        } else if (batchType === "biweekly" || batchType === "monthly") {
+          physicalActionText = `Prepare the added medication for this ${batchType === "biweekly" ? "bi-weekly" : "monthly"} cycle only. The tool is covering the base cycle length${extraChoice && extraDaysVal > 0 ? ` plus ${extraDaysVal} extra day(s)` : ""}.`;
+        } else {
+          physicalActionText = `Add the billed medication into the blister workflow only for the days covered by this bridge. After that, the regular CPAK cycle takes over with the change reflected there.`;
+        }
+
         const html = `
           <div class="bridge-live-indicator" role="status" aria-live="polite">Updated just now</div>
           <div class="wizard-output-card">
@@ -3495,6 +3580,10 @@
             <div class="small" style="color: var(--muted-strong); line-height: 1.5;">${whyCalculatedText}</div>
           </div>
           <div class="wizard-output-card">
+            <div class="wizard-output-title">What You Should Physically Do</div>
+            <div class="small" style="color: var(--muted-strong); line-height: 1.5;">${physicalActionText}</div>
+          </div>
+          <div class="wizard-output-card">
             <div class="wizard-output-title">Inventory Impact</div>
             <div class="wizard-output-row"><span class="wizard-output-label">Quantity billed</span><span class="wizard-output-value">${quantity} tab(s)</span></div>
             <div class="wizard-output-row"><span class="wizard-output-label">Quantity being added to blisters</span><span class="wizard-output-value">${inventoryAdded} tab(s)</span></div>
@@ -3503,6 +3592,13 @@
             <div class="small" style="color: var(--muted-strong); line-height: 1.5; margin-top: 10px;">${inventoryImpactText}</div>
           </div>
           ${techHint}
+          <div class="wizard-output-card">
+            <div class="wizard-output-title">Printable case summary</div>
+            <div class="small" style="color: var(--muted-strong); line-height: 1.5; margin-bottom: 12px;">
+              Print one-page summary with the change, billing recommendation, cycle dates, and copy-ready note.
+            </div>
+            <button type="button" id="bridgePrintCaseBtn" class="secondary">Print case summary</button>
+          </div>
           <div class="wizard-output-card">
             <div class="wizard-output-title">Suggested supplemental note</div>
             <textarea id="bridgeNoteText" class="wizard-note-textarea">${noteText}</textarea>
@@ -3516,12 +3612,51 @@
         outputBox.classList.add("bridge-output-pop");
 
         const copyBtn = document.getElementById("bridgeCopyBtn");
+        const printBtn = document.getElementById("bridgePrintCaseBtn");
         const noteTextarea = document.getElementById("bridgeNoteText");
         const statusEl = document.getElementById("bridgeNoteStatus");
         if (copyBtn && noteTextarea && statusEl) {
           copyBtn.addEventListener("click", async () => {
             try { await navigator.clipboard.writeText(noteTextarea.value); statusEl.textContent = "Note copied to clipboard ✅"; }
             catch (e) { statusEl.textContent = "Unable to auto-copy. You can select and copy manually."; }
+          });
+        }
+        if (printBtn && noteTextarea) {
+          printBtn.addEventListener("click", () => {
+            const printBody = `
+              <div style="border: 1px solid #c9d7ea; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; background: #fdfdfb;">
+                <div style="font-weight: 700; margin-bottom: 4px; color: #214777; font-size: 13px;">Case summary</div>
+                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Drug</span><span style="font-weight: 600; text-align: right;">${escapeHtml(drugLabel)}</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Change type</span><span style="font-weight: 600; text-align: right;">${escapeHtml(changeType === "dose-change" ? "Dose change" : "New medication")}</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Batch</span><span style="font-weight: 600; text-align: right;">${escapeHtml(batchLabel)}</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Today</span><span style="font-weight: 600; text-align: right;">${escapeHtml(formatNiceDateNoWeekday(todayDate))}</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Next launch</span><span style="font-weight: 600; text-align: right;">${escapeHtml(formatNiceDateNoWeekday(launchDate))}</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">CPAK ready</span><span style="font-weight: 600; text-align: right;">${escapeHtml(formatNiceDateNoWeekday(cpReady))}</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Bill</span><span style="font-weight: 600; text-align: right;">${escapeHtml(String(quantity))} tab(s)</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Enter days supply</span><span style="font-weight: 600; text-align: right;">${escapeHtml(String(daysSupplyToBill))} day(s)</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0;"><span style="color: #5f6e84; font-weight: 600;">Actual supply</span><span style="font-weight: 600; text-align: right;">${escapeHtml(String(actualDaysSupply))} day(s)</span></div>
+              </div>
+              <div style="border: 1px solid #c9d7ea; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; background: #fdfdfb;">
+                <div style="font-weight: 700; margin-bottom: 4px; color: #214777; font-size: 13px;">Why this was calculated</div>
+                <div style="color: #5f6e84; line-height: 1.38;">${escapeHtml(whyCalculatedText)}</div>
+              </div>
+              <div style="border: 1px solid #c9d7ea; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; background: #fdfdfb;">
+                <div style="font-weight: 700; margin-bottom: 4px; color: #214777; font-size: 13px;">Inventory impact</div>
+                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Added</span><span style="font-weight: 600; text-align: right;">${escapeHtml(String(inventoryAdded))} tab(s)</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Avoided</span><span style="font-weight: 600; text-align: right;">${escapeHtml(String(inventoryAvoided))} tab(s)</span></div>
+                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0;"><span style="color: #5f6e84; font-weight: 600;">Removed</span><span style="font-weight: 600; text-align: right;">${escapeHtml(String(inventoryRemoved))} tab(s)</span></div>
+                <div style="color: #5f6e84; line-height: 1.38; margin-top: 6px;">${escapeHtml(inventoryImpactText)}</div>
+              </div>
+              <div style="border: 1px solid #c9d7ea; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; background: #fdfdfb;">
+                <div style="font-weight: 700; margin-bottom: 4px; color: #214777; font-size: 13px;">Suggested note</div>
+                <div style="white-space: pre-wrap; line-height: 1.32; font-size: 11px;">${escapeHtml(noteTextarea.value)}</div>
+              </div>`;
+            if (!printHost) return;
+            printHost.innerHTML = buildCasePrintHtml(`${drugLabel} bridge case summary`, printBody);
+            printHost.style.display = "block";
+            window.print();
+            printHost.style.display = "none";
+            printHost.innerHTML = "";
           });
         }
         return true;
@@ -3798,6 +3933,100 @@
       scheduleAutoVacationCalc();
     }
 
+    function initHoldResumeWeeklyTool() {
+      const launchInput = document.getElementById("holdWeeklyLaunchDate");
+      const packsInput = document.getElementById("holdWeeklyPacksInPharmacy");
+      const labelInput = document.getElementById("holdWeeklyDrugName");
+      const calcBtn = document.getElementById("holdWeeklyCalcBtn");
+      const errorBox = document.getElementById("holdWeeklyErrorBox");
+      const outputBox = document.getElementById("holdWeeklyOutputBox");
+      if (!launchInput || !packsInput || !calcBtn || !errorBox || !outputBox) return;
+
+      const runHoldResumeCalc = (opts = {}) => {
+        const silent = opts.silent === true;
+        errorBox.style.display = "none";
+        errorBox.textContent = "";
+
+        const launchDate = parseLocalDate(launchInput.value);
+        const packsInPharmacy = parseInt(packsInput.value || "0", 10);
+        const label = (labelInput.value || "").trim() || "Weekly blister patient";
+
+        if (!launchDate || isNaN(packsInPharmacy) || packsInPharmacy < 0) {
+          if (!silent) {
+            errorBox.textContent = "Please enter a valid weekly launch date and a valid pack count.";
+            errorBox.style.display = "block";
+            outputBox.innerHTML = "";
+          }
+          return false;
+        }
+
+        if (!isSunday(launchDate)) {
+          if (!silent) {
+            errorBox.textContent = "This weekly hold tool expects the held launch date to be a Sunday.";
+            errorBox.style.display = "block";
+          }
+        }
+
+        const needsHold = packsInPharmacy >= 2;
+        const skippedLaunches = needsHold ? Math.max(1, packsInPharmacy - 1) : 0;
+        const resumeDate = needsHold ? addDays(launchDate, skippedLaunches * 7) : launchDate;
+        const estimatedUseThrough = needsHold ? addDays(resumeDate, -1) : addDays(launchDate, 6);
+        const noteText = needsHold
+          ? `${label} currently has ${packsInPharmacy} full weekly blister pack(s) already in pharmacy. Hold the launch dated ${formatNiceDateNoWeekday(launchDate)} to prevent extra packs from accumulating. Resume the prescriptions on ${formatNiceDateNoWeekday(resumeDate)} once the packs in pharmacy have been used down.`
+          : `${label} currently has ${packsInPharmacy} full weekly blister pack(s) in pharmacy. A hold may not be needed yet because there is not enough overstock to skip a weekly launch.`;
+
+        const whyText = needsHold
+          ? `${packsInPharmacy} pack(s) in pharmacy means the patient already has extra weekly coverage sitting in the store. This rule skips ${skippedLaunches} weekly launch${skippedLaunches === 1 ? "" : "es"} and resumes on ${formatNiceDateNoWeekday(resumeDate)} so the backlog can be used before new CPAK production restarts.`
+          : `With fewer than 2 full weekly packs in pharmacy, this tool does not suggest holding a weekly launch yet.`;
+
+        outputBox.innerHTML = `
+          <div class="bridge-live-indicator" role="status" aria-live="polite">Updated just now</div>
+          <div class="wizard-output-card">
+            <div class="wizard-output-title">Weekly hold / resume summary</div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Current launch being reviewed</span><span class="wizard-output-value">${formatNiceDateNoWeekday(launchDate)}</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Full packs already in pharmacy</span><span class="wizard-output-value">${packsInPharmacy}</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Hold current launch?</span><span class="wizard-output-value">${needsHold ? "Yes" : "No"}</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Weekly launches skipped</span><span class="wizard-output-value">${skippedLaunches}</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Resume date</span><span class="wizard-output-value">${formatNiceDateNoWeekday(resumeDate)}</span></div>
+            <div class="wizard-output-row"><span class="wizard-output-label">Estimated backlog used through</span><span class="wizard-output-value">${formatNiceDateNoWeekday(estimatedUseThrough)}</span></div>
+          </div>
+          <div class="wizard-output-card">
+            <div class="wizard-output-title">Why This Was Calculated</div>
+            <div class="small" style="color: var(--muted-strong); line-height: 1.5;">${whyText}</div>
+          </div>
+          <div class="wizard-output-card">
+            <div class="wizard-output-title">Suggested supplemental note</div>
+            <textarea id="holdWeeklyNoteText" class="wizard-note-textarea">${noteText}</textarea>
+            <button type="button" id="holdWeeklyCopyBtn" class="bridge-copy-btn">Copy note</button>
+            <div id="holdWeeklyNoteStatus" class="bridge-note-status" role="status" aria-live="polite">You can tweak the wording before copying.</div>
+          </div>`;
+
+        outputBox.classList.remove("bridge-output-pop");
+        void outputBox.offsetWidth;
+        outputBox.classList.add("bridge-output-pop");
+
+        const copyBtn = document.getElementById("holdWeeklyCopyBtn");
+        const noteTextarea = document.getElementById("holdWeeklyNoteText");
+        const statusEl = document.getElementById("holdWeeklyNoteStatus");
+        if (copyBtn && noteTextarea && statusEl) {
+          copyBtn.addEventListener("click", async () => {
+            try { await navigator.clipboard.writeText(noteTextarea.value); statusEl.textContent = "Note copied to clipboard ✅"; }
+            catch (e) { statusEl.textContent = "Unable to auto-copy. You can select and copy manually."; }
+          });
+        }
+        return true;
+      };
+
+      [launchInput, packsInput, labelInput].forEach((el) => {
+        if (!el) return;
+        const ev = el === labelInput ? "input" : "change";
+        el.addEventListener(ev, () => runHoldResumeCalc({ silent: true }));
+        if (ev === "input") el.addEventListener("change", () => runHoldResumeCalc({ silent: true }));
+      });
+
+      calcBtn.addEventListener("click", () => runHoldResumeCalc({ silent: false }));
+    }
+
     // ---- TRAINING ACCORDION ----
     const ACCORDION_STORAGE_KEY = 'trainingAccordionOpen';
     function initTrainingAccordion() {
@@ -3924,6 +4153,7 @@
         { id: "tab-btn-schedule", labels: ["schedule", "calendar", "main"] },
         { id: "tab-btn-new-patient", labels: ["new blister patient", "new patient", "patient wizard", "wizard"] },
         { id: "tab-btn-bill-rx", labels: ["bill new rx", "bridge", "bridge billing", "rx"] },
+        { id: "tab-btn-hold-resume", labels: ["hold resume", "hold", "resume", "weekly hold"] },
         { id: "tab-btn-vacation-billing", labels: ["vacation", "vacation supply", "billing vacation supply", "travel"] },
         { id: "tab-btn-training", labels: ["training", "guide"] },
         { id: "tab-btn-quick-links", labels: ["quick links", "links", "resources"] }
@@ -4106,6 +4336,7 @@
     safeInit("today-button", initTodayButton);
     safeInit("kpi-interactions", initTopKpiInteractions);
     safeInit("bridge", initBridgeTool);
+    safeInit("hold-resume-weekly", initHoldResumeWeeklyTool);
     safeInit("vacation-billing", initVacationBillingTool);
     safeInit("training", initTrainingAccordion);
     safeInit("links", initLinkSafety);
