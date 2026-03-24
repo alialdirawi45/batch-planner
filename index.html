@@ -225,7 +225,6 @@
       align-items: flex-end;
       gap: 4px;
       min-width: 150px;
-      display: none;
     }
 
     .theme-label {
@@ -808,6 +807,495 @@
     body[data-theme="wcag-cool"] .dose-chip:hover { background:#172d49; border-color:#102036; }
     body[data-theme="wcag-cool"] .dose-chip--active { background:#102036; color:#fff; border-color:#0a1422; }
 
+    body[data-theme="field-manual"] {
+      --bg:#f1efe7;
+      --text:#24271f;
+      --card-bg:#faf8f1;
+      --border:#d6d0bf;
+      --muted:#5e6252;
+      --muted-strong:#373b2f;
+      --pill-border:#b8b39f;
+      --error-text:#8b1e1e;
+      --table-row-border:#dfdac9;
+      --calendar-cell-bg:#faf8f1;
+      --calendar-muted-text:#5e6252;
+      --calendar-other-month-opacity:0.5;
+    }
+    body[data-theme="field-manual"] * { font-family:"DIN Alternate","Trebuchet MS","Segoe UI",sans-serif; }
+    body[data-theme="field-manual"] {
+      background:linear-gradient(180deg,#f1efe7 0%,#e9e5da 100%);
+      color:#24271f;
+    }
+    body[data-theme="field-manual"]::before {
+      opacity:.12;
+      background-image:linear-gradient(rgba(77,84,60,.06) 1px, transparent 1px);
+      background-size:100% 22px;
+    }
+    body[data-theme="field-manual"] .container { max-width:1360px; }
+    body[data-theme="field-manual"] .card {
+      background:#faf8f1 !important;
+      border:1px solid #d6d0bf;
+      border-radius:18px;
+      box-shadow:0 18px 38px rgba(78,84,65,.10);
+    }
+    body[data-theme="field-manual"] .card-header {
+      background:#f7f4ea;
+      border:1px solid #ddd6c4;
+      border-radius:14px;
+      padding:18px 18px 16px;
+    }
+    body[data-theme="field-manual"] h1 {
+      font-size:2rem;
+      text-transform:uppercase;
+      letter-spacing:.02em;
+    }
+    body[data-theme="field-manual"] .brand-meta {
+      text-transform:uppercase;
+      font-size:.72rem;
+      letter-spacing:.1em;
+    }
+    body[data-theme="field-manual"] .utility-stamp,
+    body[data-theme="field-manual"] .header-verse {
+      background:#f1ecdf;
+      border-color:#c7bea7;
+      color:#55603a;
+      box-shadow:none;
+    }
+    body[data-theme="field-manual"] .tabs {
+      width:230px;
+      margin-right:18px;
+      padding-right:16px;
+      border-right:1px dashed #c8c1af;
+      top:16px;
+    }
+    body[data-theme="field-manual"] .tab-btn {
+      border-radius:10px;
+      background:#f7f4ea;
+      border:1px solid #d6d0bf;
+      color:#374131;
+      padding:10px 12px;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+      font-size:.76rem;
+    }
+    body[data-theme="field-manual"] .tab-btn--active {
+      background:#55603a;
+      border-color:#55603a;
+      color:#f9f7f0;
+      box-shadow:0 10px 18px rgba(85,96,58,.16);
+    }
+    body[data-theme="field-manual"] .top-kpi-strip,
+    body[data-theme="field-manual"] .tab-content { margin-left:266px; }
+    body[data-theme="field-manual"] .top-kpi-card,
+    body[data-theme="field-manual"] .dashboard,
+    body[data-theme="field-manual"] .calendar-wrapper,
+    body[data-theme="field-manual"] .results,
+    body[data-theme="field-manual"] .wizard-card,
+    body[data-theme="field-manual"] .training-card,
+    body[data-theme="field-manual"] .links-card {
+      background:#faf8f1;
+      border:1px solid #d6d0bf;
+      border-radius:14px;
+      box-shadow:0 14px 28px rgba(78,84,65,.06);
+    }
+    body[data-theme="field-manual"] .wizard-output-card {
+      background:#fdfbf6;
+      border:1px solid #ddd6c4;
+      border-radius:12px;
+      box-shadow:none;
+    }
+    body[data-theme="field-manual"] .section-title,
+    body[data-theme="field-manual"] .wizard-output-title,
+    body[data-theme="field-manual"] .results-title,
+    body[data-theme="field-manual"] .dashboard-title,
+    body[data-theme="field-manual"] .calendar-month-label,
+    body[data-theme="field-manual"] .links-title,
+    body[data-theme="field-manual"] .links-subtitle {
+      color:#55603a;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+    body[data-theme="field-manual"] .schedule-action-row {
+      background:#f7f4ea;
+      border-color:#d6d0bf;
+      border-radius:14px;
+    }
+    body[data-theme="field-manual"] button {
+      background:#55603a;
+      border-color:#46502f;
+      color:#fff;
+      border-radius:10px;
+      box-shadow:none;
+    }
+    body[data-theme="field-manual"] button.secondary,
+    body[data-theme="field-manual"] .bridge-copy-btn,
+    body[data-theme="field-manual"] .accordion-ctrl-btn,
+    body[data-theme="field-manual"] .calendar-nav-btn {
+      background:#f7f4ea;
+      color:#55603a;
+      border-color:#c7bea7;
+      box-shadow:none;
+    }
+    body[data-theme="field-manual"] .dose-chip {
+      background:#f7f4ea;
+      color:#55603a;
+      border-color:#c7bea7;
+    }
+    body[data-theme="field-manual"] .dose-chip--active {
+      background:#55603a;
+      color:#fff;
+      border-color:#46502f;
+    }
+    body[data-theme="field-manual"] input[type="date"],
+    body[data-theme="field-manual"] input[type="number"],
+    body[data-theme="field-manual"] input[type="text"],
+    body[data-theme="field-manual"] select,
+    body[data-theme="field-manual"] textarea {
+      background:#fffdf8;
+      border-color:#d6d0bf;
+      border-radius:10px;
+    }
+    body[data-theme="field-manual"] .results-table th,
+    body[data-theme="field-manual"] .range-table th {
+      background:#ece7d7;
+      color:#55603a;
+    }
+    body[data-theme="field-manual"] .calendar-header-bar {
+      background:#f4f0e5;
+      border-color:#d6d0bf;
+    }
+    body[data-theme="field-manual"] .quick-link { color:#55603a; }
+
+    body[data-theme="signal-grid"] {
+      --bg:#eef2f7;
+      --text:#101826;
+      --card-bg:#ffffff;
+      --border:#cfd7e2;
+      --muted:#526070;
+      --muted-strong:#202938;
+      --pill-border:#b6c2d0;
+      --error-text:#991b1b;
+      --table-row-border:#dfe6ee;
+      --calendar-cell-bg:#ffffff;
+      --calendar-muted-text:#526070;
+      --calendar-other-month-opacity:0.5;
+    }
+    body[data-theme="signal-grid"] * { font-family:"IBM Plex Sans","Segoe UI",sans-serif; }
+    body[data-theme="signal-grid"] {
+      background:linear-gradient(180deg,#eef2f7 0%,#e6ebf2 100%);
+      color:#101826;
+    }
+    body[data-theme="signal-grid"]::before {
+      opacity:.12;
+      background-image:
+        linear-gradient(rgba(58,84,120,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(58,84,120,.06) 1px, transparent 1px);
+      background-size:28px 28px;
+    }
+    body[data-theme="signal-grid"] .container { max-width:1420px; padding:18px 18px 36px; }
+    body[data-theme="signal-grid"] .card {
+      background:transparent !important;
+      border:none;
+      box-shadow:none;
+      padding:0;
+    }
+    body[data-theme="signal-grid"] .card-header {
+      background:#ffffff;
+      border:2px solid #d7dee8;
+      border-radius:0;
+      padding:22px 24px 20px;
+      box-shadow:12px 12px 0 #dbe4ef;
+    }
+    body[data-theme="signal-grid"] h1 {
+      font-family:"IBM Plex Sans Condensed","Arial Narrow",sans-serif;
+      text-transform:uppercase;
+      letter-spacing:-.03em;
+      font-size:2.35rem;
+    }
+    body[data-theme="signal-grid"] .brand-meta {
+      font-size:.78rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    body[data-theme="signal-grid"] .header-verse,
+    body[data-theme="signal-grid"] .utility-stamp {
+      border-radius:0;
+      background:#f4f7fb;
+      border:2px solid #d7dee8;
+      color:#27364a;
+      box-shadow:none;
+    }
+    body[data-theme="signal-grid"] .tabs {
+      width:240px;
+      margin-right:24px;
+      padding-right:20px;
+      border-right:2px solid #d7dee8;
+      top:18px;
+    }
+    body[data-theme="signal-grid"] .tab-btn {
+      border-radius:0;
+      background:#ffffff;
+      border:2px solid #d7dee8;
+      color:#1f2b3d;
+      box-shadow:6px 6px 0 #e2e8f0;
+      padding:10px 12px;
+    }
+    body[data-theme="signal-grid"] .tab-btn--active {
+      background:#1f2b3d;
+      border-color:#1f2b3d;
+      color:#ffffff;
+      box-shadow:8px 8px 0 #bcc8d6;
+    }
+    body[data-theme="signal-grid"] .top-kpi-strip,
+    body[data-theme="signal-grid"] .tab-content { margin-left:280px; }
+    body[data-theme="signal-grid"] .top-kpi-card,
+    body[data-theme="signal-grid"] .dashboard,
+    body[data-theme="signal-grid"] .calendar-wrapper,
+    body[data-theme="signal-grid"] .results,
+    body[data-theme="signal-grid"] .wizard-card,
+    body[data-theme="signal-grid"] .training-card,
+    body[data-theme="signal-grid"] .links-card {
+      border-radius:0;
+      background:#ffffff;
+      border:2px solid #d7dee8;
+      box-shadow:10px 10px 0 #e2e8f0;
+    }
+    body[data-theme="signal-grid"] .wizard-output-card {
+      border-radius:0;
+      border:2px solid #d7dee8;
+      background:#fbfcfe;
+      box-shadow:6px 6px 0 #edf2f7;
+    }
+    body[data-theme="signal-grid"] .section-title,
+    body[data-theme="signal-grid"] .wizard-output-title,
+    body[data-theme="signal-grid"] .results-title,
+    body[data-theme="signal-grid"] .dashboard-title,
+    body[data-theme="signal-grid"] .calendar-month-label,
+    body[data-theme="signal-grid"] .links-title,
+    body[data-theme="signal-grid"] .links-subtitle {
+      font-family:"IBM Plex Sans Condensed","Arial Narrow",sans-serif;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      color:#1f2b3d;
+    }
+    body[data-theme="signal-grid"] .schedule-action-row {
+      border-radius:0;
+      background:#ffffff;
+      border:2px solid #d7dee8;
+      box-shadow:8px 8px 0 #e2e8f0;
+    }
+    body[data-theme="signal-grid"] button {
+      border-radius:0;
+      background:#1f2b3d;
+      border:2px solid #1f2b3d;
+      color:#fff;
+      box-shadow:6px 6px 0 #c8d2df;
+    }
+    body[data-theme="signal-grid"] button.secondary,
+    body[data-theme="signal-grid"] .bridge-copy-btn,
+    body[data-theme="signal-grid"] .accordion-ctrl-btn,
+    body[data-theme="signal-grid"] .calendar-nav-btn {
+      background:#ffffff;
+      color:#1f2b3d;
+      border:2px solid #d7dee8;
+      box-shadow:4px 4px 0 #e2e8f0;
+    }
+    body[data-theme="signal-grid"] .dose-chip {
+      border-radius:0;
+      background:#ffffff;
+      color:#1f2b3d;
+      border:2px solid #d7dee8;
+    }
+    body[data-theme="signal-grid"] .dose-chip--active {
+      background:#1f2b3d;
+      color:#fff;
+      border-color:#1f2b3d;
+    }
+    body[data-theme="signal-grid"] input[type="date"],
+    body[data-theme="signal-grid"] input[type="number"],
+    body[data-theme="signal-grid"] input[type="text"],
+    body[data-theme="signal-grid"] select,
+    body[data-theme="signal-grid"] textarea {
+      border-radius:0;
+      background:#ffffff;
+      border:2px solid #d7dee8;
+    }
+    body[data-theme="signal-grid"] .results-table th,
+    body[data-theme="signal-grid"] .range-table th {
+      background:#eaf0f7;
+      color:#1f2b3d;
+    }
+
+    body[data-theme="mono-terminal"] {
+      --bg:#f3f5ef;
+      --text:#1d271c;
+      --card-bg:#f7f8f2;
+      --border:#c8cebf;
+      --muted:#566152;
+      --muted-strong:#263124;
+      --pill-border:#adb6a6;
+      --error-text:#8b1e1e;
+      --table-row-border:#d9ded1;
+      --calendar-cell-bg:#f7f8f2;
+      --calendar-muted-text:#566152;
+      --calendar-other-month-opacity:0.5;
+    }
+    body[data-theme="mono-terminal"] * { font-family:"IBM Plex Mono","Menlo","Courier New",monospace !important; }
+    body[data-theme="mono-terminal"] {
+      background:linear-gradient(180deg,#f3f5ef 0%,#e9ecdf 100%);
+      color:#1d271c;
+    }
+    body[data-theme="mono-terminal"]::before {
+      opacity:.18;
+      background-image:linear-gradient(rgba(42,58,38,.06) 1px, transparent 1px);
+      background-size:100% 22px;
+    }
+    body[data-theme="mono-terminal"] .container { max-width:1360px; }
+    body[data-theme="mono-terminal"] .card {
+      background:#f7f8f2 !important;
+      border:2px solid #bfc7b7;
+      border-radius:8px;
+      box-shadow:0 18px 36px rgba(52,67,46,.08);
+    }
+    body[data-theme="mono-terminal"] .card-header {
+      background:#eef1e8;
+      border:2px solid #c8cebf;
+      border-radius:6px;
+      padding:16px 18px 16px;
+    }
+    body[data-theme="mono-terminal"] h1 {
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-size:2rem;
+    }
+    body[data-theme="mono-terminal"] .brand-meta {
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+    body[data-theme="mono-terminal"] .utility-stamp,
+    body[data-theme="mono-terminal"] .header-verse {
+      background:#f7f8f2;
+      border:2px solid #c8cebf;
+      color:#2d3a2a;
+      border-radius:4px;
+      box-shadow:none;
+    }
+    body[data-theme="mono-terminal"] .tabs {
+      width:250px;
+      margin-right:18px;
+      padding-right:18px;
+      border-right:2px dashed #c8cebf;
+      top:16px;
+    }
+    body[data-theme="mono-terminal"] .tab-btn {
+      background:#f7f8f2;
+      border:2px solid #c8cebf;
+      color:#2d3a2a;
+      border-radius:4px;
+      padding:9px 12px;
+      text-transform:uppercase;
+      box-shadow:none;
+    }
+    body[data-theme="mono-terminal"] .tab-btn--active {
+      background:#2d3a2a;
+      border-color:#2d3a2a;
+      color:#f7f8f2;
+    }
+    body[data-theme="mono-terminal"] .top-kpi-strip,
+    body[data-theme="mono-terminal"] .tab-content { margin-left:286px; }
+    body[data-theme="mono-terminal"] .top-kpi-card,
+    body[data-theme="mono-terminal"] .dashboard,
+    body[data-theme="mono-terminal"] .calendar-wrapper,
+    body[data-theme="mono-terminal"] .results,
+    body[data-theme="mono-terminal"] .wizard-card,
+    body[data-theme="mono-terminal"] .training-card,
+    body[data-theme="mono-terminal"] .links-card,
+    body[data-theme="mono-terminal"] .wizard-output-card {
+      background:#f7f8f2;
+      border:2px solid #c8cebf;
+      border-radius:6px;
+      box-shadow:none;
+    }
+    body[data-theme="mono-terminal"] .section-title,
+    body[data-theme="mono-terminal"] .wizard-output-title,
+    body[data-theme="mono-terminal"] .results-title,
+    body[data-theme="mono-terminal"] .dashboard-title,
+    body[data-theme="mono-terminal"] .calendar-month-label,
+    body[data-theme="mono-terminal"] .links-title,
+    body[data-theme="mono-terminal"] .links-subtitle {
+      color:#2d3a2a;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+    body[data-theme="mono-terminal"] .schedule-action-row {
+      background:#eef1e8;
+      border:2px solid #c8cebf;
+      border-radius:6px;
+    }
+    body[data-theme="mono-terminal"] button {
+      background:#2d3a2a;
+      border:2px solid #2d3a2a;
+      color:#f7f8f2;
+      border-radius:4px;
+      box-shadow:none;
+      text-transform:uppercase;
+    }
+    body[data-theme="mono-terminal"] button.secondary,
+    body[data-theme="mono-terminal"] .bridge-copy-btn,
+    body[data-theme="mono-terminal"] .accordion-ctrl-btn,
+    body[data-theme="mono-terminal"] .calendar-nav-btn {
+      background:#f7f8f2;
+      color:#2d3a2a;
+      border:2px solid #c8cebf;
+      box-shadow:none;
+    }
+    body[data-theme="mono-terminal"] .dose-chip {
+      background:#f7f8f2;
+      color:#2d3a2a;
+      border:2px solid #c8cebf;
+      border-radius:4px;
+    }
+    body[data-theme="mono-terminal"] .dose-chip--active {
+      background:#2d3a2a;
+      color:#f7f8f2;
+      border-color:#2d3a2a;
+    }
+    body[data-theme="mono-terminal"] input[type="date"],
+    body[data-theme="mono-terminal"] input[type="number"],
+    body[data-theme="mono-terminal"] input[type="text"],
+    body[data-theme="mono-terminal"] select,
+    body[data-theme="mono-terminal"] textarea {
+      background:#fbfcf8;
+      border:2px solid #c8cebf;
+      border-radius:4px;
+      box-shadow:none;
+    }
+    body[data-theme="mono-terminal"] .results-table th,
+    body[data-theme="mono-terminal"] .range-table th {
+      background:#e5eadf;
+      color:#2d3a2a;
+    }
+    @media (max-width:980px) {
+      body[data-theme="field-manual"] .tabs,
+      body[data-theme="signal-grid"] .tabs,
+      body[data-theme="mono-terminal"] .tabs {
+        width:auto;
+        float:none;
+        margin-right:0;
+        padding-right:0;
+        border-right:none;
+        position:static;
+      }
+      body[data-theme="field-manual"] .top-kpi-strip,
+      body[data-theme="field-manual"] .tab-content,
+      body[data-theme="signal-grid"] .top-kpi-strip,
+      body[data-theme="signal-grid"] .tab-content,
+      body[data-theme="mono-terminal"] .top-kpi-strip,
+      body[data-theme="mono-terminal"] .tab-content {
+        margin-left:0;
+      }
+    }
+
     .wizard-output-card { border-radius: 10px; border: 1px solid var(--border); padding: 8px 9px; font-size: 0.78rem; background: rgba(148, 163, 184, 0.04); margin-bottom: 8px; }
     .wizard-output-title { font-weight: 600; margin-bottom: 4px; }
     .wizard-output-row { display: flex; justify-content: space-between; gap: 6px; margin-top: 2px; }
@@ -1144,6 +1632,15 @@
         <div class="brand-meta">Primarily designed to support blister packs flow operations at SDM#779.</div>
         <div class="header-verse">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
         <div class="utility-bar">
+          <div class="theme-select-wrapper">
+            <label class="theme-label" for="themeSelect">Theme</label>
+            <select id="themeSelect" class="theme-select">
+              <option value="wcag-cool">Current</option>
+              <option value="field-manual">Field Manual</option>
+              <option value="signal-grid">Signal Grid</option>
+              <option value="mono-terminal">Mono Terminal</option>
+            </select>
+          </div>
           <div class="utility-stamp" id="lastCalculatedStamp">Last calculated: not yet</div>
         </div>
       </div>
@@ -1286,9 +1783,9 @@
 
       <!-- TAB: New blister patient -->
       <div id="tab-new-patient" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-new-patient" hidden>
-        <div class="section-title">New blister pack patient wizard</div>
+        <div class="section-title">New blister pack patient</div>
         <div class="small">
-          Use this wizard when a brand-new blister patient is added. It helps you plan bridge blister (if needed),
+          Use this section when a brand-new blister patient is added. It helps you plan bridge blister (if needed),
           first CPAK cycle timing, a copy-ready HealthWATCH note, a MAR setup checklist, and a mini calendar showing
           the patient’s start, launch, automation, CPAK delivery, and bagging dates.
         </div>
@@ -1328,7 +1825,7 @@
                   <option value="no">No – they have little or no supply at home</option>
                 </select>
                 <div class="wizard-helper">
-                  If “No”, the wizard will recommend a non-billed bridge blister until their CPAK blister is bagged and
+                  If “No”, the tool will recommend a non-billed bridge blister until their CPAK blister is bagged and
                   ready for pickup.
                 </div>
               </div>
@@ -1948,7 +2445,7 @@
                   </li>
                   <li><strong>In this tool:</strong>
                     <ul>
-                      <li>The <strong>New blister patient wizard</strong> uses your anchors to propose first launch, automation, delivery, bagging, and a bridge blister range.</li>
+                      <li>The <strong>New blister patient</strong> section uses your anchors to propose first launch, automation, delivery, bagging, and a bridge blister range.</li>
                       <li>The <strong>Bill new Rx</strong> tab uses your rule: days supply = days from today to the next launch Sunday; quantity covers until the CPAK blister with the change is ready (launch + 14 days).</li>
                     </ul>
                   </li>
@@ -1964,7 +2461,7 @@
                 <ul>
                   <li><strong>Before Sunday:</strong> use the <strong>Schedule</strong> tab to confirm which batches will launch and when to send automation.</li>
                   <li><strong>On Sunday:</strong> after launching, check the dashboard and calendar to see how this cycle plays out.</li>
-                  <li><strong>When adding a new patient:</strong> run the <strong>New blister patient wizard</strong>, then follow Section 5 of the guide for setup and MAR.</li>
+                  <li><strong>When adding a new patient:</strong> run the <strong>New blister patient</strong> section, then follow Section 5 of the guide for setup and MAR.</li>
                   <li><strong>When a new Rx / dose change arrives mid-cycle:</strong> use the <strong>Bill new Rx (bridge)</strong> tab to calculate quantity, days supply, and a note.</li>
                   <li><strong>Training new staff:</strong> walk them through this Training tab in order while showing the PDF.</li>
                 </ul>
@@ -2129,25 +2626,6 @@
     <div id="rangeReportBody" class="range-report-body"><div class="small" style="padding:10px;">No report generated yet.</div></div>
   </aside>
   <div id="printReport" style="display:none;"></div>
-  <button type="button" id="helperToggleBtn" class="helper-fab">Helper</button>
-  <div id="helperPanel" class="helper-panel" aria-hidden="true">
-    <div class="helper-head">
-      <div class="helper-title">Blister Tool Helper</div>
-      <button type="button" id="helperCloseBtn" class="helper-close">Close</button>
-    </div>
-    <div id="helperMessages" class="helper-messages"></div>
-    <div class="helper-quick" id="helperQuick">
-      <button type="button" class="helper-chip" data-prompt="How do I bill a new RX bridge?">New RX bridge</button>
-      <button type="button" class="helper-chip" data-prompt="How does vacation billing work?">Vacation billing</button>
-      <button type="button" class="helper-chip" data-prompt="How do I use the launch dates report?">Launch report</button>
-      <button type="button" class="helper-chip" data-prompt="Open Bill New RX tab">Open Bill New RX</button>
-    </div>
-    <div class="helper-input-row">
-      <input id="helperInput" type="text" placeholder="Ask about bridge, vacation, report, tabs..." />
-      <button type="button" id="helperSendBtn" class="helper-send">Send</button>
-    </div>
-  </div>
-
   <script>
     // ---- CONFIG (anchors & rules) ----
     const WEEKLY_TARGET_WEEKDAY = 0; // Sunday
@@ -2321,15 +2799,32 @@
     }
 
     // ---- THEME ----
-    function applyTheme() {
-      const safeTheme = "wcag-cool";
+    const DEFAULT_THEME = "wcag-cool";
+    const VALID_THEMES = new Set(["wcag-cool", "field-manual", "signal-grid", "mono-terminal"]);
+
+    function applyTheme(themeName = DEFAULT_THEME) {
+      const safeTheme = VALID_THEMES.has(themeName) ? themeName : DEFAULT_THEME;
       document.body.setAttribute("data-theme", safeTheme);
+      const select = document.getElementById("themeSelect");
+      if (select && select.value !== safeTheme) select.value = safeTheme;
       try { localStorage.setItem("batchTheme", safeTheme); } catch (e) {}
     }
 
     function initTheme() {
-      applyTheme();
-      try { localStorage.setItem("batchTheme", "wcag-cool"); } catch (e) {}
+      let savedTheme = DEFAULT_THEME;
+      try {
+        const stored = localStorage.getItem("batchTheme");
+        if (stored && VALID_THEMES.has(stored)) savedTheme = stored;
+      } catch (e) {}
+      applyTheme(savedTheme);
+
+      const select = document.getElementById("themeSelect");
+      if (select) {
+        select.value = savedTheme;
+        select.addEventListener("change", (e) => {
+          applyTheme(e.target.value);
+        });
+      }
     }
 
     // ---- TABS ----
@@ -3593,13 +4088,6 @@
           </div>
           ${techHint}
           <div class="wizard-output-card">
-            <div class="wizard-output-title">Printable case summary</div>
-            <div class="small" style="color: var(--muted-strong); line-height: 1.5; margin-bottom: 12px;">
-              Print one-page summary with the change, billing recommendation, cycle dates, and copy-ready note.
-            </div>
-            <button type="button" id="bridgePrintCaseBtn" class="secondary">Print case summary</button>
-          </div>
-          <div class="wizard-output-card">
             <div class="wizard-output-title">Suggested supplemental note</div>
             <textarea id="bridgeNoteText" class="wizard-note-textarea">${noteText}</textarea>
             <button type="button" id="bridgeCopyBtn" class="bridge-copy-btn">Copy note</button>
@@ -3612,51 +4100,12 @@
         outputBox.classList.add("bridge-output-pop");
 
         const copyBtn = document.getElementById("bridgeCopyBtn");
-        const printBtn = document.getElementById("bridgePrintCaseBtn");
         const noteTextarea = document.getElementById("bridgeNoteText");
         const statusEl = document.getElementById("bridgeNoteStatus");
         if (copyBtn && noteTextarea && statusEl) {
           copyBtn.addEventListener("click", async () => {
             try { await navigator.clipboard.writeText(noteTextarea.value); statusEl.textContent = "Note copied to clipboard ✅"; }
             catch (e) { statusEl.textContent = "Unable to auto-copy. You can select and copy manually."; }
-          });
-        }
-        if (printBtn && noteTextarea) {
-          printBtn.addEventListener("click", () => {
-            const printBody = `
-              <div style="border: 1px solid #c9d7ea; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; background: #fdfdfb;">
-                <div style="font-weight: 700; margin-bottom: 4px; color: #214777; font-size: 13px;">Case summary</div>
-                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Drug</span><span style="font-weight: 600; text-align: right;">${escapeHtml(drugLabel)}</span></div>
-                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Change type</span><span style="font-weight: 600; text-align: right;">${escapeHtml(changeType === "dose-change" ? "Dose change" : "New medication")}</span></div>
-                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Batch</span><span style="font-weight: 600; text-align: right;">${escapeHtml(batchLabel)}</span></div>
-                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Today</span><span style="font-weight: 600; text-align: right;">${escapeHtml(formatNiceDateNoWeekday(todayDate))}</span></div>
-                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Next launch</span><span style="font-weight: 600; text-align: right;">${escapeHtml(formatNiceDateNoWeekday(launchDate))}</span></div>
-                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">CPAK ready</span><span style="font-weight: 600; text-align: right;">${escapeHtml(formatNiceDateNoWeekday(cpReady))}</span></div>
-                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Bill</span><span style="font-weight: 600; text-align: right;">${escapeHtml(String(quantity))} tab(s)</span></div>
-                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Enter days supply</span><span style="font-weight: 600; text-align: right;">${escapeHtml(String(daysSupplyToBill))} day(s)</span></div>
-                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0;"><span style="color: #5f6e84; font-weight: 600;">Actual supply</span><span style="font-weight: 600; text-align: right;">${escapeHtml(String(actualDaysSupply))} day(s)</span></div>
-              </div>
-              <div style="border: 1px solid #c9d7ea; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; background: #fdfdfb;">
-                <div style="font-weight: 700; margin-bottom: 4px; color: #214777; font-size: 13px;">Why this was calculated</div>
-                <div style="color: #5f6e84; line-height: 1.38;">${escapeHtml(whyCalculatedText)}</div>
-              </div>
-              <div style="border: 1px solid #c9d7ea; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; background: #fdfdfb;">
-                <div style="font-weight: 700; margin-bottom: 4px; color: #214777; font-size: 13px;">Inventory impact</div>
-                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Added</span><span style="font-weight: 600; text-align: right;">${escapeHtml(String(inventoryAdded))} tab(s)</span></div>
-                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; border-bottom: 1px solid #e6edf5;"><span style="color: #5f6e84; font-weight: 600;">Avoided</span><span style="font-weight: 600; text-align: right;">${escapeHtml(String(inventoryAvoided))} tab(s)</span></div>
-                <div style="display: flex; justify-content: space-between; gap: 16px; padding: 3px 0;"><span style="color: #5f6e84; font-weight: 600;">Removed</span><span style="font-weight: 600; text-align: right;">${escapeHtml(String(inventoryRemoved))} tab(s)</span></div>
-                <div style="color: #5f6e84; line-height: 1.38; margin-top: 6px;">${escapeHtml(inventoryImpactText)}</div>
-              </div>
-              <div style="border: 1px solid #c9d7ea; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; background: #fdfdfb;">
-                <div style="font-weight: 700; margin-bottom: 4px; color: #214777; font-size: 13px;">Suggested note</div>
-                <div style="white-space: pre-wrap; line-height: 1.32; font-size: 11px;">${escapeHtml(noteTextarea.value)}</div>
-              </div>`;
-            if (!printHost) return;
-            printHost.innerHTML = buildCasePrintHtml(`${drugLabel} bridge case summary`, printBody);
-            printHost.style.display = "block";
-            window.print();
-            printHost.style.display = "none";
-            printHost.innerHTML = "";
           });
         }
         return true;
@@ -4111,200 +4560,6 @@
       });
     }
 
-    // ---- LOCAL HELPER (no backend) ----
-    function initLocalHelper() {
-      const panel = document.getElementById("helperPanel");
-      const toggleBtn = document.getElementById("helperToggleBtn");
-      const closeBtn = document.getElementById("helperCloseBtn");
-      const messages = document.getElementById("helperMessages");
-      const input = document.getElementById("helperInput");
-      const sendBtn = document.getElementById("helperSendBtn");
-      const quickButtons = Array.from(document.querySelectorAll("#helperQuick .helper-chip"));
-      if (!panel || !toggleBtn || !closeBtn || !messages || !input || !sendBtn) return;
-
-      const appendMessage = (text, who) => {
-        const div = document.createElement("div");
-        div.className = `helper-msg helper-msg--${who}`;
-        div.textContent = text;
-        messages.appendChild(div);
-        messages.scrollTop = messages.scrollHeight;
-      };
-
-      const openPanel = () => {
-        panel.classList.add("helper-panel--open");
-        panel.setAttribute("aria-hidden", "false");
-        input.focus();
-      };
-      const closePanel = () => {
-        panel.classList.remove("helper-panel--open");
-        panel.setAttribute("aria-hidden", "true");
-      };
-
-      const normalize = (s) => (s || "")
-        .toLowerCase()
-        .replace(/[^a-z0-9#\s]/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
-      const toTokens = (s) => new Set(normalize(s).split(" ").filter(Boolean));
-      const hasAnyPhrase = (norm, phrases) => phrases.some((p) => norm.includes(p));
-      const tokenHitCount = (tokens, words) => words.reduce((n, w) => n + (tokens.has(w) ? 1 : 0), 0);
-
-      const tabAliases = [
-        { id: "tab-btn-schedule", labels: ["schedule", "calendar", "main"] },
-        { id: "tab-btn-new-patient", labels: ["new blister patient", "new patient", "patient wizard", "wizard"] },
-        { id: "tab-btn-bill-rx", labels: ["bill new rx", "bridge", "bridge billing", "rx"] },
-        { id: "tab-btn-hold-resume", labels: ["hold resume", "hold", "resume", "weekly hold"] },
-        { id: "tab-btn-vacation-billing", labels: ["vacation", "vacation supply", "billing vacation supply", "travel"] },
-        { id: "tab-btn-training", labels: ["training", "guide"] },
-        { id: "tab-btn-quick-links", labels: ["quick links", "links", "resources"] }
-      ];
-
-      const openTabByName = (name) => {
-        const key = normalize(name);
-        const match = tabAliases.find((t) => t.labels.some((label) => key.includes(label)));
-        const btn = match ? document.getElementById(match.id) : null;
-        if (btn) { btn.click(); return match.labels[0]; }
-        return null;
-      };
-
-      const tryTabCommand = (raw) => {
-        const norm = normalize(raw);
-        const commandWords = ["open", "go", "switch", "take", "show"];
-        const hasCommand = commandWords.some((w) => norm.startsWith(w + " ") || norm.includes(` ${w} `));
-        if (!hasCommand) return null;
-        const matched = openTabByName(norm);
-        if (!matched) return "I could not find that tab. Try: schedule, new patient, bill new rx, vacation, training, quick links.";
-        return `Opened ${matched} tab.`;
-      };
-
-      const extractVacationPackSuggestion = (raw) => {
-        const norm = normalize(raw);
-        const weekMatch = norm.match(/(\d+(?:\.\d+)?)\s*(week|weeks|wk|wks)\b/);
-        const dayMatch = norm.match(/(\d+)\s*(day|days)\b/);
-        const onHandMatch = norm.match(/(?:on hand|in pharmacy|already)\s*(?:is|=|:)?\s*(\d+)/);
-        let days = null;
-        if (weekMatch) days = Math.ceil(parseFloat(weekMatch[1]) * 7);
-        else if (dayMatch) days = parseInt(dayMatch[1], 10);
-        if (days == null || isNaN(days) || days <= 0) return null;
-        const suggestedTotal = Math.ceil(days / 7);
-        const onHand = onHandMatch ? parseInt(onHandMatch[1], 10) : 0;
-        const toMake = Math.max(0, suggestedTotal - (isNaN(onHand) ? 0 : onHand));
-        return { days, suggestedTotal, onHand: isNaN(onHand) ? 0 : onHand, toMake };
-      };
-
-      let lastTopic = null;
-      const intents = [
-        {
-          id: "greeting",
-          phrases: ["hello", "hi", "hey", "good morning", "good afternoon"],
-          tokens: ["hello", "hi", "hey"],
-          response: () => "Hi. I can help with bridge billing, vacation supply, launch dates report, fee highlighting, and tab navigation."
-        },
-        {
-          id: "bridge",
-          phrases: ["bill new rx", "bridge billing", "bridge"],
-          tokens: ["bridge", "rx", "launch"],
-          response: () => "Bridge flow: set batch + today + next launch + tabs/day. Quantity follows batch rules; entered days supply is from today to next launch."
-        },
-        {
-          id: "vacation",
-          phrases: ["vacation supply", "billing vacation", "vacation", "travel supply"],
-          tokens: ["vacation", "travel", "packs", "return"],
-          response: (raw) => {
-            const quick = extractVacationPackSuggestion(raw);
-            if (quick) {
-              return `Based on ${quick.days} day(s): suggest ${quick.suggestedTotal} full blister pack(s). With ${quick.onHand} on-hand, suggest making ${quick.toMake}.`;
-            }
-            return "Vacation flow: enter start + return + pack counts. The tool rounds to full 7-day packs, aligns resume billing to cycle launch, and generates a note.";
-          }
-        },
-        {
-          id: "report",
-          phrases: ["launch dates report", "range report", "report", "fee report"],
-          tokens: ["report", "launch", "dates"],
-          response: () => "Launch Dates Report: choose date range, generate, and print. Rows are grouped by date and Dispensing Fee charges are highlighted on-screen and in print."
-        },
-        {
-          id: "fee",
-          phrases: ["dispensing fee", "fee charge", "fee"],
-          tokens: ["fee", "charge"],
-          response: () => "Dispensing Fee charge events are highlighted in the Launch Dates Report. Open Schedule -> Launch Dates Report."
-        },
-        {
-          id: "days-supply",
-          phrases: ["days supply", "day supply", "d s"],
-          tokens: ["days", "supply"],
-          response: () => "Days supply aligns to cycle timing: Bridge uses today -> launch. Vacation uses start -> resume launch. Quantity can differ from entered days supply by design."
-        },
-        {
-          id: "packs",
-          phrases: ["blister pack", "packs", "pack"],
-          tokens: ["pack", "packs", "blister"],
-          response: () => "Pack rule: each blister pack = 7 days. Vacation suggestion always rounds up to full packs (no partial packs)."
-        }
-      ];
-
-      const respond = (text) => {
-        const raw = (text || "").trim();
-        const norm = normalize(raw);
-        if (!norm) return "Type a question like: 'How does vacation billing work?'";
-
-        const tabCommandResponse = tryTabCommand(raw);
-        if (tabCommandResponse) return tabCommandResponse;
-
-        const tokens = toTokens(raw);
-        const scored = intents.map((i) => {
-          const phraseScore = hasAnyPhrase(norm, i.phrases) ? 3 : 0;
-          const tokenScore = tokenHitCount(tokens, i.tokens);
-          return { intent: i, score: phraseScore + tokenScore };
-        }).sort((a, b) => b.score - a.score);
-
-        if (scored[0] && scored[0].score > 0) {
-          lastTopic = scored[0].intent.id;
-          return scored[0].intent.response(raw);
-        }
-
-        if ((norm.startsWith("what about") || norm.startsWith("and ")) && lastTopic) {
-          const fallback = intents.find((i) => i.id === lastTopic);
-          if (fallback) return fallback.response(raw);
-        }
-
-        return "I can help with bridge billing, vacation supply, launch dates report, fee highlighting, and opening tabs. Try: 'take me to vacation tab' or 'for 5 weeks with 1 on hand, how many packs to make?'.";
-      };
-
-      const send = (presetText) => {
-        const text = (presetText != null ? presetText : input.value).trim();
-        if (!text) return;
-        appendMessage(text, "user");
-        const answer = respond(text);
-        appendMessage(answer, "bot");
-        input.value = "";
-      };
-
-      toggleBtn.addEventListener("click", () => {
-        if (panel.classList.contains("helper-panel--open")) closePanel();
-        else openPanel();
-      });
-      closeBtn.addEventListener("click", closePanel);
-      sendBtn.addEventListener("click", () => send());
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          send();
-        }
-      });
-      quickButtons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const prompt = btn.getAttribute("data-prompt") || "";
-          if (!prompt) return;
-          if (!panel.classList.contains("helper-panel--open")) openPanel();
-          send(prompt);
-        });
-      });
-
-      appendMessage("Local helper ready. Ask me about bridge billing, vacation supply, or launch dates report.", "bot");
-    }
-
     // ---- LIGHTWEIGHT SELF-TESTS (console only) ----
     function selfTest() {
       try {
@@ -4340,7 +4595,6 @@
     safeInit("vacation-billing", initVacationBillingTool);
     safeInit("training", initTrainingAccordion);
     safeInit("links", initLinkSafety);
-    safeInit("local-helper", initLocalHelper);
     safeInit("self-test", selfTest);
 
     if (typeof window.performScheduleCalculation === "function") {
