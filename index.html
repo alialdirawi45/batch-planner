@@ -965,320 +965,8 @@
       border-color:#d6d0bf;
     }
     body[data-theme="field-manual"] .quick-link { color:#55603a; }
-
-    body[data-theme="signal-grid"] {
-      --bg:#eef2f7;
-      --text:#101826;
-      --card-bg:#ffffff;
-      --border:#cfd7e2;
-      --muted:#526070;
-      --muted-strong:#202938;
-      --pill-border:#b6c2d0;
-      --error-text:#991b1b;
-      --table-row-border:#dfe6ee;
-      --calendar-cell-bg:#ffffff;
-      --calendar-muted-text:#526070;
-      --calendar-other-month-opacity:0.5;
-    }
-    body[data-theme="signal-grid"] * { font-family:"IBM Plex Sans","Segoe UI",sans-serif; }
-    body[data-theme="signal-grid"] {
-      background:linear-gradient(180deg,#eef2f7 0%,#e6ebf2 100%);
-      color:#101826;
-    }
-    body[data-theme="signal-grid"]::before {
-      opacity:.12;
-      background-image:
-        linear-gradient(rgba(58,84,120,.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(58,84,120,.06) 1px, transparent 1px);
-      background-size:28px 28px;
-    }
-    body[data-theme="signal-grid"] .container { max-width:1420px; padding:18px 18px 36px; }
-    body[data-theme="signal-grid"] .card {
-      background:transparent !important;
-      border:none;
-      box-shadow:none;
-      padding:0;
-    }
-    body[data-theme="signal-grid"] .card-header {
-      background:#ffffff;
-      border:2px solid #d7dee8;
-      border-radius:0;
-      padding:22px 24px 20px;
-      box-shadow:12px 12px 0 #dbe4ef;
-    }
-    body[data-theme="signal-grid"] h1 {
-      font-family:"IBM Plex Sans Condensed","Arial Narrow",sans-serif;
-      text-transform:uppercase;
-      letter-spacing:-.03em;
-      font-size:2.35rem;
-    }
-    body[data-theme="signal-grid"] .brand-meta {
-      font-size:.78rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-    body[data-theme="signal-grid"] .header-verse,
-    body[data-theme="signal-grid"] .utility-stamp {
-      border-radius:0;
-      background:#f4f7fb;
-      border:2px solid #d7dee8;
-      color:#27364a;
-      box-shadow:none;
-    }
-    body[data-theme="signal-grid"] .tabs {
-      width:240px;
-      margin-right:24px;
-      padding-right:20px;
-      border-right:2px solid #d7dee8;
-      top:18px;
-    }
-    body[data-theme="signal-grid"] .tab-btn {
-      border-radius:0;
-      background:#ffffff;
-      border:2px solid #d7dee8;
-      color:#1f2b3d;
-      box-shadow:6px 6px 0 #e2e8f0;
-      padding:10px 12px;
-    }
-    body[data-theme="signal-grid"] .tab-btn--active {
-      background:#1f2b3d;
-      border-color:#1f2b3d;
-      color:#ffffff;
-      box-shadow:8px 8px 0 #bcc8d6;
-    }
-    body[data-theme="signal-grid"] .top-kpi-strip,
-    body[data-theme="signal-grid"] .tab-content { margin-left:280px; }
-    body[data-theme="signal-grid"] .top-kpi-card,
-    body[data-theme="signal-grid"] .dashboard,
-    body[data-theme="signal-grid"] .calendar-wrapper,
-    body[data-theme="signal-grid"] .results,
-    body[data-theme="signal-grid"] .wizard-card,
-    body[data-theme="signal-grid"] .training-card,
-    body[data-theme="signal-grid"] .links-card {
-      border-radius:0;
-      background:#ffffff;
-      border:2px solid #d7dee8;
-      box-shadow:10px 10px 0 #e2e8f0;
-    }
-    body[data-theme="signal-grid"] .wizard-output-card {
-      border-radius:0;
-      border:2px solid #d7dee8;
-      background:#fbfcfe;
-      box-shadow:6px 6px 0 #edf2f7;
-    }
-    body[data-theme="signal-grid"] .section-title,
-    body[data-theme="signal-grid"] .wizard-output-title,
-    body[data-theme="signal-grid"] .results-title,
-    body[data-theme="signal-grid"] .dashboard-title,
-    body[data-theme="signal-grid"] .calendar-month-label,
-    body[data-theme="signal-grid"] .links-title,
-    body[data-theme="signal-grid"] .links-subtitle {
-      font-family:"IBM Plex Sans Condensed","Arial Narrow",sans-serif;
-      text-transform:uppercase;
-      letter-spacing:.06em;
-      color:#1f2b3d;
-    }
-    body[data-theme="signal-grid"] .schedule-action-row {
-      border-radius:0;
-      background:#ffffff;
-      border:2px solid #d7dee8;
-      box-shadow:8px 8px 0 #e2e8f0;
-    }
-    body[data-theme="signal-grid"] button {
-      border-radius:0;
-      background:#1f2b3d;
-      border:2px solid #1f2b3d;
-      color:#fff;
-      box-shadow:6px 6px 0 #c8d2df;
-    }
-    body[data-theme="signal-grid"] button.secondary,
-    body[data-theme="signal-grid"] .bridge-copy-btn,
-    body[data-theme="signal-grid"] .accordion-ctrl-btn,
-    body[data-theme="signal-grid"] .calendar-nav-btn {
-      background:#ffffff;
-      color:#1f2b3d;
-      border:2px solid #d7dee8;
-      box-shadow:4px 4px 0 #e2e8f0;
-    }
-    body[data-theme="signal-grid"] .dose-chip {
-      border-radius:0;
-      background:#ffffff;
-      color:#1f2b3d;
-      border:2px solid #d7dee8;
-    }
-    body[data-theme="signal-grid"] .dose-chip--active {
-      background:#1f2b3d;
-      color:#fff;
-      border-color:#1f2b3d;
-    }
-    body[data-theme="signal-grid"] input[type="date"],
-    body[data-theme="signal-grid"] input[type="number"],
-    body[data-theme="signal-grid"] input[type="text"],
-    body[data-theme="signal-grid"] select,
-    body[data-theme="signal-grid"] textarea {
-      border-radius:0;
-      background:#ffffff;
-      border:2px solid #d7dee8;
-    }
-    body[data-theme="signal-grid"] .results-table th,
-    body[data-theme="signal-grid"] .range-table th {
-      background:#eaf0f7;
-      color:#1f2b3d;
-    }
-
-    body[data-theme="mono-terminal"] {
-      --bg:#f3f5ef;
-      --text:#1d271c;
-      --card-bg:#f7f8f2;
-      --border:#c8cebf;
-      --muted:#566152;
-      --muted-strong:#263124;
-      --pill-border:#adb6a6;
-      --error-text:#8b1e1e;
-      --table-row-border:#d9ded1;
-      --calendar-cell-bg:#f7f8f2;
-      --calendar-muted-text:#566152;
-      --calendar-other-month-opacity:0.5;
-    }
-    body[data-theme="mono-terminal"] * { font-family:"IBM Plex Mono","Menlo","Courier New",monospace !important; }
-    body[data-theme="mono-terminal"] {
-      background:linear-gradient(180deg,#f3f5ef 0%,#e9ecdf 100%);
-      color:#1d271c;
-    }
-    body[data-theme="mono-terminal"]::before {
-      opacity:.18;
-      background-image:linear-gradient(rgba(42,58,38,.06) 1px, transparent 1px);
-      background-size:100% 22px;
-    }
-    body[data-theme="mono-terminal"] .container { max-width:1360px; }
-    body[data-theme="mono-terminal"] .card {
-      background:#f7f8f2 !important;
-      border:2px solid #bfc7b7;
-      border-radius:8px;
-      box-shadow:0 18px 36px rgba(52,67,46,.08);
-    }
-    body[data-theme="mono-terminal"] .card-header {
-      background:#eef1e8;
-      border:2px solid #c8cebf;
-      border-radius:6px;
-      padding:16px 18px 16px;
-    }
-    body[data-theme="mono-terminal"] h1 {
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      font-size:2rem;
-    }
-    body[data-theme="mono-terminal"] .brand-meta {
-      text-transform:uppercase;
-      letter-spacing:.08em;
-    }
-    body[data-theme="mono-terminal"] .utility-stamp,
-    body[data-theme="mono-terminal"] .header-verse {
-      background:#f7f8f2;
-      border:2px solid #c8cebf;
-      color:#2d3a2a;
-      border-radius:4px;
-      box-shadow:none;
-    }
-    body[data-theme="mono-terminal"] .tabs {
-      width:250px;
-      margin-right:18px;
-      padding-right:18px;
-      border-right:2px dashed #c8cebf;
-      top:16px;
-    }
-    body[data-theme="mono-terminal"] .tab-btn {
-      background:#f7f8f2;
-      border:2px solid #c8cebf;
-      color:#2d3a2a;
-      border-radius:4px;
-      padding:9px 12px;
-      text-transform:uppercase;
-      box-shadow:none;
-    }
-    body[data-theme="mono-terminal"] .tab-btn--active {
-      background:#2d3a2a;
-      border-color:#2d3a2a;
-      color:#f7f8f2;
-    }
-    body[data-theme="mono-terminal"] .top-kpi-strip,
-    body[data-theme="mono-terminal"] .tab-content { margin-left:286px; }
-    body[data-theme="mono-terminal"] .top-kpi-card,
-    body[data-theme="mono-terminal"] .dashboard,
-    body[data-theme="mono-terminal"] .calendar-wrapper,
-    body[data-theme="mono-terminal"] .results,
-    body[data-theme="mono-terminal"] .wizard-card,
-    body[data-theme="mono-terminal"] .training-card,
-    body[data-theme="mono-terminal"] .links-card,
-    body[data-theme="mono-terminal"] .wizard-output-card {
-      background:#f7f8f2;
-      border:2px solid #c8cebf;
-      border-radius:6px;
-      box-shadow:none;
-    }
-    body[data-theme="mono-terminal"] .section-title,
-    body[data-theme="mono-terminal"] .wizard-output-title,
-    body[data-theme="mono-terminal"] .results-title,
-    body[data-theme="mono-terminal"] .dashboard-title,
-    body[data-theme="mono-terminal"] .calendar-month-label,
-    body[data-theme="mono-terminal"] .links-title,
-    body[data-theme="mono-terminal"] .links-subtitle {
-      color:#2d3a2a;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-    }
-    body[data-theme="mono-terminal"] .schedule-action-row {
-      background:#eef1e8;
-      border:2px solid #c8cebf;
-      border-radius:6px;
-    }
-    body[data-theme="mono-terminal"] button {
-      background:#2d3a2a;
-      border:2px solid #2d3a2a;
-      color:#f7f8f2;
-      border-radius:4px;
-      box-shadow:none;
-      text-transform:uppercase;
-    }
-    body[data-theme="mono-terminal"] button.secondary,
-    body[data-theme="mono-terminal"] .bridge-copy-btn,
-    body[data-theme="mono-terminal"] .accordion-ctrl-btn,
-    body[data-theme="mono-terminal"] .calendar-nav-btn {
-      background:#f7f8f2;
-      color:#2d3a2a;
-      border:2px solid #c8cebf;
-      box-shadow:none;
-    }
-    body[data-theme="mono-terminal"] .dose-chip {
-      background:#f7f8f2;
-      color:#2d3a2a;
-      border:2px solid #c8cebf;
-      border-radius:4px;
-    }
-    body[data-theme="mono-terminal"] .dose-chip--active {
-      background:#2d3a2a;
-      color:#f7f8f2;
-      border-color:#2d3a2a;
-    }
-    body[data-theme="mono-terminal"] input[type="date"],
-    body[data-theme="mono-terminal"] input[type="number"],
-    body[data-theme="mono-terminal"] input[type="text"],
-    body[data-theme="mono-terminal"] select,
-    body[data-theme="mono-terminal"] textarea {
-      background:#fbfcf8;
-      border:2px solid #c8cebf;
-      border-radius:4px;
-      box-shadow:none;
-    }
-    body[data-theme="mono-terminal"] .results-table th,
-    body[data-theme="mono-terminal"] .range-table th {
-      background:#e5eadf;
-      color:#2d3a2a;
-    }
     @media (max-width:980px) {
-      body[data-theme="field-manual"] .tabs,
-      body[data-theme="signal-grid"] .tabs,
-      body[data-theme="mono-terminal"] .tabs {
+      body[data-theme="field-manual"] .tabs {
         width:auto;
         float:none;
         margin-right:0;
@@ -1287,11 +975,7 @@
         position:static;
       }
       body[data-theme="field-manual"] .top-kpi-strip,
-      body[data-theme="field-manual"] .tab-content,
-      body[data-theme="signal-grid"] .top-kpi-strip,
-      body[data-theme="signal-grid"] .tab-content,
-      body[data-theme="mono-terminal"] .top-kpi-strip,
-      body[data-theme="mono-terminal"] .tab-content {
+      body[data-theme="field-manual"] .tab-content {
         margin-left:0;
       }
     }
@@ -1632,15 +1316,6 @@
         <div class="brand-meta">Primarily designed to support blister packs flow operations at SDM#779.</div>
         <div class="header-verse">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
         <div class="utility-bar">
-          <div class="theme-select-wrapper">
-            <label class="theme-label" for="themeSelect">Theme</label>
-            <select id="themeSelect" class="theme-select">
-              <option value="wcag-cool">Current</option>
-              <option value="field-manual">Field Manual</option>
-              <option value="signal-grid">Signal Grid</option>
-              <option value="mono-terminal">Mono Terminal</option>
-            </select>
-          </div>
           <div class="utility-stamp" id="lastCalculatedStamp">Last calculated: not yet</div>
         </div>
       </div>
@@ -2799,32 +2474,15 @@
     }
 
     // ---- THEME ----
-    const DEFAULT_THEME = "wcag-cool";
-    const VALID_THEMES = new Set(["wcag-cool", "field-manual", "signal-grid", "mono-terminal"]);
+    const DEFAULT_THEME = "field-manual";
 
-    function applyTheme(themeName = DEFAULT_THEME) {
-      const safeTheme = VALID_THEMES.has(themeName) ? themeName : DEFAULT_THEME;
-      document.body.setAttribute("data-theme", safeTheme);
-      const select = document.getElementById("themeSelect");
-      if (select && select.value !== safeTheme) select.value = safeTheme;
-      try { localStorage.setItem("batchTheme", safeTheme); } catch (e) {}
+    function applyTheme() {
+      document.body.setAttribute("data-theme", DEFAULT_THEME);
+      try { localStorage.setItem("batchTheme", DEFAULT_THEME); } catch (e) {}
     }
 
     function initTheme() {
-      let savedTheme = DEFAULT_THEME;
-      try {
-        const stored = localStorage.getItem("batchTheme");
-        if (stored && VALID_THEMES.has(stored)) savedTheme = stored;
-      } catch (e) {}
-      applyTheme(savedTheme);
-
-      const select = document.getElementById("themeSelect");
-      if (select) {
-        select.value = savedTheme;
-        select.addEventListener("change", (e) => {
-          applyTheme(e.target.value);
-        });
-      }
+      applyTheme();
     }
 
     // ---- TABS ----
