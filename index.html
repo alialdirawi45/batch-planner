@@ -1600,9 +1600,9 @@
                 </div>
               </div>
 
-              <div id="wizardPlaceholder" class="wizard-helper">
-                Fill out the batch type, patient start date, and supply at home, then click “Generate plan” to see
-                bridge blister needs, first CPAK cycle, a patient-specific calendar, and documentation prompts.
+              <div id="wizardPlaceholder" class="wizard-output-card">
+                <div class="wizard-output-title">Result will appear here</div>
+                <div class="small">Enter the details on the left and click <strong>Generate plan</strong>.</div>
               </div>
             </div>
           </div>
@@ -1676,7 +1676,8 @@
               <div class="wizard-row" id="bridgeHasOnHandRow" style="margin-top:10px;">
                 <label for="bridgeHasOnHand">Is there already a CPAK blister in the pharmacy for this patient?</label>
                 <select id="bridgeHasOnHand">
-                  <option value="no" selected>No</option>
+                  <option value="" selected>Select...</option>
+                  <option value="no">No</option>
                   <option value="yes">Yes</option>
                 </select>
                 <div class="wizard-helper">If <strong>Yes</strong>, the tool covers <strong>3 weeks (21 days)</strong>. For a new medication it uses the full new regimen; for a dose change it uses only the positive daily difference.</div>
@@ -1725,14 +1726,10 @@
             <div class="wizard-section">
               <div class="wizard-section-title">Bridge output</div>
               <div id="bridgeOutputBox" class="bridge-output-box">
-                Enter the details on the left and click <strong>“Calculate bridge quantity & days supply”</strong>. The tool will:
-                <ul style="margin-top:4px; padding-left:18px;">
-                  <li>Assume the CPAK blister with this change will be <strong>ready for pickup 14 days after the launch Sunday</strong>.</li>
-                  <li>For a <strong>new medication</strong>, quantity uses the full new regimen.</li>
-                  <li>For a <strong>dose change</strong>, quantity uses only the positive difference between old and new daily dosing.</li>
-                  <li>Set <strong>days supply</strong> as: <em>number of days from today until the next launch Sunday</em> (your “from now until launch” rule).</li>
-                  <li>Generate a <strong>copy-ready note</strong> for patient supplemental notes.</li>
-                </ul>
+                <div class="wizard-output-card">
+                  <div class="wizard-output-title">Result will appear here</div>
+                  <div class="small">Enter the case on the left and click <strong>Calculate bridge quantity & days supply</strong>.</div>
+                </div>
               </div>
             </div>
           </div>
@@ -1779,8 +1776,10 @@
             <div class="wizard-section">
               <div class="wizard-section-title">Hold / resume output</div>
               <div id="holdWeeklyOutputBox" class="bridge-output-box">
-                Enter the weekly launch date and how many full packs are already in pharmacy, then click
-                <strong>Calculate hold / resume plan</strong>. The tool will recommend whether to hold the current weekly launch and what Sunday to resume on.
+                <div class="wizard-output-card">
+                  <div class="wizard-output-title">Result will appear here</div>
+                  <div class="small">Enter the weekly launch date and packs in pharmacy, then click <strong>Calculate hold / resume plan</strong>.</div>
+                </div>
               </div>
             </div>
           </div>
@@ -1864,13 +1863,10 @@
             <div class="wizard-section">
               <div class="wizard-section-title">Vacation billing output</div>
               <div id="vacOutputBox" class="bridge-output-box">
-                Enter vacation details and click <strong>Calculate vacation billing</strong>. The tool will:
-                <ul style="margin-top:4px; padding-left:18px;">
-                  <li>Calculate billed quantity from packs made in store for this vacation period.</li>
-                  <li>Set entered days supply from vacation start date until resume launch date.</li>
-                  <li>Align resume billing to the correct launch cycle (weekly/bi-weekly/monthly).</li>
-                  <li>Generate a copy-ready supplemental note.</li>
-                </ul>
+                <div class="wizard-output-card">
+                  <div class="wizard-output-title">Result will appear here</div>
+                  <div class="small">Enter the vacation details on the left and click <strong>Calculate vacation billing</strong>.</div>
+                </div>
               </div>
             </div>
           </div>
@@ -3450,8 +3446,9 @@
         }
 
         if (weeklyRow && untilNextPackSelect) {
-          weeklyRow.style.display = isWeekly ? "block" : "none";
-          if (!isWeekly) { untilNextPackSelect.value = "yes"; }
+          const showWeeklyQuestion = isWeekly && hasOnHandSelect && hasOnHandSelect.value === "no";
+          weeklyRow.style.display = showWeeklyQuestion ? "block" : "none";
+          if (!showWeeklyQuestion) { untilNextPackSelect.value = "yes"; }
         }
 
         const needsExtraRow = isBiWeekly || isMonthly;
@@ -3488,6 +3485,12 @@
       if (changeTypeSelect) {
         changeTypeSelect.addEventListener("change", () => {
           updateChangeTypeVisibility();
+          scheduleAutoCalc();
+        });
+      }
+      if (hasOnHandSelect) {
+        hasOnHandSelect.addEventListener("change", () => {
+          updateBridgeOptionVisibility();
           scheduleAutoCalc();
         });
       }
@@ -3674,6 +3677,7 @@
         const inventoryRemoved = (changeType === "dose-change" && doseDelta < 0)
           ? Math.round((Math.abs(doseDelta) * bridgeDays) * 100) / 100
           : 0;
+        const vialQuantity = Math.round((tabsPerDay * daysSupplyToBill) * 100) / 100;
         const inventoryImpactText = (changeType === "dose-change" && doseDelta < 0)
           ? `This is a dose reduction. The tool does not suggest extra billing because you are taking medication out of the blister packs, not adding more.`
           : (changeType === "dose-change" && doseDelta === 0)
@@ -3688,14 +3692,26 @@
             <div class="small" style="color: var(--muted-strong);">
               <strong>No extra billing needed.</strong> This dose change reduces or does not increase use, so correct the blister contents without billing extra quantity.
             </div>
-          </div>` : `
+          </div>` : (hasOnHand ? `
+          <div class="wizard-output-card">
+            <div class="wizard-output-title">Technician action</div>
+            <div class="small" style="color: var(--muted-strong);">
+              <strong>Bill ${quantity} tab(s) for ${daysSupplyToBill} day(s)</strong> in HealthWATCH.
+            </div>
+          </div>` : (wantsUntilNextPack ? `
           <div class="wizard-output-card">
             <div class="wizard-output-title">Technician action</div>
             <div class="small" style="color: var(--muted-strong);">
               <strong>Bill ${quantity} tab(s) for ${daysSupplyToBill} day(s)</strong> in HealthWATCH, but
-              <strong>only dispense enough to cover until the patient’s next pick-up date</strong>.
+              <strong>only dispense ${vialQuantity} tablet(s) in a vial until their next pick up</strong>.
             </div>
-          </div>`;
+          </div>` : `
+          <div class="wizard-output-card">
+            <div class="wizard-output-title">Technician action</div>
+            <div class="small" style="color: var(--muted-strong);">
+              <strong>Bill ${quantity} tab(s) for ${daysSupplyToBill} day(s)</strong> in HealthWATCH.
+            </div>
+          </div>`));
 
         let physicalActionText = "";
         if (changeType === "dose-change" && doseDelta <= 0) {
