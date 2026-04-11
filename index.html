@@ -1700,19 +1700,23 @@
                 <div class="wizard-helper">For the patient’s existing SS-CPAK-7 batch (weekly, bi-weekly, or 28-day monthly).</div>
               </div>
 
-              <div class="wizard-row" style="margin-top:10px;">
-                <label for="bridgeTodayDate">Today’s date / Rx billed date</label>
-                <input type="date" id="bridgeTodayDate" />
-                <div class="wizard-helper">Date you are billing the new prescription or dose change.</div>
+              <div class="wizard-row" id="bridgeBiweeklyVialRow" style="margin-top:10px; display:none;">
+                <label for="bridgeBiweeklyVial">Do you want to give the patient some tablets in a vial or an existing blister pack they brought back?</label>
+                <select id="bridgeBiweeklyVial">
+                  <option value="" selected>Select...</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+                <div class="wizard-helper">Bi-weekly batch only. If yes, the tool bills 2 weeks plus the extra days you give now.</div>
               </div>
 
-              <div class="wizard-row" style="margin-top:10px;">
-                <label for="bridgeNextLaunch">Next launch (Sunday) for this batch</label>
-                <input type="date" id="bridgeNextLaunch" />
-                <div class="wizard-helper">Launch Sunday when this change will enter CPAK. Days supply will be “from today until this Sunday”.</div>
+              <div class="wizard-row" id="bridgeBiweeklyVialDaysRow" style="margin-top:10px; display:none;">
+                <label for="bridgeBiweeklyVialDays">How many day(s) do you want to give now?</label>
+                <input type="number" id="bridgeBiweeklyVialDays" min="0" step="1" value="0" />
+                <div class="wizard-helper">Enter full days only. The tool converts this into tablets/capsules based on tablets per day.</div>
               </div>
 
-              <div class="wizard-row" style="margin-top:10px;">
+              <div class="wizard-row" id="bridgeChangeTypeRow" style="margin-top:10px;">
                 <label for="bridgeChangeType">What kind of change is this?</label>
                 <select id="bridgeChangeType">
                   <option value="new" selected>New medication</option>
@@ -1727,7 +1731,19 @@
                 <div class="wizard-helper">For example: old TID = 3, old 1.5 once daily = 1.5.</div>
               </div>
 
-              <div class="wizard-row" style="margin-top:10px;">
+              <div class="wizard-row" id="bridgeTodayRow" style="margin-top:10px;">
+                <label for="bridgeTodayDate">Today’s date / Rx billed date</label>
+                <input type="date" id="bridgeTodayDate" />
+                <div class="wizard-helper">Date you are billing the new prescription or dose change.</div>
+              </div>
+
+              <div class="wizard-row" id="bridgeLaunchRow" style="margin-top:10px;">
+                <label for="bridgeNextLaunch">Next launch (Sunday) for this batch</label>
+                <input type="date" id="bridgeNextLaunch" />
+                <div class="wizard-helper">Launch Sunday when this change will enter CPAK. Days supply will be “from today until this Sunday”.</div>
+              </div>
+
+              <div class="wizard-row" id="bridgeTabsPerDayRow" style="margin-top:10px;">
                 <label for="bridgeTabsPerDay">Tablets per day</label>
                 <input type="number" id="bridgeTabsPerDay" step="0.25" min="0" />
                 <div id="bridgeDosePresets" class="dose-presets" aria-label="Common dosing presets">
@@ -1777,7 +1793,7 @@
                 </div>
               </div>
 
-              <div class="wizard-row" style="margin-top:10px;">
+              <div class="wizard-row" id="bridgeDrugNameRow" style="margin-top:10px;">
                 <label for="bridgeDrugName">Drug name / strength (for note)</label>
                 <input type="text" id="bridgeDrugName" placeholder="e.g., Rosuvastatin 20 mg" />
               </div>
@@ -3453,6 +3469,7 @@
       const tabsPerDayInput = document.getElementById("bridgeTabsPerDay");
       const calcBtn = document.getElementById("bridgeCalcBtn");
       const errorBox = document.getElementById("bridgeErrorBox");
+      const bridgeOutputBoxForFlow = document.getElementById("bridgeOutputBox");
       const printHost = document.getElementById("printReport");
       if (!todayInput || !launchInput || !calcBtn || !errorBox) return;
 
@@ -3472,6 +3489,15 @@
 
       const batchTypeSelect = document.getElementById("bridgeBatchType");
       const changeTypeSelect = document.getElementById("bridgeChangeType");
+      const biweeklyVialSelect = document.getElementById("bridgeBiweeklyVial");
+      const biweeklyVialDaysInput = document.getElementById("bridgeBiweeklyVialDays");
+      const biweeklyVialRow = document.getElementById("bridgeBiweeklyVialRow");
+      const biweeklyVialDaysRow = document.getElementById("bridgeBiweeklyVialDaysRow");
+      const todayRow = document.getElementById("bridgeTodayRow");
+      const launchRow = document.getElementById("bridgeLaunchRow");
+      const changeTypeRow = document.getElementById("bridgeChangeTypeRow");
+      const tabsPerDayRow = document.getElementById("bridgeTabsPerDayRow");
+      const drugNameRow = document.getElementById("bridgeDrugNameRow");
       const oldTabsRow = document.getElementById("bridgeOldTabsRow");
       const oldTabsInput = document.getElementById("bridgeOldTabsPerDay");
       const weeklyRow = document.getElementById("bridgeUntilNextPackRow");
@@ -3524,6 +3550,38 @@
         const isWeekly = batchTypeSelect.value === "weekly";
         const isBiWeekly = batchTypeSelect.value === "biweekly";
         const isMonthly = batchTypeSelect.value === "monthly";
+        const biweeklyChoice = biweeklyVialSelect ? biweeklyVialSelect.value : "";
+        const biweeklyWantsVial = isBiWeekly && biweeklyChoice === "yes";
+        const biweeklyAnswered = isBiWeekly && (biweeklyChoice === "yes" || biweeklyChoice === "no");
+        const biweeklyDaysVal = biweeklyVialDaysInput ? parseInt(String(biweeklyVialDaysInput.value || "0"), 10) : 0;
+        const biweeklyReadyForNextStep = !isBiWeekly || (biweeklyChoice === "no") || (biweeklyWantsVial && biweeklyDaysVal > 0);
+
+        if (biweeklyVialRow) {
+          biweeklyVialRow.style.display = isBiWeekly ? "block" : "none";
+          if (!isBiWeekly && biweeklyVialSelect) biweeklyVialSelect.value = "";
+        }
+
+        if (biweeklyVialDaysRow) {
+          biweeklyVialDaysRow.style.display = biweeklyWantsVial ? "block" : "none";
+          if (!biweeklyWantsVial && biweeklyVialDaysInput) biweeklyVialDaysInput.value = "0";
+        }
+
+        [todayRow, launchRow, changeTypeRow, tabsPerDayRow, drugNameRow, calcBtn].forEach((el) => {
+          if (!el) return;
+          el.style.display = isBiWeekly ? (biweeklyReadyForNextStep ? "" : "none") : "";
+        });
+
+        if (isBiWeekly && !biweeklyReadyForNextStep && bridgeOutputBoxForFlow) {
+          bridgeOutputBoxForFlow.innerHTML = `
+            <div class="wizard-output-card">
+              <div class="wizard-output-title">Result will appear here</div>
+              <div class="small">Answer the bi-weekly questions on the left. The result will update after the needed fields are complete.</div>
+            </div>`;
+        }
+
+        if (oldTabsRow && isBiWeekly && !biweeklyReadyForNextStep) {
+          oldTabsRow.style.display = "none";
+        }
 
         if (hasOnHandRow && hasOnHandSelect) {
           hasOnHandRow.style.display = (isBiWeekly || isMonthly) ? "none" : "block";
@@ -3536,7 +3594,7 @@
           if (!showWeeklyQuestion) { untilNextPackSelect.value = "yes"; }
         }
 
-        const needsExtraRow = isBiWeekly || isMonthly;
+        const needsExtraRow = isMonthly;
         if (extraRow && extraYesNo && extraDays) {
           extraRow.style.display = needsExtraRow ? "block" : "none";
           if (!needsExtraRow) {
@@ -3551,6 +3609,10 @@
             if (extraSubHelper) extraSubHelper.textContent = `Adds on top of the base ${baseDays} days (only when “Yes”).`;
             updateExtraEnable();
           }
+        }
+
+        if (isBiWeekly && !biweeklyAnswered) {
+          if (oldTabsInput) oldTabsInput.value = "";
         }
       };
 
@@ -3575,6 +3637,22 @@
       }
       if (hasOnHandSelect) {
         hasOnHandSelect.addEventListener("change", () => {
+          updateBridgeOptionVisibility();
+          scheduleAutoCalc();
+        });
+      }
+      if (biweeklyVialSelect) {
+        biweeklyVialSelect.addEventListener("change", () => {
+          updateBridgeOptionVisibility();
+          scheduleAutoCalc();
+        });
+      }
+      if (biweeklyVialDaysInput) {
+        biweeklyVialDaysInput.addEventListener("input", () => {
+          updateBridgeOptionVisibility();
+          scheduleAutoCalc();
+        });
+        biweeklyVialDaysInput.addEventListener("change", () => {
           updateBridgeOptionVisibility();
           scheduleAutoCalc();
         });
@@ -3617,11 +3695,16 @@
         const untilNextPackEl = document.getElementById("bridgeUntilNextPack");
         const extraChoiceEl = document.getElementById("bridgeExtraYesNo");
         const extraDaysEl = document.getElementById("bridgeExtraDays");
+        const biweeklyVialEl = document.getElementById("bridgeBiweeklyVial");
+        const biweeklyVialDaysEl = document.getElementById("bridgeBiweeklyVialDays");
         const hasOnHand   = (batchType === "biweekly" || batchType === "monthly") ? false : ((hasOnHandSelectEl ? hasOnHandSelectEl.value : "") === "yes");
 
         const wantsUntilNextPack = ((untilNextPackEl ? untilNextPackEl.value : "") !== "no");
-        const extraChoice = ((extraChoiceEl ? extraChoiceEl.value : "") === "yes");
+        const biweeklyVialChoice = biweeklyVialEl ? biweeklyVialEl.value : "";
+        const wantsBiweeklyVial = batchType === "biweekly" && biweeklyVialChoice === "yes";
+        const extraChoice = batchType === "monthly" && ((extraChoiceEl ? extraChoiceEl.value : "") === "yes");
         const extraDaysRaw = extraDaysEl ? extraDaysEl.value : "";
+        const biweeklyVialDaysRaw = biweeklyVialDaysEl ? biweeklyVialDaysEl.value : "";
         const drugLabelIn = (document.getElementById("bridgeDrugName").value || "").trim();
 
         const outputBox   = document.getElementById("bridgeOutputBox");
@@ -3633,6 +3716,26 @@
 
         let extraDaysVal = parseInt(String(extraDaysRaw || "0"), 10);
         if (isNaN(extraDaysVal) || extraDaysVal < 0) extraDaysVal = 0;
+        let biweeklyVialDaysVal = parseInt(String(biweeklyVialDaysRaw || "0"), 10);
+        if (isNaN(biweeklyVialDaysVal) || biweeklyVialDaysVal < 0) biweeklyVialDaysVal = 0;
+
+        if (batchType === "biweekly" && (biweeklyVialChoice !== "yes" && biweeklyVialChoice !== "no")) {
+          if (!silent) {
+            errorBox.textContent = "Please select whether you are giving any tablets in a vial or existing blister pack.";
+            errorBox.style.display = "block";
+            outputBox.innerHTML = "";
+          }
+          return false;
+        }
+
+        if (batchType === "biweekly" && wantsBiweeklyVial && biweeklyVialDaysVal <= 0) {
+          if (!silent) {
+            errorBox.textContent = "Please enter how many day(s) you want to give now.";
+            errorBox.style.display = "block";
+            outputBox.innerHTML = "";
+          }
+          return false;
+        }
 
         if (!todayDate || !launchDate || !tabsPerDay || tabsPerDay <= 0) {
           if (!silent) {
@@ -3677,7 +3780,7 @@
           lastBridgeDay = addDays(todayDate, 14 - 1); // inclusive display
           quantity = Math.round((tabsPerDay * 14) * 100) / 100;
         } else if (batchType === "biweekly") {
-          const extra = extraChoice ? extraDaysVal : 0;
+          const extra = wantsBiweeklyVial ? biweeklyVialDaysVal : 0;
           bridgeDays = 14 + extra;
           lastBridgeDay = addDays(todayDate, bridgeDays - 1); // inclusive display
           quantity = Math.round((tabsPerDay * bridgeDays) * 100) / 100;
@@ -3722,6 +3825,9 @@
             actualDaysSupply = Math.round(actualDaysSupply);
           }
         }
+        const biweeklyDailyBillAmount = (changeType === "dose-change") ? Math.max(0, doseDelta || 0) : tabsPerDay;
+        const biweeklyVialQuantityToGive = Math.round((biweeklyDailyBillAmount * biweeklyVialDaysVal) * 100) / 100;
+        const biweeklyCpakQuantity = Math.round((biweeklyDailyBillAmount * 14) * 100) / 100;
 
         const batchLabel =
           batchType === "weekly"   ? "Weekly batch" :
@@ -3749,7 +3855,11 @@
           whyCalculatedText = `A smaller quantity was billed because this is a dose change, not a brand-new medication. The tool only bills for the extra amount being added each day across the 3 weekly packs that still need to be corrected before CPAK fully catches up.`;
         } else if (batchType === "weekly" && !hasOnHand && !wantsUntilNextPack) {
           whyCalculatedText = `2 weeks were used because this weekly case was capped at the next two weekly blisters. In simple terms: the tool is only trying to cover the short gap before the regular cycle catches up.`;
-        } else if (batchType === "biweekly" || batchType === "monthly") {
+        } else if (batchType === "biweekly" && wantsBiweeklyVial) {
+          whyCalculatedText = `Billing ${quantity} tab(s) to account for ${biweeklyVialQuantityToGive} tab(s) given in a vial or existing blister pack, plus 2 weeks worth of medication for the 2 blister packs that are coming from CPAK.`;
+        } else if (batchType === "biweekly") {
+          whyCalculatedText = `Billing 2 weeks worth to be added to the 2 blister packs that are coming from CPAK.`;
+        } else if (batchType === "monthly") {
           whyCalculatedText = `The billed quantity follows the ${batchType === "biweekly" ? "bi-weekly" : "monthly"} cycle length used by this tool. It counts the number of days that need to be covered before the regular blister cycle takes over again.`;
         } else {
           whyCalculatedText = `The billed quantity was calculated from the daily amount and the number of days that need coverage before the next regular blister cycle takes over. The entered days supply stays tied to the next launch date so billing remains aligned with the cycle.`;
@@ -3771,32 +3881,42 @@
               ? `This is a dose increase, so the tool bills only the extra tablets/capsules being added. It avoids rebilling the part that was already billed under the old dose.`
               : `This is treated as a new medication, so the billed quantity reflects the full amount that must be added to the blister packs for the coverage window.`;
 
-        const techHint = (changeType === "dose-change" && doseDelta <= 0) ? `
+        let techHint = "";
+        if (changeType === "dose-change" && doseDelta <= 0) {
+          techHint = `
           <div class="wizard-output-card">
             <div class="wizard-output-title">Technician action</div>
             <div class="small" style="color: var(--muted-strong);">
               <strong>No extra billing needed.</strong> This dose change reduces or does not increase use, so correct the blister contents without billing extra quantity.
             </div>
-          </div>` : (hasOnHand ? `
+          </div>`;
+        } else if (batchType === "biweekly" && wantsBiweeklyVial) {
+          techHint = `
+          <div class="wizard-output-card">
+            <div class="wizard-output-title">Technician action</div>
+            <div class="small" style="color: var(--muted-strong);">
+              <strong>Bill ${quantity} tab(s) for ${daysSupplyToBill} day(s)</strong> in HealthWATCH, and
+              <strong>give ${biweeklyVialQuantityToGive} tab(s)</strong> to the patient in a vial or existing blister pack.
+            </div>
+          </div>`;
+        } else if (batchType === "biweekly" || hasOnHand || !wantsUntilNextPack) {
+          techHint = `
           <div class="wizard-output-card">
             <div class="wizard-output-title">Technician action</div>
             <div class="small" style="color: var(--muted-strong);">
               <strong>Bill ${quantity} tab(s) for ${daysSupplyToBill} day(s)</strong> in HealthWATCH.
             </div>
-          </div>` : (wantsUntilNextPack ? `
+          </div>`;
+        } else {
+          techHint = `
           <div class="wizard-output-card">
             <div class="wizard-output-title">Technician action</div>
             <div class="small" style="color: var(--muted-strong);">
               <strong>Bill ${quantity} tab(s) for ${daysSupplyToBill} day(s)</strong> in HealthWATCH, but
               <strong>only dispense ${vialQuantity} tablet(s) in a vial until their next pick up</strong>.
             </div>
-          </div>` : `
-          <div class="wizard-output-card">
-            <div class="wizard-output-title">Technician action</div>
-            <div class="small" style="color: var(--muted-strong);">
-              <strong>Bill ${quantity} tab(s) for ${daysSupplyToBill} day(s)</strong> in HealthWATCH.
-            </div>
-          </div>`));
+          </div>`;
+        }
 
         let physicalActionText = "";
         if (changeType === "dose-change" && doseDelta <= 0) {
@@ -3807,7 +3927,11 @@
           physicalActionText = `Add only the extra amount into the current blister pack, the blister being fixed this week, and the next weekly blister coming from CPAK. Do not bill the full new regimen because part of it was already billed under the old dose.`;
         } else if (batchType === "weekly" && !hasOnHand && !wantsUntilNextPack) {
           physicalActionText = `Prepare only enough medication to cover the short gap before the next regular weekly blister cycle takes over. This case is limited to the next two weekly blisters only.`;
-        } else if (batchType === "biweekly" || batchType === "monthly") {
+        } else if (batchType === "biweekly" && wantsBiweeklyVial) {
+          physicalActionText = `Give ${biweeklyVialQuantityToGive} tab(s) to the patient in a vial or existing blister pack. Keep 2 weeks worth of medication to be added to the 2 weeks blister pack that are coming from CPAK. You do not need to physically keep them on the side; just fake fill them as needed.`;
+        } else if (batchType === "biweekly") {
+          physicalActionText = `To be added to the 2 weeks blister pack that are coming from CPAK.`;
+        } else if (batchType === "monthly") {
           physicalActionText = `Prepare the added medication for this ${batchType === "biweekly" ? "bi-weekly" : "monthly"} cycle only. The tool is covering the base cycle length${extraChoice && extraDaysVal > 0 ? ` plus ${extraDaysVal} extra day(s)` : ""}.`;
         } else {
           physicalActionText = `Add the billed medication into the blister workflow only for the days covered by this bridge. After that, the regular CPAK cycle takes over with the change reflected there.`;
@@ -3887,6 +4011,8 @@
         "bridgeTabsPerDay",
         "bridgeHasOnHand",
         "bridgeUntilNextPack",
+        "bridgeBiweeklyVial",
+        "bridgeBiweeklyVialDays",
         "bridgeExtraYesNo",
         "bridgeExtraDays",
         "bridgeDrugName"
@@ -3894,7 +4020,7 @@
       autoCalcInputIds.forEach((id) => {
         const el = document.getElementById(id);
         if (!el) return;
-        const eventName = (id === "bridgeTabsPerDay" || id === "bridgeOldTabsPerDay" || id === "bridgeDrugName" || id === "bridgeExtraDays") ? "input" : "change";
+        const eventName = (id === "bridgeTabsPerDay" || id === "bridgeOldTabsPerDay" || id === "bridgeDrugName" || id === "bridgeExtraDays" || id === "bridgeBiweeklyVialDays") ? "input" : "change";
         el.addEventListener(eventName, scheduleAutoCalc);
         if (eventName === "input") el.addEventListener("change", scheduleAutoCalc);
       });
