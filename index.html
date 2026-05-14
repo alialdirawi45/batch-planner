@@ -803,6 +803,85 @@
     .dose-chip:hover { background: #fdf0dc; border-color: #e7ba79; }
     .dose-chip--active { background: #fce8cc; border-color: #e0a860; color: #7c2d12; }
 
+    .delivery-day-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+    .delivery-day-btn {
+      margin-top: 0;
+      border-radius: 999px;
+      border: 1px solid #c7bea7;
+      background: #f7f4ea;
+      color: #55603a;
+      box-shadow: none;
+      padding: 6px 12px;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+    .delivery-day-btn--active {
+      background: #55603a;
+      border-color: #55603a;
+      color: #fff;
+    }
+    .delivery-status {
+      margin-top: 10px;
+      min-height: 18px;
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+    .delivery-status--success { color: #166534; }
+    .delivery-status--warning { color: #9a3412; }
+    .delivery-results-shell {
+      display: grid;
+      gap: 8px;
+    }
+    .delivery-meta-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+    .delivery-count-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 999px;
+      border: 1px solid #d6d0bf;
+      background: #f7f4ea;
+      color: #55603a;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 9px;
+    }
+    .delivery-search-card {
+      border-style: dashed;
+      background: #fffdf8;
+    }
+    .delivery-empty {
+      padding: 14px 10px;
+      border: 1px dashed #d6d0bf;
+      border-radius: 10px;
+      background: #fffdf8;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+    .delivery-table-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .delivery-table-actions button {
+      margin-top: 0;
+      padding: 5px 10px;
+      font-size: 0.72rem;
+    }
+
     /* WCAG cool component overrides */
     body[data-theme="wcag-cool"] {
       background: #f3f7fb;
@@ -957,6 +1036,16 @@
       border-color:#c7bea7;
     }
     body[data-theme="field-manual"] .dose-chip--active {
+      background:#55603a;
+      color:#fff;
+      border-color:#46502f;
+    }
+    body[data-theme="field-manual"] .delivery-day-btn {
+      background:#f7f4ea;
+      color:#55603a;
+      border-color:#c7bea7;
+    }
+    body[data-theme="field-manual"] .delivery-day-btn--active {
       background:#55603a;
       color:#fff;
       border-color:#46502f;
@@ -1306,17 +1395,30 @@
     }
 
     @media print {
-      body * { visibility: hidden !important; }
-      #printReport, #printReport * { visibility: visible !important; }
+      html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #fff !important;
+      }
+      body {
+        display: block !important;
+        min-height: auto !important;
+      }
+      body > *:not(#printReport) {
+        display: none !important;
+      }
       #printReport {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
+        display: block !important;
+        position: static !important;
+        width: 100% !important;
+        max-width: none !important;
         margin: 0;
         padding: 0;
         background: #fff;
         color: #000;
+      }
+      #printReport, #printReport * {
+        visibility: visible !important;
       }
     }
 
@@ -1393,6 +1495,7 @@
         <button type="button" id="tab-btn-bill-rx" class="tab-btn" data-tab-target="bill-rx" role="tab" aria-controls="tab-bill-rx" aria-selected="false" tabindex="-1">Bill New RX</button>
         <button type="button" id="tab-btn-hold-resume" class="tab-btn" data-tab-target="hold-resume" role="tab" aria-controls="tab-hold-resume" aria-selected="false" tabindex="-1">Hold / Resume Weekly</button>
         <button type="button" id="tab-btn-vacation-billing" class="tab-btn" data-tab-target="vacation-billing" role="tab" aria-controls="tab-vacation-billing" aria-selected="false" tabindex="-1">Billing Vacation Supply</button>
+        <button type="button" id="tab-btn-daily-deliveries" class="tab-btn" data-tab-target="daily-deliveries" role="tab" aria-controls="tab-daily-deliveries" aria-selected="false" tabindex="-1">Daily Deliveries</button>
         <button type="button" id="tab-btn-training" class="tab-btn" data-tab-target="training" role="tab" aria-controls="tab-training" aria-selected="false" tabindex="-1">Training</button>
         <button type="button" id="tab-btn-quick-links" class="tab-btn" data-tab-target="quick-links" role="tab" aria-controls="tab-quick-links" aria-selected="false" tabindex="-1">Quick Links Hub</button>
       </div>
@@ -1955,6 +2058,88 @@
         </div>
       </div>
 
+      <!-- TAB: Daily Deliveries -->
+      <div id="tab-daily-deliveries" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-daily-deliveries" hidden>
+        <div class="section-title">Daily Deliveries</div>
+        <div class="small">
+          Assign blister pack patients to a delivery day, open each day’s list quickly, and search any patient to confirm what day they receive delivery.
+        </div>
+
+        <div class="wizard-card">
+          <div class="wizard-grid">
+            <div class="wizard-section">
+              <div class="wizard-section-title">1. Search & add patient</div>
+
+              <div class="wizard-row">
+                <label for="deliverySearchInput">Search patient name</label>
+                <input type="text" id="deliverySearchInput" placeholder="Type a patient name" />
+                <div class="wizard-helper">Search checks every saved patient and shows the patient name with the assigned delivery day.</div>
+              </div>
+
+              <div class="wizard-output-card delivery-search-card" id="deliverySearchResultCard">
+                <div class="wizard-output-title">Search result will appear here</div>
+                <div class="small">Start typing a patient name to see the assigned delivery day.</div>
+              </div>
+
+              <div class="wizard-row" style="margin-top:14px;">
+                <div class="wizard-section-title" style="margin-bottom:0;">2. Add patient</div>
+              </div>
+
+              <div class="wizard-row">
+                <label for="deliveryPatientName">Patient name</label>
+                <input type="text" id="deliveryPatientName" placeholder="e.g., John Smith" />
+              </div>
+
+              <div class="wizard-row">
+                <label for="deliveryPatientDay">Delivery day</label>
+                <select id="deliveryPatientDay">
+                  <option value="" selected>Select delivery day...</option>
+                  <option value="Monday">Monday</option>
+                  <option value="Tuesday">Tuesday</option>
+                  <option value="Wednesday">Wednesday</option>
+                  <option value="Thursday">Thursday</option>
+                  <option value="Friday">Friday</option>
+                  <option value="Saturday">Saturday</option>
+                </select>
+              </div>
+
+              <div class="wizard-row" style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button type="button" id="deliverySaveBtn" class="primary-btn" style="margin-top:0;">Save patient</button>
+                <button type="button" id="deliveryCancelEditBtn" class="secondary" style="margin-top:0; display:none;">Cancel edit</button>
+              </div>
+              <div id="deliveryFormStatus" class="delivery-status" role="status" aria-live="polite"></div>
+            </div>
+
+            <div class="wizard-section">
+              <div class="wizard-section-title">Delivery assignments</div>
+
+              <div class="delivery-day-tabs" id="deliveryDayTabs" aria-label="Delivery day views">
+                <button type="button" class="delivery-day-btn delivery-day-btn--active" data-delivery-view="All Patients">All Patients</button>
+                <button type="button" class="delivery-day-btn" data-delivery-view="Monday">Monday</button>
+                <button type="button" class="delivery-day-btn" data-delivery-view="Tuesday">Tuesday</button>
+                <button type="button" class="delivery-day-btn" data-delivery-view="Wednesday">Wednesday</button>
+                <button type="button" class="delivery-day-btn" data-delivery-view="Thursday">Thursday</button>
+                <button type="button" class="delivery-day-btn" data-delivery-view="Friday">Friday</button>
+                <button type="button" class="delivery-day-btn" data-delivery-view="Saturday">Saturday</button>
+              </div>
+
+              <div class="delivery-results-shell">
+                <div class="wizard-output-card">
+                  <div class="delivery-meta-row">
+                    <div class="wizard-output-title" id="deliveryTableTitle">All Patients</div>
+                    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                      <div class="delivery-count-pill" id="deliveryCountPill">0 patients</div>
+                      <button type="button" id="deliveryPrintBtn" class="secondary" style="margin-top:0;">Print list</button>
+                    </div>
+                  </div>
+                  <div id="deliveryTableWrap"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- TAB: Training -->
       <div id="tab-training" class="tab-content" role="tabpanel" aria-labelledby="tab-btn-training" hidden>
         <div class="section-title">Training – blister pack workflow refresher</div>
@@ -2477,9 +2662,9 @@
     }
     function buildCasePrintHtml(title, bodyHtml) {
       return `
-        <div style="font-family: Avenir, system-ui, sans-serif; color: #21304a; padding: 10px 14px; font-size: 12px; line-height: 1.32;">
+        <div style="font-family: Avenir, system-ui, sans-serif; color: #21304a; padding: 6px 8px; font-size: 12px; line-height: 1.32; width: 100%; max-width: none; margin: 0;">
           <style>
-            @page { size: auto; margin: 10mm; }
+            @page { size: auto; margin: 8mm; }
           </style>
           <h1 style="font-size: 20px; margin: 0 0 4px;">${escapeHtml(title)}</h1>
           <div style="color: #5f6e84; margin-bottom: 10px; font-size: 11px;">Printed ${escapeHtml(formatNiceDate(new Date()))}</div>
@@ -2585,6 +2770,7 @@
         "bill-rx": document.getElementById("tab-bill-rx"),
         "hold-resume": document.getElementById("tab-hold-resume"),
         "vacation-billing": document.getElementById("tab-vacation-billing"),
+        "daily-deliveries": document.getElementById("tab-daily-deliveries"),
         "training": document.getElementById("tab-training"),
         "quick-links": document.getElementById("tab-quick-links")
       };
@@ -4377,6 +4563,317 @@
       calcBtn.addEventListener("click", () => runHoldResumeCalc({ silent: false }));
     }
 
+    // ---- DAILY DELIVERIES ----
+    const DAILY_DELIVERIES_STORAGE_KEY = "dailyDeliveriesAssignmentsV1";
+    const DELIVERY_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const INITIAL_DELIVERY_ASSIGNMENTS = [{"name":"Albert Simon","day":"Tuesday"},{"name":"Aleksandra Drecun","day":"Tuesday"},{"name":"Amtul Jamil","day":"Tuesday"},{"name":"Andre Eid","day":"Friday"},{"name":"Andrew Judd","day":"Monday"},{"name":"Anne Irving","day":"Saturday"},{"name":"Areej Musa","day":"Friday"},{"name":"Avita Rodrigues","day":"Monday"},{"name":"Baby Jaskaran","day":"Saturday"},{"name":"Balaji Packrisamy","day":"Monday"},{"name":"Baljinder Bedi","day":"Monday"},{"name":"Barbara Karsznia","day":"Monday"},{"name":"Barbara Strickland-Maier","day":"Monday"},{"name":"Barry Hollahan","day":"Saturday"},{"name":"Belinda Burgess","day":"Wednesday"},{"name":"Benjamin Sampson","day":"Monday"},{"name":"Blanca Ramirez","day":"Wednesday"},{"name":"Brian Charette","day":"Friday"},{"name":"Carol Anne Bueglas","day":"Friday"},{"name":"Cecile Dwyer","day":"Thursday"},{"name":"Charles Ansah","day":"Tuesday"},{"name":"Charles Wen","day":"Tuesday"},{"name":"Cheryl Davidson","day":"Monday"},{"name":"Christine Dunn","day":"Monday"},{"name":"Clarita Rivera","day":"Wednesday"},{"name":"Cory Fletcher","day":"Friday"},{"name":"Cyprian D'Cruz","day":"Monday"},{"name":"Dana Tiangson","day":"Friday"},{"name":"Daniel Mcpeak","day":"Monday"},{"name":"Danielle Cooke","day":"Tuesday"},{"name":"Daphne Pike","day":"Saturday"},{"name":"Daryl Burton","day":"Monday"},{"name":"Dave Rowley","day":"Thursday"},{"name":"Dawna Brake","day":"Tuesday"},{"name":"Deanna Gittens","day":"Tuesday"},{"name":"Denise Quesnelle","day":"Saturday"},{"name":"Derek Moseley","day":"Saturday"},{"name":"Detlef Bernhard","day":"Friday"},{"name":"Donald St.Croix","day":"Monday"},{"name":"Dorothy Clarke","day":"Tuesday"},{"name":"Douglas Strachan","day":"Friday"},{"name":"Edward De Melo","day":"Monday"},{"name":"Elio Betancourt","day":"Tuesday"},{"name":"Elvira Avelino","day":"Monday"},{"name":"Erva Joseph","day":"Monday"},{"name":"Euton Sinclair","day":"Tuesday"},{"name":"Felix Aryeh Boakye","day":"Monday"},{"name":"Gabriela Dinu","day":"Tuesday"},{"name":"Geoffrey Whale","day":"Monday"},{"name":"Ghulam Rao","day":"Friday"},{"name":"Giuseppe Romani","day":"Thursday"},{"name":"Gunilla Romani","day":"Thursday"},{"name":"Gustave Sango Furume","day":"Tuesday"},{"name":"Hari Singh Hans","day":"Monday"},{"name":"Harvel Benjamin","day":"Tuesday"},{"name":"Hasan Korkmaz","day":"Saturday"},{"name":"Hasnah Binti Maidin","day":"Monday"},{"name":"Heidi Strachan","day":"Friday"},{"name":"Hilda Ovando","day":"Monday"},{"name":"Hyacinth Simms","day":"Thursday"},{"name":"Icasiano Alejandro","day":"Saturday"},{"name":"Indira Ramsackal","day":"Thursday"},{"name":"Irene Deschamps","day":"Friday"},{"name":"Irene Kerr","day":"Friday"},{"name":"Jaime Soriano","day":"Saturday"},{"name":"James Jack","day":"Friday"},{"name":"Jane Elizabeth Hall","day":"Tuesday"},{"name":"Jane Sheena Emerson","day":"Friday"},{"name":"Janice Chase","day":"Monday"},{"name":"Jean Coles","day":"Monday"},{"name":"Jenette Morrison","day":"Friday"},{"name":"Jerome Ford","day":"Saturday"},{"name":"Jesus Allen Maliwat","day":"Saturday"},{"name":"Joao Aguiar","day":"Saturday"},{"name":"John David Dunn","day":"Monday"},{"name":"John De Melo","day":"Monday"},{"name":"John Griffett","day":"Thursday"},{"name":"Jose Melo","day":"Monday"},{"name":"Josephin Oshana","day":"Thursday"},{"name":"Joyce Abela","day":"Friday"},{"name":"Judy Duncan","day":"Monday"},{"name":"Kamni Siddiqui","day":"Thursday"},{"name":"Kaneez Fatima","day":"Saturday"},{"name":"Khatoon Maharaj","day":"Friday"},{"name":"Lalitha Natarajan","day":"Friday"},{"name":"Lauretta Emma Parker Moseley","day":"Saturday"},{"name":"Leona Hansen","day":"Monday"},{"name":"Leonor Noemi Deschambault","day":"Friday"},{"name":"Leslie Karunaratne","day":"Monday"},{"name":"Linda Sands","day":"Monday"},{"name":"Lulu Pereira","day":"Tuesday"},{"name":"Manjinder Hans","day":"Monday"},{"name":"Manuel Gayoso","day":"Thursday"},{"name":"Manuela Cimbron","day":"Monday"},{"name":"Maria Navarro","day":"Monday"},{"name":"Marie Gardner","day":"Monday"},{"name":"Mario Russo","day":"Saturday"},{"name":"Marjorie Thomas","day":"Wednesday"},{"name":"Mary Birt","day":"Thursday"},{"name":"Mary Sessa","day":"Thursday"},{"name":"Maryanne Zmenak","day":"Monday"},{"name":"Maudlyn Morris","day":"Thursday"},{"name":"Maxima Lubon-Butcher","day":"Friday"},{"name":"Meredith Johnson","day":"Monday"},{"name":"Michael Cassidy","day":"Monday"},{"name":"Michael Elliott","day":"Saturday"},{"name":"Mildred Cabrey","day":"Tuesday"},{"name":"Mirko Derovski","day":"Friday"},{"name":"Mohammed Ba'Aqeel","day":"Saturday"},{"name":"Moni Begum","day":"Monday"},{"name":"Nargis Bano","day":"Monday"},{"name":"Nasreen Tahir","day":"Monday"},{"name":"Neelam Wadhwa","day":"Monday"},{"name":"Nelly Aguilar","day":"Monday"},{"name":"Nezhat Gilanchi","day":"Thursday"},{"name":"Nirmala Bhargav","day":"Monday"},{"name":"Norma O'Brien","day":"Tuesday"},{"name":"Norman Walker","day":"Friday"},{"name":"Patricia Caffrey","day":"Thursday"},{"name":"Patricia Sgro","day":"Monday"},{"name":"Pauletta Jackson","day":"Wednesday"},{"name":"Pauline M Mcintosh","day":"Wednesday"},{"name":"Phyllis Cyr","day":"Wednesday"},{"name":"Pileria Carbone","day":"Monday"},{"name":"Praboutee Champatsingh","day":"Saturday"},{"name":"Prudence Owusu-Ansahs","day":"Thursday"},{"name":"Ramdeo Ramsackal","day":"Thursday"},{"name":"Rani Aulakh","day":"Monday"},{"name":"Raul Caguin","day":"Monday"},{"name":"Richard Rosamond","day":"Friday"},{"name":"Richard Sereda","day":"Tuesday"},{"name":"Rita Karunaratne","day":"Monday"},{"name":"Robert Callaghan","day":"Tuesday"},{"name":"Robert Stephen Judd","day":"Monday"},{"name":"Romeo Ovando","day":"Monday"},{"name":"Ronald Patrick","day":"Wednesday"},{"name":"Roylance Wilson","day":"Friday"},{"name":"Sabiha Khanum","day":"Thursday"},{"name":"Safia Munshi","day":"Tuesday"},{"name":"Sandradee Clarke-Williams","day":"Tuesday"},{"name":"Shaheen Siddiqui","day":"Monday"},{"name":"Sharon Rowley","day":"Thursday"},{"name":"Sheila Mungal","day":"Saturday"},{"name":"Shirley D'Souza","day":"Wednesday"},{"name":"Sofia Ramirez","day":"Monday"},{"name":"Souzan Arabo","day":"Monday"},{"name":"Stephen Mungal","day":"Saturday"},{"name":"Sujatha Balaji","day":"Monday"},{"name":"Sultan Salahuddin","day":"Friday"},{"name":"Sunil Wadhwa","day":"Monday"},{"name":"Tasneem Chaudhary","day":"Thursday"},{"name":"Theresa Wadden","day":"Monday"},{"name":"Thomas G Boroday","day":"Monday"},{"name":"Trudi Bachly","day":"Monday"},{"name":"Ultimina Charette","day":"Friday"},{"name":"Unnayan Majumder","day":"Saturday"},{"name":"Ursula Ball","day":"Wednesday"},{"name":"Usha Rani","day":"Monday"},{"name":"Veronica Soriano","day":"Saturday"},{"name":"Vishal Bhargav","day":"Monday"},{"name":"Wayne Jarus","day":"Monday"},{"name":"Wayne Mattingly","day":"Friday"},{"name":"William Larsen","day":"Friday"},{"name":"William Murphy","day":"Monday"}];
+    function initDailyDeliveriesTool() {
+      const searchInput = document.getElementById("deliverySearchInput");
+      const searchResultCard = document.getElementById("deliverySearchResultCard");
+      const patientNameInput = document.getElementById("deliveryPatientName");
+      const patientDayInput = document.getElementById("deliveryPatientDay");
+      const saveBtn = document.getElementById("deliverySaveBtn");
+      const cancelEditBtn = document.getElementById("deliveryCancelEditBtn");
+      const formStatus = document.getElementById("deliveryFormStatus");
+      const dayTabs = Array.from(document.querySelectorAll("#deliveryDayTabs .delivery-day-btn"));
+      const tableTitle = document.getElementById("deliveryTableTitle");
+      const countPill = document.getElementById("deliveryCountPill");
+      const tableWrap = document.getElementById("deliveryTableWrap");
+      const printBtn = document.getElementById("deliveryPrintBtn");
+      const printHost = document.getElementById("printReport");
+      if (!searchInput || !searchResultCard || !patientNameInput || !patientDayInput || !saveBtn || !cancelEditBtn || !formStatus || !tableTitle || !countPill || !tableWrap || !printBtn || !printHost) return;
+
+      let activeView = "All Patients";
+      let editingId = null;
+
+      try {
+        const existing = JSON.parse(localStorage.getItem(DAILY_DELIVERIES_STORAGE_KEY) || "[]");
+        if (!Array.isArray(existing) || existing.length === 0) {
+          const seeded = INITIAL_DELIVERY_ASSIGNMENTS.map((item, index) => ({
+            id: `seed-${index + 1}`,
+            name: item.name,
+            day: item.day
+          }));
+          localStorage.setItem(DAILY_DELIVERIES_STORAGE_KEY, JSON.stringify(seeded));
+        }
+      } catch (e) {
+        const seeded = INITIAL_DELIVERY_ASSIGNMENTS.map((item, index) => ({
+          id: `seed-${index + 1}`,
+          name: item.name,
+          day: item.day
+        }));
+        localStorage.setItem(DAILY_DELIVERIES_STORAGE_KEY, JSON.stringify(seeded));
+      }
+
+      try {
+        const existing = JSON.parse(localStorage.getItem(DAILY_DELIVERIES_STORAGE_KEY) || "[]");
+        if (Array.isArray(existing) && existing.length) {
+          const normalized = existing.map((item) => {
+            if (!item || typeof item.name !== "string") return item;
+            if (item.name.trim().toLowerCase() === "hasnah binti maidin") {
+              return { ...item, day: "Monday" };
+            }
+            return item;
+          });
+          localStorage.setItem(DAILY_DELIVERIES_STORAGE_KEY, JSON.stringify(normalized));
+        }
+      } catch (e) {}
+
+      const readAssignments = () => {
+        try {
+          const raw = JSON.parse(localStorage.getItem(DAILY_DELIVERIES_STORAGE_KEY) || "[]");
+          if (!Array.isArray(raw)) return [];
+          return raw
+            .filter((item) => item && typeof item.name === "string" && DELIVERY_DAYS.includes(item.day))
+            .map((item) => ({
+              id: item.id || `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+              name: item.name.trim(),
+              day: item.day
+            }))
+            .filter((item) => item.name);
+        } catch (e) {
+          return [];
+        }
+      };
+
+      const saveAssignments = (rows) => {
+        localStorage.setItem(DAILY_DELIVERIES_STORAGE_KEY, JSON.stringify(rows));
+      };
+
+      const sortAssignments = (rows) => {
+        return [...rows].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+      };
+
+      const getVisibleRows = () => {
+        const assignments = sortAssignments(readAssignments());
+        return activeView === "All Patients"
+          ? assignments
+          : assignments.filter((item) => item.day === activeView);
+      };
+
+      const setFormStatus = (message, tone = "") => {
+        formStatus.textContent = message;
+        formStatus.className = `delivery-status${tone ? ` delivery-status--${tone}` : ""}`;
+      };
+
+      const setActiveView = (view) => {
+        activeView = view;
+        dayTabs.forEach((btn) => {
+          const isActive = btn.getAttribute("data-delivery-view") === view;
+          btn.classList.toggle("delivery-day-btn--active", isActive);
+        });
+        renderTable();
+      };
+
+      const renderSearch = () => {
+        const query = searchInput.value.trim().toLowerCase();
+        const assignments = sortAssignments(readAssignments());
+        if (!query) {
+          searchResultCard.innerHTML = `
+            <div class="wizard-output-title">Search result will appear here</div>
+            <div class="small">Start typing a patient name to see the assigned delivery day.</div>
+          `;
+          return;
+        }
+
+        const matches = assignments.filter((item) => item.name.toLowerCase().includes(query));
+        if (!matches.length) {
+          searchResultCard.innerHTML = `
+            <div class="wizard-output-title">No patient found</div>
+            <div class="small">No saved delivery assignment matches “${escapeHtml(searchInput.value.trim())}”.</div>
+          `;
+          return;
+        }
+
+        searchResultCard.innerHTML = `
+          <div class="wizard-output-title">Search results</div>
+          ${matches.map((item) => `
+            <div class="wizard-output-row">
+              <span class="wizard-output-label">${escapeHtml(item.name)}</span>
+              <span class="wizard-output-value">${escapeHtml(item.day)}</span>
+            </div>
+          `).join("")}
+        `;
+      };
+
+      const renderTable = () => {
+        const visibleRows = getVisibleRows();
+
+        tableTitle.textContent = activeView;
+        countPill.textContent = `${visibleRows.length} patient${visibleRows.length === 1 ? "" : "s"}`;
+
+        if (!visibleRows.length) {
+          const emptyText = activeView === "All Patients"
+            ? "No patients have been assigned yet. Add a patient on the left to start building the delivery list."
+            : `No patients are currently assigned to ${activeView}.`;
+          tableWrap.innerHTML = `<div class="delivery-empty">${emptyText}</div>`;
+          return;
+        }
+
+        tableWrap.innerHTML = `
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>Patient Name</th>
+                <th>Delivery Day</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${visibleRows.map((item) => `
+                <tr>
+                  <td>${escapeHtml(item.name)}</td>
+                  <td>${escapeHtml(item.day)}</td>
+                  <td>
+                    <div class="delivery-table-actions">
+                      <button type="button" class="secondary" data-delivery-edit="${item.id}">Edit</button>
+                      <button type="button" class="secondary" data-delivery-delete="${item.id}">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+
+        tableWrap.querySelectorAll("[data-delivery-edit]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const id = btn.getAttribute("data-delivery-edit");
+            const rows = readAssignments();
+            const match = rows.find((item) => item.id === id);
+            if (!match) return;
+            editingId = id;
+            patientNameInput.value = match.name;
+            patientDayInput.value = match.day;
+            saveBtn.textContent = "Save changes";
+            cancelEditBtn.style.display = "inline-flex";
+            setFormStatus(`Editing ${match.name}. Update the name or day, then save.`, "warning");
+            patientNameInput.focus();
+          });
+        });
+
+        tableWrap.querySelectorAll("[data-delivery-delete]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const id = btn.getAttribute("data-delivery-delete");
+            const rows = readAssignments();
+            const match = rows.find((item) => item.id === id);
+            if (!match) return;
+            const nextRows = rows.filter((item) => item.id !== id);
+            saveAssignments(nextRows);
+            if (editingId === id) resetForm();
+            setFormStatus(`${match.name} was removed from daily deliveries.`, "warning");
+            renderSearch();
+            renderTable();
+          });
+        });
+      };
+
+      const printCurrentView = () => {
+        const visibleRows = getVisibleRows();
+        if (!visibleRows.length) {
+          setFormStatus(`There are no patients to print for ${activeView}.`, "warning");
+          return;
+        }
+
+        const title = activeView === "All Patients"
+          ? "Daily Deliveries - All Patients"
+          : `Daily Deliveries - ${activeView}`;
+
+        const bodyHtml = `
+          <div style="margin-bottom:10px; font-size:12px; color:#445166;">
+            ${escapeHtml(activeView === "All Patients"
+              ? "Alphabetical list of all delivery patients."
+              : `${activeView} delivery patient list.`)}
+          </div>
+          <table style="width:100%; border-collapse:collapse; font-size:12px;">
+            <thead>
+              <tr>
+                <th style="text-align:left; padding:6px 8px; border-bottom:1px solid #cfd8e3; background:#eef3ea; color:#55603a;">Patient Name</th>
+                <th style="text-align:left; padding:6px 8px; border-bottom:1px solid #cfd8e3; background:#eef3ea; color:#55603a;">Delivery Day</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${visibleRows.map((item) => `
+                <tr>
+                  <td style="padding:6px 8px; border-bottom:1px solid #e6e1d4;">${escapeHtml(item.name)}</td>
+                  <td style="padding:6px 8px; border-bottom:1px solid #e6e1d4;">${escapeHtml(item.day)}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+
+        printHost.innerHTML = buildCasePrintHtml(title, bodyHtml);
+        printHost.style.display = "block";
+        window.print();
+        printHost.style.display = "none";
+        printHost.innerHTML = "";
+      };
+
+      const resetForm = () => {
+        editingId = null;
+        patientNameInput.value = "";
+        patientDayInput.value = "";
+        saveBtn.textContent = "Save patient";
+        cancelEditBtn.style.display = "none";
+      };
+
+      const handleSave = () => {
+        const name = patientNameInput.value.trim().replace(/\s+/g, " ");
+        const day = patientDayInput.value;
+        if (!name) {
+          setFormStatus("Enter the patient name before saving.", "warning");
+          patientNameInput.focus();
+          return;
+        }
+        if (!DELIVERY_DAYS.includes(day)) {
+          setFormStatus("Choose a delivery day before saving.", "warning");
+          patientDayInput.focus();
+          return;
+        }
+
+        const rows = readAssignments();
+        const duplicate = rows.find((item) => item.name.toLowerCase() === name.toLowerCase() && item.id !== editingId);
+        if (duplicate) {
+          setFormStatus(`${duplicate.name} is already assigned to ${duplicate.day}. Edit that row if you want to change the day.`, "warning");
+          return;
+        }
+
+        if (editingId) {
+          const updatedRows = rows.map((item) => item.id === editingId ? { ...item, name, day } : item);
+          saveAssignments(updatedRows);
+          setFormStatus(`${name} was updated successfully.`, "success");
+        } else {
+          rows.push({ id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, name, day });
+          saveAssignments(rows);
+          setFormStatus(`${name} was added to ${day}.`, "success");
+        }
+
+        resetForm();
+        renderSearch();
+        renderTable();
+      };
+
+      dayTabs.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const view = btn.getAttribute("data-delivery-view");
+          if (!view) return;
+          setActiveView(view);
+        });
+      });
+
+      searchInput.addEventListener("input", renderSearch);
+      saveBtn.addEventListener("click", handleSave);
+      printBtn.addEventListener("click", printCurrentView);
+      cancelEditBtn.addEventListener("click", () => {
+        resetForm();
+        setFormStatus("Edit cancelled.", "");
+      });
+
+      renderSearch();
+      renderTable();
+    }
+
     // ---- TRAINING ACCORDION ----
     const ACCORDION_STORAGE_KEY = 'trainingAccordionOpen';
     function initTrainingAccordion() {
@@ -4494,6 +4991,7 @@
     safeInit("bridge", initBridgeTool);
     safeInit("hold-resume-weekly", initHoldResumeWeeklyTool);
     safeInit("vacation-billing", initVacationBillingTool);
+    safeInit("daily-deliveries", initDailyDeliveriesTool);
     safeInit("training", initTrainingAccordion);
     safeInit("links", initLinkSafety);
     safeInit("self-test", selfTest);
