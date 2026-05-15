@@ -4568,7 +4568,75 @@
     // ---- DAILY DELIVERIES ----
     const DAILY_DELIVERIES_STORAGE_KEY = "dailyDeliveriesAssignmentsV1";
     const DELIVERY_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Pickup"];
-    const INITIAL_DELIVERY_ASSIGNMENTS = [{"name": "A.Y. Callender-", "day": "Pickup"}, {"name": "Ainsworth Penaloza", "day": "Pickup"}, {"name": "Albert Simon", "day": "Tuesday"}, {"name": "Aleksandra Drecun", "day": "Tuesday"}, {"name": "Alton J Emanuel", "day": "Pickup"}, {"name": "Amtul Jamil", "day": "Tuesday"}, {"name": "Andre Eid", "day": "Friday"}, {"name": "Andrea Funnell", "day": "Pickup"}, {"name": "Andrew Judd", "day": "Monday"}, {"name": "Andrew Richardson", "day": "Pickup"}, {"name": "Anna Roszuk", "day": "Pickup"}, {"name": "Anne Irving", "day": "Saturday"}, {"name": "Antoinette Spooner", "day": "Pickup"}, {"name": "Areej Musa", "day": "Friday"}, {"name": "Avita Rodrigues", "day": "Monday"}, {"name": "Baby Jaskaran", "day": "Saturday"}, {"name": "Balaji Packrisamy", "day": "Monday"}, {"name": "Baljinder Bedi", "day": "Monday"}, {"name": "Barbara Donoghue", "day": "Pickup"}, {"name": "Barbara Jursinic", "day": "Pickup"}, {"name": "Barbara Karsznia", "day": "Monday"}, {"name": "Barbara Strickland-Maier", "day": "Monday"}, {"name": "Barry Hollahan", "day": "Saturday"}, {"name": "Belinda Burgess", "day": "Wednesday"}, {"name": "Benjamin Sampson", "day": "Monday"}, {"name": "Blake Morton", "day": "Pickup"}, {"name": "Blanca Ramirez", "day": "Wednesday"}, {"name": "Boris Hladysh", "day": "Pickup"}, {"name": "Borys Vovk", "day": "Pickup"}, {"name": "Breda Barbaric", "day": "Pickup"}, {"name": "Brian Charette", "day": "Friday"}, {"name": "Carol Anne Bueglas", "day": "Friday"}, {"name": "Catherine Schill", "day": "Pickup"}, {"name": "Cecile Dwyer", "day": "Thursday"}, {"name": "Charles Ansah", "day": "Tuesday"}, {"name": "Charles Wen", "day": "Tuesday"}, {"name": "Cheryl Davidson", "day": "Monday"}, {"name": "Christine Dunn", "day": "Monday"}, {"name": "Christopher Stringer", "day": "Pickup"}, {"name": "Clarita Rivera", "day": "Wednesday"}, {"name": "Claudette Fortunato", "day": "Pickup"}, {"name": "Cory Fletcher", "day": "Friday"}, {"name": "Cyprian D'Cruz", "day": "Monday"}, {"name": "Cyril Kanhai", "day": "Pickup"}, {"name": "Dana Tiangson", "day": "Friday"}, {"name": "Daniel Flores Garcia", "day": "Pickup"}, {"name": "Daniel Mcpeak", "day": "Monday"}, {"name": "Daniel Pentke", "day": "Pickup"}, {"name": "Danielle Cooke", "day": "Tuesday"}, {"name": "Daphne Pike", "day": "Saturday"}, {"name": "Daryl Burton", "day": "Monday"}, {"name": "Dave Rowley", "day": "Thursday"}, {"name": "Davenand Rajbansee", "day": "Pickup"}, {"name": "Dawna Brake", "day": "Tuesday"}, {"name": "Dawson Schembri", "day": "Pickup"}, {"name": "Dean Scully", "day": "Pickup"}, {"name": "Deanna Gittens", "day": "Tuesday"}, {"name": "Denise Quesnelle", "day": "Saturday"}, {"name": "Derek Moseley", "day": "Saturday"}, {"name": "Detlef Bernhard", "day": "Friday"}, {"name": "Don Carleton", "day": "Pickup"}, {"name": "Donald Maceachern", "day": "Pickup"}, {"name": "Donald St.Croix", "day": "Monday"}, {"name": "Donna Patterson", "day": "Pickup"}, {"name": "Dorothy Clarke", "day": "Tuesday"}, {"name": "Dorothy Henry", "day": "Pickup"}, {"name": "Doug Albert Bond", "day": "Pickup"}, {"name": "Douglas Strachan", "day": "Friday"}, {"name": "Dustin Henderson", "day": "Pickup"}, {"name": "Edward De Melo", "day": "Monday"}, {"name": "Elio Betancourt", "day": "Tuesday"}, {"name": "Elizabeth Boyce", "day": "Pickup"}, {"name": "Elvira Avelino", "day": "Monday"}, {"name": "Erva Joseph", "day": "Monday"}, {"name": "Euton Sinclair", "day": "Tuesday"}, {"name": "Farhat Jahan", "day": "Pickup"}, {"name": "Felix Aryeh Boakye", "day": "Monday"}, {"name": "Florence Plamondon", "day": "Pickup"}, {"name": "Frances Edmondson", "day": "Pickup"}, {"name": "Gabriela Dinu", "day": "Tuesday"}, {"name": "Gemma Khaloo", "day": "Pickup"}, {"name": "Geoffrey Whale", "day": "Monday"}, {"name": "George Connors", "day": "Pickup"}, {"name": "Ghulam Rao", "day": "Friday"}, {"name": "Giuseppe Magno", "day": "Pickup"}, {"name": "Giuseppe Romani", "day": "Thursday"}, {"name": "Gunilla Romani", "day": "Thursday"}, {"name": "Gustave Sango Furume", "day": "Tuesday"}, {"name": "Hanna Hitchins", "day": "Pickup"}, {"name": "Hans Wertli", "day": "Pickup"}, {"name": "Hari Singh Hans", "day": "Monday"}, {"name": "Harvel Benjamin", "day": "Tuesday"}, {"name": "Hasan Korkmaz", "day": "Saturday"}, {"name": "Hasnah Binti Maidin", "day": "Monday"}, {"name": "Hazel Butcher", "day": "Pickup"}, {"name": "Heidi Strachan", "day": "Friday"}, {"name": "Hilda Ovando", "day": "Monday"}, {"name": "Huguette Lehoux", "day": "Pickup"}, {"name": "Hyacinth Simms", "day": "Thursday"}, {"name": "Icasiano Alejandro", "day": "Saturday"}, {"name": "Igorr Karatigin", "day": "Pickup"}, {"name": "Imran Brohi", "day": "Pickup"}, {"name": "Indira Ramsackal", "day": "Thursday"}, {"name": "Indradevi Kuhanesan", "day": "Pickup"}, {"name": "Inge Hladysh", "day": "Pickup"}, {"name": "Irene Deschamps", "day": "Friday"}, {"name": "Irene Kerr", "day": "Friday"}, {"name": "Isabel Weir", "day": "Pickup"}, {"name": "Jaime Soriano", "day": "Saturday"}, {"name": "James Jack", "day": "Friday"}, {"name": "Janae Abbott", "day": "Pickup"}, {"name": "Jane Elizabeth Hall", "day": "Tuesday"}, {"name": "Jane Sheena Emerson", "day": "Friday"}, {"name": "Janet Campbell", "day": "Pickup"}, {"name": "Janet Magno", "day": "Pickup"}, {"name": "Janice Chase", "day": "Monday"}, {"name": "Javed Khan", "day": "Pickup"}, {"name": "Jean Coles", "day": "Monday"}, {"name": "Jeffrey Cait", "day": "Pickup"}, {"name": "Jenette Morrison", "day": "Friday"}, {"name": "Jermie Wills", "day": "Pickup"}, {"name": "Jerome Ford", "day": "Saturday"}, {"name": "Jesus Allen Maliwat", "day": "Saturday"}, {"name": "Joao Aguiar", "day": "Saturday"}, {"name": "Johann Mletzko", "day": "Pickup"}, {"name": "John David Dunn", "day": "Monday"}, {"name": "John De Melo", "day": "Monday"}, {"name": "John Griffett", "day": "Thursday"}, {"name": "John Mowatt", "day": "Pickup"}, {"name": "Jose Melo", "day": "Monday"}, {"name": "Josephin Oshana", "day": "Thursday"}, {"name": "Joyce Abela", "day": "Friday"}, {"name": "Judy Duncan", "day": "Monday"}, {"name": "Julie Moore", "day": "Pickup"}, {"name": "Kamni Siddiqui", "day": "Thursday"}, {"name": "Kaneez Fatima", "day": "Saturday"}, {"name": "Karlene Brown", "day": "Pickup"}, {"name": "Katarina Horvat", "day": "Pickup"}, {"name": "Khatoon Maharaj", "day": "Friday"}, {"name": "Krystyna Wyroba", "day": "Pickup"}, {"name": "Lalitha Natarajan", "day": "Friday"}, {"name": "Laura Pickering", "day": "Pickup"}, {"name": "Lauretta Emma Parker Moseley", "day": "Saturday"}, {"name": "Leo Tiberio", "day": "Pickup"}, {"name": "Leona Hansen", "day": "Monday"}, {"name": "Leonor Noemi Deschambault", "day": "Friday"}, {"name": "Leslie Karunaratne", "day": "Monday"}, {"name": "Linda Matyczuk", "day": "Pickup"}, {"name": "Linda Sands", "day": "Monday"}, {"name": "Lisa Fagundo", "day": "Pickup"}, {"name": "Lori Stackhouse", "day": "Pickup"}, {"name": "Lulu Pereira", "day": "Tuesday"}, {"name": "Lyndia Mckenzie", "day": "Pickup"}, {"name": "Lynn Briggs", "day": "Pickup"}, {"name": "Lynn Craven", "day": "Pickup"}, {"name": "Manjinder Hans", "day": "Monday"}, {"name": "Manpreet Khurana", "day": "Pickup"}, {"name": "Manuel Gayoso", "day": "Thursday"}, {"name": "Manuela Cimbron", "day": "Monday"}, {"name": "Margaret Piggott", "day": "Pickup"}, {"name": "Margaret Worth", "day": "Pickup"}, {"name": "Maria Dovale", "day": "Pickup"}, {"name": "Maria Navarro", "day": "Monday"}, {"name": "Marie Gardner", "day": "Monday"}, {"name": "Mario Russo", "day": "Saturday"}, {"name": "Marjorie Thomas", "day": "Wednesday"}, {"name": "Mary Birt", "day": "Thursday"}, {"name": "Mary Lou Gegenfurtner", "day": "Pickup"}, {"name": "Mary Sessa", "day": "Thursday"}, {"name": "Maryanne Zmenak", "day": "Monday"}, {"name": "Maudlyn Morris", "day": "Thursday"}, {"name": "Maxima Lubon-Butcher", "day": "Friday"}, {"name": "Meredith Johnson", "day": "Monday"}, {"name": "Michael Cassidy", "day": "Monday"}, {"name": "Michael Elliott", "day": "Saturday"}, {"name": "Michael Rastas", "day": "Pickup"}, {"name": "Michael Somerville", "day": "Pickup"}, {"name": "Michael Stringer", "day": "Pickup"}, {"name": "Michelle Beattie", "day": "Pickup"}, {"name": "Mikhail Chaloupov", "day": "Pickup"}, {"name": "Mildred Cabrey", "day": "Tuesday"}, {"name": "Mirko Derovski", "day": "Friday"}, {"name": "Mohammad Asif Khan", "day": "Pickup"}, {"name": "Mohammed Ba'Aqeel", "day": "Saturday"}, {"name": "Moni Begum", "day": "Monday"}, {"name": "Morris Heber", "day": "Pickup"}, {"name": "Muhammad Jamil Khan", "day": "Pickup"}, {"name": "Najma Ishtiaq", "day": "Pickup"}, {"name": "Nargis Bano", "day": "Monday"}, {"name": "Nasir Masoodi", "day": "Pickup"}, {"name": "Nasreen Tahir", "day": "Monday"}, {"name": "Neelam Wadhwa", "day": "Monday"}, {"name": "Nelly Aguilar", "day": "Monday"}, {"name": "Nezhat Gilanchi", "day": "Thursday"}, {"name": "Nicholas Roberts", "day": "Pickup"}, {"name": "Nirmala Bhargav", "day": "Monday"}, {"name": "Noel Sr. Thomas", "day": "Pickup"}, {"name": "Norma O'Brien", "day": "Tuesday"}, {"name": "Norman Walker", "day": "Friday"}, {"name": "Omar Whyte", "day": "Pickup"}, {"name": "Oxana Koguot-Kozak", "day": "Pickup"}, {"name": "Patricia Caffrey", "day": "Thursday"}, {"name": "Patricia Sgro", "day": "Monday"}, {"name": "Paul Everett", "day": "Pickup"}, {"name": "Paul Metlin", "day": "Pickup"}, {"name": "Pauletta Jackson", "day": "Wednesday"}, {"name": "Pauline M Mcintosh", "day": "Wednesday"}, {"name": "Phyllis Cyr", "day": "Wednesday"}, {"name": "Pileria Carbone", "day": "Monday"}, {"name": "Praboutee Champatsingh", "day": "Saturday"}, {"name": "Prudence Owusu-Ansahs", "day": "Thursday"}, {"name": "Ramdeo Ramsackal", "day": "Thursday"}, {"name": "Rani Aulakh", "day": "Monday"}, {"name": "Raphael Granda", "day": "Pickup"}, {"name": "Raul Caguin", "day": "Monday"}, {"name": "Remedios Lontoc", "day": "Pickup"}, {"name": "Richard Brown", "day": "Pickup"}, {"name": "Richard Rosamond", "day": "Friday"}, {"name": "Richard Sereda", "day": "Tuesday"}, {"name": "Rick Mcintosh", "day": "Pickup"}, {"name": "Rita Karunaratne", "day": "Monday"}, {"name": "Rita O'Neil", "day": "Pickup"}, {"name": "Robert Callaghan", "day": "Tuesday"}, {"name": "Robert Grabner", "day": "Pickup"}, {"name": "Robert Stephen Judd", "day": "Monday"}, {"name": "Rocco Galluzzo", "day": "Pickup"}, {"name": "Roderick Landry", "day": "Pickup"}, {"name": "Roman Kivac", "day": "Pickup"}, {"name": "Romeo Ovando", "day": "Monday"}, {"name": "Ronald Lowery", "day": "Pickup"}, {"name": "Ronald Patrick", "day": "Wednesday"}, {"name": "Roylance Wilson", "day": "Friday"}, {"name": "Sabiha Khanum", "day": "Thursday"}, {"name": "Safia Munshi", "day": "Tuesday"}, {"name": "Sandradee Clarke-Williams", "day": "Tuesday"}, {"name": "Shaheen Siddiqui", "day": "Monday"}, {"name": "Sharon Laforet", "day": "Pickup"}, {"name": "Sharon Rowley", "day": "Thursday"}, {"name": "Sheila Mungal", "day": "Saturday"}, {"name": "Shirley D'Souza", "day": "Wednesday"}, {"name": "Shirley Murdoch", "day": "Pickup"}, {"name": "Sofia Ramirez", "day": "Monday"}, {"name": "Souzan Arabo", "day": "Monday"}, {"name": "Stephen Mungal", "day": "Saturday"}, {"name": "Sujatha Balaji", "day": "Monday"}, {"name": "Sultan Salahuddin", "day": "Friday"}, {"name": "Sunil Wadhwa", "day": "Monday"}, {"name": "Talassa Colaco", "day": "Pickup"}, {"name": "Tasneem Chaudhary", "day": "Thursday"}, {"name": "Terry Hymans", "day": "Pickup"}, {"name": "Theresa Wadden", "day": "Monday"}, {"name": "Thomas G Boroday", "day": "Monday"}, {"name": "Thomas O'Neill", "day": "Pickup"}, {"name": "Trinidad Jimenez", "day": "Pickup"}, {"name": "Trudi Bachly", "day": "Monday"}, {"name": "Ultimina Charette", "day": "Friday"}, {"name": "Unnayan Majumder", "day": "Saturday"}, {"name": "Ursula Ball", "day": "Wednesday"}, {"name": "Usha Rani", "day": "Monday"}, {"name": "Veronica Soriano", "day": "Saturday"}, {"name": "Vishal Bhargav", "day": "Monday"}, {"name": "Wayne Douglas Sproule", "day": "Pickup"}, {"name": "Wayne Jarus", "day": "Monday"}, {"name": "Wayne Mattingly", "day": "Friday"}, {"name": "William Larsen", "day": "Friday"}, {"name": "William Murphy", "day": "Monday"}, {"name": "Zarin Chowdhury", "day": "Pickup"}];
+    const INITIAL_DELIVERY_ASSIGNMENTS = [{"name": "Abbott, J", "day": "Pickup"}, {"name": "Abela, J", "day": "Friday"}, {"name": "Aguiar, J", "day": "Saturday"}, {"name": "Aguilar, N", "day": "Monday"}, {"name": "Alejandro, I", "day": "Saturday"}, {"name": "Ansah, C", "day": "Tuesday"}, {"name": "Arabo, S", "day": "Monday"}, {"name": "Aulakh, R", "day": "Monday"}, {"name": "Avelino, E", "day": "Monday"}, {"name": "Ba'Aqeel, M", "day": "Saturday"}, {"name": "Bachly, T", "day": "Monday"}, {"name": "Balaji, S", "day": "Monday"}, {"name": "Ball, U", "day": "Wednesday"}, {"name": "Bano, N", "day": "Monday"}, {"name": "Barbaric, B", "day": "Pickup"}, {"name": "Beattie, M", "day": "Pickup"}, {"name": "Bedi, B", "day": "Monday"}, {"name": "Begum, M", "day": "Monday"}, {"name": "Benjamin, H", "day": "Tuesday"}, {"name": "Bernhard, D", "day": "Friday"}, {"name": "Betancourt, E", "day": "Tuesday"}, {"name": "Bhargav, NI", "day": "Monday"}, {"name": "Bhargav, VI", "day": "Monday"}, {"name": "Birt, M", "day": "Thursday"}, {"name": "Boakye, F", "day": "Monday"}, {"name": "Bond, D", "day": "Pickup"}, {"name": "Boroday, T", "day": "Monday"}, {"name": "Boyce, E", "day": "Pickup"}, {"name": "Brake, D", "day": "Tuesday"}, {"name": "Briggs, L", "day": "Pickup"}, {"name": "Brohi, I", "day": "Pickup"}, {"name": "Brown, KA", "day": "Pickup"}, {"name": "Brown, RI", "day": "Pickup"}, {"name": "Bueglas, C", "day": "Friday"}, {"name": "Burgess, B", "day": "Wednesday"}, {"name": "Burton, D", "day": "Monday"}, {"name": "Butcher, H", "day": "Pickup"}, {"name": "Cabrey, M", "day": "Tuesday"}, {"name": "Caffrey, P", "day": "Thursday"}, {"name": "Caguin, R", "day": "Monday"}, {"name": "Cait, J", "day": "Pickup"}, {"name": "Callaghan, R", "day": "Tuesday"}, {"name": "Callender-, A", "day": "Pickup"}, {"name": "Campbell, J", "day": "Pickup"}, {"name": "Carbone, P", "day": "Monday"}, {"name": "Carleton, D", "day": "Pickup"}, {"name": "Cassidy, M", "day": "Monday"}, {"name": "Chaloupov, M", "day": "Pickup"}, {"name": "Champatsingh, P", "day": "Saturday"}, {"name": "Charette, BR", "day": "Friday"}, {"name": "Charette, UL", "day": "Friday"}, {"name": "Chase, J", "day": "Monday"}, {"name": "Chaudhary, T", "day": "Thursday"}, {"name": "Chowdhury, Z", "day": "Pickup"}, {"name": "Cimbron, M", "day": "Monday"}, {"name": "Clarke, D", "day": "Tuesday"}, {"name": "Clarke-Williams, S", "day": "Tuesday"}, {"name": "Colaco, T", "day": "Pickup"}, {"name": "Coles, J", "day": "Monday"}, {"name": "Connors, G", "day": "Pickup"}, {"name": "Cooke, D", "day": "Tuesday"}, {"name": "Craven, L", "day": "Pickup"}, {"name": "Cyr, P", "day": "Wednesday"}, {"name": "D'Cruz, C", "day": "Monday"}, {"name": "D'Souza, S", "day": "Wednesday"}, {"name": "Davidson, C", "day": "Monday"}, {"name": "Derovski, M", "day": "Friday"}, {"name": "Deschambault, L", "day": "Friday"}, {"name": "Deschamps, I", "day": "Friday"}, {"name": "Dinu, G", "day": "Tuesday"}, {"name": "Donoghue, B", "day": "Pickup"}, {"name": "Dovale, M", "day": "Pickup"}, {"name": "Drecun, A", "day": "Tuesday"}, {"name": "Duncan, J", "day": "Monday"}, {"name": "Dunn, CH", "day": "Monday"}, {"name": "Dunn, JO", "day": "Monday"}, {"name": "Dwyer, C", "day": "Thursday"}, {"name": "Edmondson, F", "day": "Pickup"}, {"name": "Eid, A", "day": "Friday"}, {"name": "Elliott, M", "day": "Saturday"}, {"name": "Emanuel, A", "day": "Pickup"}, {"name": "Emerson, J", "day": "Friday"}, {"name": "Everett, P", "day": "Pickup"}, {"name": "Fagundo, L", "day": "Pickup"}, {"name": "Fatima, K", "day": "Saturday"}, {"name": "Fletcher, C", "day": "Friday"}, {"name": "Ford, J", "day": "Saturday"}, {"name": "Fortunato, C", "day": "Pickup"}, {"name": "Funnell, A", "day": "Pickup"}, {"name": "Furume, G", "day": "Tuesday"}, {"name": "Galluzzo, R", "day": "Pickup"}, {"name": "Garcia, D", "day": "Pickup"}, {"name": "Gardner, M", "day": "Monday"}, {"name": "Gayoso, M", "day": "Thursday"}, {"name": "Gegenfurtner, M", "day": "Pickup"}, {"name": "Gilanchi, N", "day": "Thursday"}, {"name": "Gittens, D", "day": "Tuesday"}, {"name": "Grabner, R", "day": "Pickup"}, {"name": "Granda, R", "day": "Pickup"}, {"name": "Griffett, J", "day": "Thursday"}, {"name": "Hall, J", "day": "Tuesday"}, {"name": "Hans, HA", "day": "Monday"}, {"name": "Hans, MA", "day": "Monday"}, {"name": "Hansen, L", "day": "Monday"}, {"name": "Heber, M", "day": "Pickup"}, {"name": "Henderson, D", "day": "Pickup"}, {"name": "Henry, D", "day": "Pickup"}, {"name": "Hitchins, H", "day": "Pickup"}, {"name": "Hladysh, BO", "day": "Pickup"}, {"name": "Hladysh, IN", "day": "Pickup"}, {"name": "Hollahan, B", "day": "Saturday"}, {"name": "Horvat, K", "day": "Pickup"}, {"name": "Hymans, T", "day": "Pickup"}, {"name": "Irving, A", "day": "Saturday"}, {"name": "Ishtiaq, N", "day": "Pickup"}, {"name": "Jack, J", "day": "Friday"}, {"name": "Jackson, P", "day": "Wednesday"}, {"name": "Jahan, F", "day": "Pickup"}, {"name": "Jamil, A", "day": "Tuesday"}, {"name": "Jarus, W", "day": "Monday"}, {"name": "Jaskaran, B", "day": "Saturday"}, {"name": "Jimenez, T", "day": "Pickup"}, {"name": "Johnson, M", "day": "Monday"}, {"name": "Joseph, E", "day": "Monday"}, {"name": "Judd, AN", "day": "Monday"}, {"name": "Judd, RO", "day": "Monday"}, {"name": "Jursinic, B", "day": "Pickup"}, {"name": "Kanhai, C", "day": "Pickup"}, {"name": "Karatigin, I", "day": "Pickup"}, {"name": "Karsznia, B", "day": "Monday"}, {"name": "Karunaratne, LE", "day": "Monday"}, {"name": "Karunaratne, RI", "day": "Monday"}, {"name": "Kerr, I", "day": "Friday"}, {"name": "Khaloo, G", "day": "Pickup"}, {"name": "Khan, JA", "day": "Pickup"}, {"name": "Khan, MO", "day": "Pickup"}, {"name": "Khan, MU", "day": "Pickup"}, {"name": "Khanum, S", "day": "Thursday"}, {"name": "Khurana, M", "day": "Pickup"}, {"name": "Kivac, R", "day": "Pickup"}, {"name": "Koguot-Kozak, O", "day": "Pickup"}, {"name": "Korkmaz, H", "day": "Saturday"}, {"name": "Kuhanesan, I", "day": "Pickup"}, {"name": "Laforet, S", "day": "Pickup"}, {"name": "Landry, R", "day": "Pickup"}, {"name": "Larsen, W", "day": "Friday"}, {"name": "Lehoux, H", "day": "Pickup"}, {"name": "Lontoc, R", "day": "Pickup"}, {"name": "Lowery, R", "day": "Pickup"}, {"name": "Lubon-Butcher, M", "day": "Friday"}, {"name": "Maceachern, D", "day": "Pickup"}, {"name": "Magno, GI", "day": "Pickup"}, {"name": "Magno, JA", "day": "Pickup"}, {"name": "Maharaj, K", "day": "Friday"}, {"name": "Maidin, H", "day": "Monday"}, {"name": "Majumder, U", "day": "Saturday"}, {"name": "Maliwat, J", "day": "Saturday"}, {"name": "Masoodi, N", "day": "Pickup"}, {"name": "Mattingly, W", "day": "Friday"}, {"name": "Matyczuk, L", "day": "Pickup"}, {"name": "Mcintosh, PA", "day": "Wednesday"}, {"name": "Mcintosh, RI", "day": "Pickup"}, {"name": "Mckenzie, L", "day": "Pickup"}, {"name": "Mcpeak, D", "day": "Monday"}, {"name": "De Melo, ED", "day": "Monday"}, {"name": "De Melo, JO", "day": "Monday"}, {"name": "Melo, J", "day": "Pickup"}, {"name": "Metlin, P", "day": "Pickup"}, {"name": "Mletzko, J", "day": "Pickup"}, {"name": "Moore, J", "day": "Pickup"}, {"name": "Morris, M", "day": "Thursday"}, {"name": "Morrison, J", "day": "Friday"}, {"name": "Morton, B", "day": "Pickup"}, {"name": "Moseley, DE", "day": "Saturday"}, {"name": "Moseley, LA", "day": "Saturday"}, {"name": "Mowatt, J", "day": "Pickup"}, {"name": "Mungal, SH", "day": "Saturday"}, {"name": "Mungal, ST", "day": "Saturday"}, {"name": "Munshi, S", "day": "Tuesday"}, {"name": "Murdoch, S", "day": "Pickup"}, {"name": "Murphy, W", "day": "Monday"}, {"name": "Musa, A", "day": "Friday"}, {"name": "Natarajan, L", "day": "Friday"}, {"name": "Navarro, M", "day": "Monday"}, {"name": "O'Brien, N", "day": "Tuesday"}, {"name": "O'Neil, R", "day": "Pickup"}, {"name": "O'Neill, T", "day": "Pickup"}, {"name": "Oshana, J", "day": "Thursday"}, {"name": "Ovando, HI", "day": "Monday"}, {"name": "Ovando, RO", "day": "Monday"}, {"name": "Owusu-Ansahs, P", "day": "Thursday"}, {"name": "Packrisamy, B", "day": "Monday"}, {"name": "Patrick, R", "day": "Wednesday"}, {"name": "Patterson, D", "day": "Pickup"}, {"name": "Penaloza, A", "day": "Pickup"}, {"name": "Pentke, D", "day": "Pickup"}, {"name": "Pereira, L", "day": "Tuesday"}, {"name": "Pickering, L", "day": "Pickup"}, {"name": "Piggott, M", "day": "Pickup"}, {"name": "Pike, D", "day": "Saturday"}, {"name": "Plamondon, F", "day": "Pickup"}, {"name": "Quesnelle, D", "day": "Saturday"}, {"name": "Rajbansee, D", "day": "Pickup"}, {"name": "Ramirez, BL", "day": "Wednesday"}, {"name": "Ramirez, SO", "day": "Monday"}, {"name": "Ramsackal, IN", "day": "Thursday"}, {"name": "Ramsackal, RA", "day": "Thursday"}, {"name": "Rani, U", "day": "Monday"}, {"name": "Rao, G", "day": "Friday"}, {"name": "Rastas, M", "day": "Pickup"}, {"name": "Richardson, A", "day": "Pickup"}, {"name": "Rivera, C", "day": "Wednesday"}, {"name": "Roberts, N", "day": "Pickup"}, {"name": "Rodrigues, A", "day": "Monday"}, {"name": "Romani, GI", "day": "Thursday"}, {"name": "Romani, GU", "day": "Thursday"}, {"name": "Rosamond, R", "day": "Friday"}, {"name": "Roszuk, A", "day": "Pickup"}, {"name": "Rowley, DA", "day": "Thursday"}, {"name": "Rowley, SH", "day": "Thursday"}, {"name": "Russo, M", "day": "Saturday"}, {"name": "Salahuddin, S", "day": "Friday"}, {"name": "Sampson, B", "day": "Monday"}, {"name": "Sands, L", "day": "Monday"}, {"name": "Schembri, D", "day": "Pickup"}, {"name": "Schill, C", "day": "Pickup"}, {"name": "Scully, D", "day": "Pickup"}, {"name": "Sereda, R", "day": "Tuesday"}, {"name": "Sessa, M", "day": "Thursday"}, {"name": "Sgro, P", "day": "Monday"}, {"name": "Siddiqui, KA", "day": "Thursday"}, {"name": "Siddiqui, SH", "day": "Monday"}, {"name": "Simms, H", "day": "Thursday"}, {"name": "Simon, A", "day": "Tuesday"}, {"name": "Sinclair, E", "day": "Tuesday"}, {"name": "Somerville, M", "day": "Pickup"}, {"name": "Soriano, JA", "day": "Saturday"}, {"name": "Soriano, VE", "day": "Saturday"}, {"name": "Spooner, A", "day": "Pickup"}, {"name": "Sproule, W", "day": "Pickup"}, {"name": "St.Croix, D", "day": "Monday"}, {"name": "Stackhouse, L", "day": "Pickup"}, {"name": "Strachan, DO", "day": "Friday"}, {"name": "Strachan, HE", "day": "Friday"}, {"name": "Strickland-Maier, B", "day": "Monday"}, {"name": "Stringer, CH", "day": "Pickup"}, {"name": "Stringer, MI", "day": "Pickup"}, {"name": "Tahir, N", "day": "Monday"}, {"name": "Thomas, MA", "day": "Wednesday"}, {"name": "Thomas, NO", "day": "Pickup"}, {"name": "Tiangson, D", "day": "Friday"}, {"name": "Tiberio, L", "day": "Pickup"}, {"name": "Vovk, B", "day": "Pickup"}, {"name": "Wadden, T", "day": "Monday"}, {"name": "Wadhwa, NE", "day": "Monday"}, {"name": "Wadhwa, SU", "day": "Monday"}, {"name": "Walker, N", "day": "Friday"}, {"name": "Weir, I", "day": "Pickup"}, {"name": "Wen, C", "day": "Tuesday"}, {"name": "Wertli, H", "day": "Pickup"}, {"name": "Whale, G", "day": "Monday"}, {"name": "Whyte, O", "day": "Pickup"}, {"name": "Wills, J", "day": "Pickup"}, {"name": "Wilson, R", "day": "Friday"}, {"name": "Worth, M", "day": "Pickup"}, {"name": "Wyroba, K", "day": "Pickup"}, {"name": "Zmenak, M", "day": "Monday"}];
+    const DELIVERY_NAME_CORRECTIONS = {
+      "melo, edw::monday": { name: "De Melo, ED", day: "Monday" },
+      "melo, joh::monday": { name: "De Melo, JO", day: "Monday" },
+      "melo, jos::monday": { name: "Melo, J", day: "Pickup" },
+      "melo, ed::monday": { name: "De Melo, ED", day: "Monday" },
+      "melo, jo::monday": { name: "De Melo, JO", day: "Monday" },
+      "de melo, e::monday": { name: "De Melo, ED", day: "Monday" },
+      "de melo, ed::monday": { name: "De Melo, ED", day: "Monday" },
+      "de melo, j::monday": { name: "De Melo, JO", day: "Monday" },
+      "de melo, jo::monday": { name: "De Melo, JO", day: "Monday" },
+      "melo, j::monday": { name: "Melo, J", day: "Pickup" },
+      "melo, jo::pickup": { name: "Melo, J", day: "Pickup" }
+    };
+    const DELIVERY_LEGACY_REMOVE_KEYS = new Set([
+      "melo, ed::monday",
+      "melo, edw::monday",
+      "melo, jo::monday",
+      "melo, joh::monday",
+      "melo, jos::monday"
+    ]);
+    const DELIVERY_LEGACY_REMOVE_NAMES = new Set([
+      "melo, ed",
+      "melo, edw",
+      "melo, jo",
+      "melo, joh",
+      "melo, jos"
+    ]);
+    function getDeliveryLastName(name) {
+      if (typeof name !== "string") return "";
+      const trimmed = name.trim();
+      if (!trimmed) return "";
+      if (trimmed.includes(",")) return trimmed.split(",")[0].trim();
+      const parts = trimmed.replace(/,/g, " ").split(/\s+/).filter(Boolean);
+      return parts.length ? parts[parts.length - 1].trim() : "";
+    }
+    function getDeliveryNameSuffix(name) {
+      if (typeof name !== "string") return "";
+      const trimmed = name.trim();
+      if (!trimmed) return "";
+      if (!trimmed.includes(",")) return "";
+      const bits = trimmed.split(",", 2);
+      return (bits[1] || "").trim().toUpperCase();
+    }
+    function normalizeDeliveryPatientName(rawName, existingRows = [], excludeId = null) {
+      const input = String(rawName == null ? "" : rawName).trim().replace(/\s+/g, " ");
+      if (!input) return "";
+      if (input.includes(",")) {
+        const [last, rest = ""] = input.split(",", 2);
+        const suffix = rest.trim().toUpperCase();
+        return suffix ? `${last.trim()}, ${suffix}` : last.trim();
+      }
+      const parts = input.replace(/,/g, " ").split(/\s+/).filter(Boolean);
+      if (!parts.length) return "";
+      const firstName = parts[0];
+      const lastName = parts[parts.length - 1];
+      const lastLower = lastName.toLowerCase();
+      const sameLastRows = existingRows.filter((item) => {
+        if (!item || item.id === excludeId || typeof item.name !== "string") return false;
+        return getDeliveryLastName(item.name).toLowerCase() === lastLower;
+      });
+      if (!sameLastRows.length) return `${lastName}, ${firstName.slice(0, 1).toUpperCase()}`;
+      const usedSuffixes = new Set(sameLastRows.map((item) => getDeliveryNameSuffix(item.name)).filter(Boolean));
+      for (let letters = 2; letters <= firstName.length; letters += 1) {
+        const candidate = firstName.slice(0, letters).toUpperCase();
+        if (!usedSuffixes.has(candidate)) return `${lastName}, ${candidate}`;
+      }
+      return `${lastName}, ${firstName.toUpperCase()}`;
+    }
     function initDailyDeliveriesTool() {
       const searchInput = document.getElementById("deliverySearchInput");
       const searchResultCard = document.getElementById("deliverySearchResultCard");
@@ -4587,6 +4655,13 @@
 
       let activeView = "All Patients";
       let editingId = null;
+      const canonicalSeedMap = new Map();
+      INITIAL_DELIVERY_ASSIGNMENTS.forEach((item) => {
+        const key = `${getDeliveryLastName(item.name).toLowerCase()}::${item.day}`;
+        const bucket = canonicalSeedMap.get(key) || [];
+        bucket.push(item);
+        canonicalSeedMap.set(key, bucket);
+      });
 
       try {
         const existing = JSON.parse(localStorage.getItem(DAILY_DELIVERIES_STORAGE_KEY) || "[]");
@@ -4613,8 +4688,19 @@
           const byKey = new Map();
           existing.forEach((item) => {
             if (!item || typeof item.name !== "string") return;
-            const normalizedName = item.name.trim();
-            const normalizedDay = normalizedName.toLowerCase() === "hasnah binti maidin" ? "Monday" : item.day;
+            const rawName = item.name.trim().toLowerCase();
+            if (DELIVERY_LEGACY_REMOVE_NAMES.has(rawName)) return;
+            const rawKey = `${item.name.trim().toLowerCase()}::${item.day}`;
+            if (DELIVERY_LEGACY_REMOVE_KEYS.has(rawKey)) return;
+            const correctionKey = `${item.name.trim().toLowerCase()}::${item.day}`;
+            const corrected = DELIVERY_NAME_CORRECTIONS[correctionKey];
+            const normalizedDay = corrected ? corrected.day : item.day;
+            const sourceName = corrected ? corrected.name : item.name;
+            const lastKey = `${getDeliveryLastName(sourceName).toLowerCase()}::${normalizedDay}`;
+            const candidates = canonicalSeedMap.get(lastKey) || [];
+            const normalizedName = candidates.length === 1
+              ? candidates[0].name
+              : normalizeDeliveryPatientName(sourceName, candidates.length ? candidates : INITIAL_DELIVERY_ASSIGNMENTS, item.id || null);
             const nextItem = { ...item, name: normalizedName, day: normalizedDay };
             byKey.set(`${normalizedName.toLowerCase()}::${normalizedDay}`, nextItem);
           });
@@ -4632,14 +4718,47 @@
         try {
           const raw = JSON.parse(localStorage.getItem(DAILY_DELIVERIES_STORAGE_KEY) || "[]");
           if (!Array.isArray(raw)) return [];
-          return raw
+          const canonicalRows = raw
+            .filter((item) => {
+              if (!item || typeof item.name !== "string") return false;
+              const rawName = item.name.trim().toLowerCase();
+              if (DELIVERY_LEGACY_REMOVE_NAMES.has(rawName)) return false;
+              const rawKey = `${item.name.trim().toLowerCase()}::${item.day}`;
+              return !DELIVERY_LEGACY_REMOVE_KEYS.has(rawKey);
+            })
             .filter((item) => item && typeof item.name === "string" && DELIVERY_DAYS.includes(item.day))
             .map((item) => ({
               id: item.id || `${Date.now()}-${Math.random().toString(16).slice(2)}`,
               name: item.name.trim(),
               day: item.day
             }))
-            .filter((item) => item.name);
+            .filter((item) => item.name)
+            .map((item) => {
+              const correctionKey = `${item.name.trim().toLowerCase()}::${item.day}`;
+              const corrected = DELIVERY_NAME_CORRECTIONS[correctionKey];
+              const canonicalDay = corrected ? corrected.day : item.day;
+              const sourceName = corrected ? corrected.name : item.name;
+              const lastKey = `${getDeliveryLastName(sourceName).toLowerCase()}::${canonicalDay}`;
+              const candidates = canonicalSeedMap.get(lastKey) || [];
+              const canonicalName = candidates.length === 1
+                ? candidates[0].name
+                : normalizeDeliveryPatientName(sourceName, candidates.length ? candidates : INITIAL_DELIVERY_ASSIGNMENTS, item.id);
+              return { ...item, name: canonicalName, day: canonicalDay };
+            });
+          const deduped = [];
+          const seen = new Set();
+          canonicalRows.forEach((item) => {
+            const key = `${item.name.toLowerCase()}::${item.day}`;
+            if (seen.has(key)) return;
+            seen.add(key);
+            deduped.push(item);
+          });
+          const rawSnapshot = JSON.stringify(raw);
+          const dedupedSnapshot = JSON.stringify(deduped);
+          if (rawSnapshot !== dedupedSnapshot) {
+            localStorage.setItem(DAILY_DELIVERIES_STORAGE_KEY, dedupedSnapshot);
+          }
+          return deduped;
         } catch (e) {
           return [];
         }
@@ -4828,7 +4947,8 @@
       };
 
       const handleSave = () => {
-        const name = patientNameInput.value.trim().replace(/\s+/g, " ");
+        const rows = readAssignments();
+        const name = normalizeDeliveryPatientName(patientNameInput.value, rows, editingId);
         const day = patientDayInput.value;
         if (!name) {
           setFormStatus("Enter the patient name before saving.", "warning");
@@ -4841,7 +4961,6 @@
           return;
         }
 
-        const rows = readAssignments();
         const duplicate = rows.find((item) => item.name.toLowerCase() === name.toLowerCase() && item.id !== editingId);
         if (duplicate) {
           setFormStatus(`${duplicate.name} is already assigned to ${duplicate.day}. Edit that row if you want to change the day.`, "warning");
