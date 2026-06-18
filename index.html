@@ -5019,6 +5019,8 @@
             const rows = readAssignments();
             const match = rows.find((item) => item.id === id);
             if (!match) return;
+            const confirmed = window.confirm(`Are you sure you want to permanently delete ${match.name} from the delivery list?`);
+            if (!confirmed) return;
             try {
               await removeAssignment(id);
               if (editingId === id) resetForm();
