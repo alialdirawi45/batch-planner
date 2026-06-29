@@ -219,34 +219,6 @@
       color: var(--muted);
     }
 
-    .theme-select-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 4px;
-      min-width: 150px;
-    }
-
-    .theme-label {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-
-    .theme-select {
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      padding: 4px 10px;
-      font-size: 0.8rem;
-      background: transparent;
-      color: var(--muted-strong);
-    }
-
-    .theme-select:focus {
-      outline: none;
-      border-color: #38bdf8;
-      box-shadow: 0 0 0 1px #38bdf8;
-    }
-
     /* Tabs */
     .tabs {
       display: flex;
@@ -1225,23 +1197,6 @@
       color: var(--muted);
       margin-top: 4px;
     }
-
-    /* Helper removed */
-    .helper-fab,
-    .helper-panel,
-    .helper-panel--open,
-    .helper-head,
-    .helper-title,
-    .helper-close,
-    .helper-messages,
-    .helper-msg,
-    .helper-msg--user,
-    .helper-msg--bot,
-    .helper-quick,
-    .helper-chip,
-    .helper-input-row,
-    .helper-input-row input,
-    .helper-send { display: none !important; }
 
     /* Single consolidated theme overrides */
     .container { max-width: 1360px; }
@@ -4599,8 +4554,7 @@
     // ---- DAILY DELIVERIES ----
     const DAILY_DELIVERIES_STORAGE_KEY = "dailyDeliveriesAssignmentsV1";
     const DELIVERY_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Pickup"];
-    // Existing browser-saved delivery data remains the primary source.
-    // This empty seed keeps the script stable if localStorage is already populated.
+    // Built-in fallback delivery list used to backfill cloud/local data when needed.
     const INITIAL_DELIVERY_ASSIGNMENTS = [{"name": "Abbott, J", "day": "Pickup"}, {"name": "Abela, J", "day": "Friday"}, {"name": "Aguiar, J", "day": "Saturday"}, {"name": "Aguilar, N", "day": "Monday"}, {"name": "Alejandro, I", "day": "Saturday"}, {"name": "Ansah, C", "day": "Tuesday"}, {"name": "Arabo, S", "day": "Monday"}, {"name": "Aulakh, R", "day": "Monday"}, {"name": "Avelino, E", "day": "Monday"}, {"name": "Ba'Aqeel, M", "day": "Saturday"}, {"name": "Bachly, T", "day": "Monday"}, {"name": "Balaji, S", "day": "Monday"}, {"name": "Ball, U", "day": "Wednesday"}, {"name": "Bano, N", "day": "Monday"}, {"name": "Barbaric, B", "day": "Pickup"}, {"name": "Beattie, M", "day": "Pickup"}, {"name": "Bedi, B", "day": "Monday"}, {"name": "Begum, M", "day": "Monday"}, {"name": "Benjamin, H", "day": "Tuesday"}, {"name": "Bernhard, D", "day": "Friday"}, {"name": "Betancourt, E", "day": "Tuesday"}, {"name": "Bhargav, VIS", "day": "Monday"}, {"name": "Bhargav, NIR", "day": "Monday"}, {"name": "Birt, M", "day": "Thursday"}, {"name": "Boakye, F", "day": "Monday"}, {"name": "Bond, D", "day": "Pickup"}, {"name": "Boroday, T", "day": "Monday"}, {"name": "Boyce, E", "day": "Pickup"}, {"name": "Brake, D", "day": "Tuesday"}, {"name": "Briggs, L", "day": "Pickup"}, {"name": "Brohi, I", "day": "Pickup"}, {"name": "Brown, KAR", "day": "Pickup"}, {"name": "Brown, RIC", "day": "Pickup"}, {"name": "Bueglas, C", "day": "Friday"}, {"name": "Burgess, B", "day": "Wednesday"}, {"name": "Burton, D", "day": "Monday"}, {"name": "Butcher, H", "day": "Pickup"}, {"name": "Cabrey, M", "day": "Tuesday"}, {"name": "Caffrey, P", "day": "Thursday"}, {"name": "Caguin, R", "day": "Monday"}, {"name": "Cait, J", "day": "Pickup"}, {"name": "Callaghan, R", "day": "Tuesday"}, {"name": "Callender-, A", "day": "Pickup"}, {"name": "Campbell, J", "day": "Pickup"}, {"name": "Carbone, P", "day": "Monday"}, {"name": "Carleton, D", "day": "Pickup"}, {"name": "Cassidy, M", "day": "Monday"}, {"name": "Chaloupov, M", "day": "Pickup"}, {"name": "Champatsingh, P", "day": "Saturday"}, {"name": "Charette, BRI", "day": "Friday"}, {"name": "Charette, ULT", "day": "Friday"}, {"name": "Chase, J", "day": "Monday"}, {"name": "Chaudhary, T", "day": "Thursday"}, {"name": "Chowdhury, Z", "day": "Pickup"}, {"name": "Cimbron, M", "day": "Monday"}, {"name": "Clarke, D", "day": "Tuesday"}, {"name": "Clarke-Williams, S", "day": "Tuesday"}, {"name": "Colaco, T", "day": "Pickup"}, {"name": "Coles, J", "day": "Monday"}, {"name": "Connors, G", "day": "Pickup"}, {"name": "Cooke, D", "day": "Tuesday"}, {"name": "Craven, L", "day": "Pickup"}, {"name": "Cyr, P", "day": "Wednesday"}, {"name": "D'Cruz, C", "day": "Monday"}, {"name": "D'Souza, S", "day": "Wednesday"}, {"name": "Davidson, C", "day": "Monday"}, {"name": "De Melo, EDW", "day": "Monday"}, {"name": "De Melo, JOH", "day": "Monday"}, {"name": "Derovski, M", "day": "Friday"}, {"name": "Deschambault, L", "day": "Friday"}, {"name": "Deschamps, I", "day": "Friday"}, {"name": "Dinu, G", "day": "Tuesday"}, {"name": "Donoghue, B", "day": "Pickup"}, {"name": "Dovale, M", "day": "Pickup"}, {"name": "Drecun, A", "day": "Tuesday"}, {"name": "Duncan, J", "day": "Thursday"}, {"name": "Dunn, CHR", "day": "Monday"}, {"name": "Dunn, JOH", "day": "Monday"}, {"name": "Dwyer, C", "day": "Thursday"}, {"name": "Edmondson, F", "day": "Pickup"}, {"name": "Eid, A", "day": "Friday"}, {"name": "Elliott, M", "day": "Saturday"}, {"name": "Emanuel, A", "day": "Pickup"}, {"name": "Emerson, J", "day": "Friday"}, {"name": "Everett, P", "day": "Pickup"}, {"name": "Fagundo, L", "day": "Pickup"}, {"name": "Fatima, K", "day": "Saturday"}, {"name": "Fletcher, C", "day": "Friday"}, {"name": "Flores Garcia, D", "day": "Pickup"}, {"name": "Ford, J", "day": "Saturday"}, {"name": "Fortunato, C", "day": "Pickup"}, {"name": "Funnell, A", "day": "Pickup"}, {"name": "Furume, G", "day": "Tuesday"}, {"name": "Galluzzo, R", "day": "Pickup"}, {"name": "Gardner, M", "day": "Monday"}, {"name": "Gayoso, M", "day": "Thursday"}, {"name": "Gegenfurtner, M", "day": "Pickup"}, {"name": "Gilanchi, N", "day": "Thursday"}, {"name": "Gittens, D", "day": "Tuesday"}, {"name": "Grabner, R", "day": "Pickup"}, {"name": "Granda, R", "day": "Pickup"}, {"name": "Griffett, J", "day": "Thursday"}, {"name": "Hall, J", "day": "Tuesday"}, {"name": "Hans, HAR", "day": "Monday"}, {"name": "Hans, MAN", "day": "Monday"}, {"name": "Hansen, L", "day": "Monday"}, {"name": "Heber, M", "day": "Pickup"}, {"name": "Henderson, D", "day": "Pickup"}, {"name": "Henry, D", "day": "Pickup"}, {"name": "Hitchins, H", "day": "Pickup"}, {"name": "Hladysh, BOR", "day": "Pickup"}, {"name": "Hladysh, ING", "day": "Pickup"}, {"name": "Hollahan, B", "day": "Saturday"}, {"name": "Horvat, K", "day": "Pickup"}, {"name": "Hymans, T", "day": "Pickup"}, {"name": "Irving, A", "day": "Saturday"}, {"name": "Ishtiaq, N", "day": "Pickup"}, {"name": "Jack, J", "day": "Friday"}, {"name": "Jackson, P", "day": "Wednesday"}, {"name": "Jahan, F", "day": "Pickup"}, {"name": "Jamil, A", "day": "Tuesday"}, {"name": "Jarus, W", "day": "Monday"}, {"name": "Jaskaran, B", "day": "Saturday"}, {"name": "Jimenez, T", "day": "Pickup"}, {"name": "Johnson, M", "day": "Monday"}, {"name": "Joseph, E", "day": "Monday"}, {"name": "Judd, AND", "day": "Monday"}, {"name": "Judd, ROB", "day": "Monday"}, {"name": "Jursinic, B", "day": "Pickup"}, {"name": "Kanhai, C", "day": "Pickup"}, {"name": "Karatigin, I", "day": "Pickup"}, {"name": "Karsznia, B", "day": "Monday"}, {"name": "Karunaratne, LES", "day": "Monday"}, {"name": "Karunaratne, RIT", "day": "Monday"}, {"name": "Kerr, I", "day": "Friday"}, {"name": "Khaloo, G", "day": "Pickup"}, {"name": "Khan, JAV", "day": "Pickup"}, {"name": "Khan, MOH", "day": "Pickup"}, {"name": "Khan, MUH", "day": "Pickup"}, {"name": "Khanum, S", "day": "Thursday"}, {"name": "Khurana, M", "day": "Pickup"}, {"name": "Kivac, R", "day": "Pickup"}, {"name": "Koguot-Kozak, O", "day": "Pickup"}, {"name": "Korkmaz, H", "day": "Saturday"}, {"name": "Kuhanesan, I", "day": "Pickup"}, {"name": "Laforet, S", "day": "Pickup"}, {"name": "Landry, R", "day": "Pickup"}, {"name": "Larsen, W", "day": "Friday"}, {"name": "Lehoux, H", "day": "Pickup"}, {"name": "Lontoc, R", "day": "Pickup"}, {"name": "Lowery, R", "day": "Pickup"}, {"name": "Lubon-Butcher, M", "day": "Friday"}, {"name": "Maceachern, D", "day": "Pickup"}, {"name": "Magno, GIU", "day": "Pickup"}, {"name": "Magno, JAN", "day": "Pickup"}, {"name": "Maharaj, K", "day": "Friday"}, {"name": "Maidin, H", "day": "Tuesday"}, {"name": "Majumder, U", "day": "Saturday"}, {"name": "Maliwat, J", "day": "Saturday"}, {"name": "Masoodi, N", "day": "Pickup"}, {"name": "Mattingly, W", "day": "Friday"}, {"name": "Matyczuk, L", "day": "Pickup"}, {"name": "Mcintosh, PAU", "day": "Wednesday"}, {"name": "Mcintosh, RIC", "day": "Pickup"}, {"name": "Mckenzie, L", "day": "Pickup"}, {"name": "Mcpeak, D", "day": "Monday"}, {"name": "Melo, J", "day": "Pickup"}, {"name": "Metlin, P", "day": "Pickup"}, {"name": "Mletzko, J", "day": "Pickup"}, {"name": "Moore, J", "day": "Pickup"}, {"name": "Morris, M", "day": "Thursday"}, {"name": "Morrison, J", "day": "Friday"}, {"name": "Morton, B", "day": "Pickup"}, {"name": "Moseley, D", "day": "Saturday"}, {"name": "Mowatt, J", "day": "Pickup"}, {"name": "Mungal, SHE", "day": "Saturday"}, {"name": "Mungal, STE", "day": "Saturday"}, {"name": "Munshi, S", "day": "Tuesday"}, {"name": "Murdoch, S", "day": "Pickup"}, {"name": "Murphy, W", "day": "Monday"}, {"name": "Musa, A", "day": "Friday"}, {"name": "Natarajan, L", "day": "Friday"}, {"name": "Navarro, M", "day": "Monday"}, {"name": "O'Brien, N", "day": "Tuesday"}, {"name": "O'Neil, R", "day": "Pickup"}, {"name": "O'Neill, T", "day": "Pickup"}, {"name": "Oshana, J", "day": "Thursday"}, {"name": "Ovando, HIL", "day": "Monday"}, {"name": "Ovando, ROM", "day": "Monday"}, {"name": "Owusu-Ansahs, P", "day": "Thursday"}, {"name": "Packrisamy, B", "day": "Monday"}, {"name": "Parker Moseley, L", "day": "Saturday"}, {"name": "Patrick, R", "day": "Wednesday"}, {"name": "Patterson, D", "day": "Pickup"}, {"name": "Penaloza, A", "day": "Pickup"}, {"name": "Pentke, D", "day": "Pickup"}, {"name": "Pereira, L", "day": "Tuesday"}, {"name": "Pickering, L", "day": "Pickup"}, {"name": "Piggott, M", "day": "Pickup"}, {"name": "Pike, D", "day": "Saturday"}, {"name": "Plamondon, F", "day": "Pickup"}, {"name": "Quesnelle, D", "day": "Saturday"}, {"name": "Rajbansee, D", "day": "Pickup"}, {"name": "Ramirez, BLA", "day": "Wednesday"}, {"name": "Ramirez, SOF", "day": "Monday"}, {"name": "Ramsackal, IND", "day": "Thursday"}, {"name": "Ramsackal, RAM", "day": "Thursday"}, {"name": "Rani, U", "day": "Monday"}, {"name": "Rao, G", "day": "Friday"}, {"name": "Rastas, M", "day": "Pickup"}, {"name": "Richardson, A", "day": "Pickup"}, {"name": "Rivera, C", "day": "Wednesday"}, {"name": "Roberts, N", "day": "Pickup"}, {"name": "Rodrigues, A", "day": "Monday"}, {"name": "Romani, GIU", "day": "Thursday"}, {"name": "Romani, GUN", "day": "Thursday"}, {"name": "Rosamond, R", "day": "Friday"}, {"name": "Roszuk, A", "day": "Pickup"}, {"name": "Rowley, DAV", "day": "Thursday"}, {"name": "Rowley, SHA", "day": "Thursday"}, {"name": "Russo, M", "day": "Saturday"}, {"name": "Salahuddin, S", "day": "Friday"}, {"name": "Sampson, B", "day": "Monday"}, {"name": "Sands, L", "day": "Monday"}, {"name": "Schembri, D", "day": "Pickup"}, {"name": "Schill, C", "day": "Pickup"}, {"name": "Scully, D", "day": "Pickup"}, {"name": "Sereda, R", "day": "Tuesday"}, {"name": "Sessa, M", "day": "Thursday"}, {"name": "Sgro, P", "day": "Monday"}, {"name": "Siddiqui, KAM", "day": "Thursday"}, {"name": "Siddiqui, SHA", "day": "Monday"}, {"name": "Simms, H", "day": "Thursday"}, {"name": "Simon, A", "day": "Tuesday"}, {"name": "Sinclair, E", "day": "Tuesday"}, {"name": "Somerville, M", "day": "Pickup"}, {"name": "Soriano, JAI", "day": "Saturday"}, {"name": "Soriano, VER", "day": "Saturday"}, {"name": "Spooner, A", "day": "Pickup"}, {"name": "Sproule, W", "day": "Pickup"}, {"name": "St.Croix, D", "day": "Monday"}, {"name": "Stackhouse, L", "day": "Pickup"}, {"name": "Strachan, DOU", "day": "Friday"}, {"name": "Strachan, HEI", "day": "Friday"}, {"name": "Strickland-Maier, B", "day": "Monday"}, {"name": "Stringer, CHR", "day": "Pickup"}, {"name": "Stringer, MIC", "day": "Pickup"}, {"name": "Tahir, N", "day": "Monday"}, {"name": "Thomas, NOE", "day": "Pickup"}, {"name": "Thomas, MAR", "day": "Wednesday"}, {"name": "Tiangson, D", "day": "Friday"}, {"name": "Tiberio, L", "day": "Monday"}, {"name": "Vovk, B", "day": "Pickup"}, {"name": "Wadden, T", "day": "Monday"}, {"name": "Wadhwa, NEE", "day": "Monday"}, {"name": "Wadhwa, SUN", "day": "Monday"}, {"name": "Walker, N", "day": "Friday"}, {"name": "Weir, I", "day": "Pickup"}, {"name": "Wen, C", "day": "Tuesday"}, {"name": "Wertli, H", "day": "Pickup"}, {"name": "Whale, G", "day": "Monday"}, {"name": "Whyte, O", "day": "Pickup"}, {"name": "Wills, J", "day": "Pickup"}, {"name": "Wilson, R", "day": "Friday"}, {"name": "Worth, M", "day": "Pickup"}, {"name": "Wyroba, K", "day": "Pickup"}, {"name": "Zmenak, M", "day": "Monday"}];
     const DELIVERY_DAY_OVERRIDES = {
       "duncan, j": "Thursday",
