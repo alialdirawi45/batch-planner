@@ -4671,6 +4671,7 @@
 
       let activeView = "All Patients";
       let editingId = null;
+      let deliverySortMode = "name";
       let deliveryAssignmentsCache = [];
       let cloudSyncReady = false;
       let realtimeChannel = null;
@@ -4759,7 +4760,22 @@
         }
       };
 
-      const sortAssignments = (rows) => [...rows].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+      const sortAssignments = (rows) => {
+        const normalizedRows = [...rows];
+        if (deliverySortMode === "notes") {
+          return normalizedRows.sort((a, b) => {
+            const aNotes = (a.notes || "").trim().toLowerCase();
+            const bNotes = (b.notes || "").trim().toLowerCase();
+            if (aNotes !== bNotes) {
+              if (!aNotes) return 1;
+              if (!bNotes) return -1;
+              return aNotes.localeCompare(bNotes, undefined, { sensitivity: "base" });
+            }
+            return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+          });
+        }
+        return normalizedRows.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+      };
 
       const getVisibleRows = () => {
         const assignments = sortAssignments(readAssignments());
@@ -4926,9 +4942,9 @@
           <table class="results-table">
             <thead>
               <tr>
-                <th>Patient Name</th>
+                <th><button type="button" class="secondary" data-delivery-sort="name" aria-pressed="${deliverySortMode === "name" ? "true" : "false"}">Patient Name${deliverySortMode === "name" ? " · active" : ""}</button></th>
                 <th>Delivery Day</th>
-                <th>Notes</th>
+                <th><button type="button" class="secondary" data-delivery-sort="notes" aria-pressed="${deliverySortMode === "notes" ? "true" : "false"}">Notes${deliverySortMode === "notes" ? " · active" : ""}</button></th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -4949,6 +4965,15 @@
             </tbody>
           </table>
         `;
+
+        tableWrap.querySelectorAll("[data-delivery-sort]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const mode = btn.getAttribute("data-delivery-sort");
+            if (mode !== "name" && mode !== "notes") return;
+            deliverySortMode = mode;
+            renderTable();
+          });
+        });
 
         tableWrap.querySelectorAll("[data-delivery-edit]").forEach((btn) => {
           btn.addEventListener("click", () => {
